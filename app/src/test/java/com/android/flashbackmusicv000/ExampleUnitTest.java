@@ -1,4 +1,4 @@
-package com.android.flashbackmusic;
+package com.android.flashbackmusicv000;
 
 import org.junit.Test;
 
