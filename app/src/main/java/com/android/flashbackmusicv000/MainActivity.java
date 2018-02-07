@@ -1,4 +1,4 @@
-package com.android.flashbackmusic;
+package com.android.flashbackmusicv000;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -9,13 +9,17 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+<<<<<<< HEAD:app/src/main/java/com/android/flashbackmusic/SongsList.java
 public class SongsList extends AppCompatActivity {
     //this is my comment to push onto GitHub
+=======
+public class MainActivity extends AppCompatActivity {
+>>>>>>> fc7ffbf9930db81f610764e77cc5b708365c15a2:app/src/main/java/com/android/flashbackmusicv000/MainActivity.java
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_songs_list);
+        setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -32,15 +36,13 @@ public class SongsList extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_songs_list, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle actgit git
-        //
-        //
+        // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
@@ -49,6 +51,7 @@ public class SongsList extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 }
