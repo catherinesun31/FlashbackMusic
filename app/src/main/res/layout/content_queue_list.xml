@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.android.flashbackmusicv000.QueueList"
+    tools:showIn="@layout/activity_queue_list">
+
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="FLASHBACK QUEUE"
+            android:background="#d77979"
+            android:textSize="20dp"
+            android:id="@+id/queue"
+            android:gravity = "center"
+            />
+        <TableRow>
+
+            <Button
+                android:id="@+id/song1"
+                android:layout_width="333dp"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:text="Song1"
+                android:textAlignment="textStart"
+                android:textSize="20dp" />
+
+            <Button
+                android:id="@+id/song1check"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:text="+" />
+
+        </TableRow>
+        <TableRow>
+
+            <Button
+                android:id="@+id/song2"
+                android:layout_width="333dp"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:text="Song2"
+                android:textAlignment="textStart"
+                android:textSize="20dp" />
+
+            <Button
+                android:id="@+id/song2check"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:text="+" />
+
+        </TableRow>
+        <TableRow>
+
+            <Button
+                android:id="@+id/song3"
+                android:layout_width="333dp"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:text="Song3"
+                android:textAlignment="textStart"
+                android:textSize="20dp" />
+
+            <Button
+                android:id="@+id/song3check"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:text="+" />
+
+        </TableRow>
+        <TableRow>
+
+            <Button
+                android:id="@+id/song4"
+                android:layout_width="333dp"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:text="Song4"
+                android:textAlignment="textStart"
+                android:textSize="20dp" />
+
+            <Button
+                android:id="@+id/song4check"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:text="+" />
+
+        </TableRow>
+        <TableRow>
+
+            <Button
+                android:id="@+id/song5"
+                android:layout_width="333dp"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:text="Song5"
+                android:textAlignment="textStart"
+                android:textSize="20dp" />
+
+            <Button
+                android:id="@+id/song5check"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:text="+" />
+
+        </TableRow>
+        <TableRow>
+
+            <Button
+                android:id="@+id/song6"
+                android:layout_width="333dp"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:text="Song6"
+                android:textAlignment="textStart"
+                android:textSize="20dp" />
+
+            <Button
+                android:id="@+id/song6check"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:text="+" />
+
+        </TableRow>
+        <TableRow>
+
+            <Button
+                android:id="@+id/song7"
+                android:layout_width="333dp"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:text="Song7"
+                android:textAlignment="textStart"
+                android:textSize="20dp" />
+
+            <Button
+                android:id="@+id/song7check"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:text="+" />
+
+        </TableRow>
+        <TableRow>
+
+            <Button
+                android:id="@+id/song8"
+                android:layout_width="333dp"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:text="Song8"
+                android:textAlignment="textStart"
+                android:textSize="20dp" />
+
+            <Button
+                android:id="@+id/song8check"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:text="+" />
+
+        </TableRow>
+        <TableRow>
+
+            <Button
+                android:id="@+id/song9"
+                android:layout_width="333dp"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:text="Song9"
+                android:textAlignment="textStart"
+                android:textSize="20dp" />
+
+            <Button
+                android:id="@+id/song9check"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:text="+" />
+
+        </TableRow>
+        <TableRow>
+
+            <Switch
+                android:id="@+id/flashSwitch"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:text="FLASHBACK MODE"
+                android:textSize="20dp"
+                android:textAlignment="center"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true" />
+        </TableRow>
+
+
+
+
+    </TableLayout>
+
+
+</ScrollView>
+
+
+
+
