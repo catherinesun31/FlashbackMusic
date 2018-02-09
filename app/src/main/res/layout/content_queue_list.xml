@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,233 +7,254 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.android.flashbackmusicv000.QueueList"
     tools:showIn="@layout/activity_queue_list">
-
-
-    <TableLayout
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="40dp">
+        <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="FLASHBACK QUEUE"
-            android:background="#d77979"
-            android:textSize="20dp"
-            android:id="@+id/queue"
-            android:gravity = "center"
-            />
-        <TableRow>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="FLASHBACK QUEUE"
+                android:background="#d77979"
+                android:textSize="20dp"
+                android:gravity = "center"
+                android:id="@+id/queueList"
+                app:layout_constraintEnd_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="parent"/>
 
             <Button
                 android:id="@+id/song1"
-                android:layout_width="333dp"
+                android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:text="Song1"
+                android:text="Song 1"
                 android:textAlignment="textStart"
-                android:textSize="20dp" />
+                android:textSize="20dp"
+                android:background="#e6e6e6"
+                app:layout_constraintEnd_toStartOf="@+id/queueList"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/queueList"/>
 
             <Button
                 android:id="@+id/song1check"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:text="+" />
+                android:text="+"
+                android:textSize="20dp"
+                android:background="#e6e6e6"
 
-        </TableRow>
-        <TableRow>
+                android:shadowColor="#00ffffff"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/queueList"/>
 
             <Button
                 android:id="@+id/song2"
-                android:layout_width="333dp"
+                android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:text="Song2"
+                android:text="Song 2"
                 android:textAlignment="textStart"
-                android:textSize="20dp" />
+                android:textSize="20dp"
+                android:background="#e6e6e6"
+                app:layout_constraintEnd_toStartOf="@+id/song1"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/song1"/>
 
             <Button
                 android:id="@+id/song2check"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:text="+" />
+                android:text="+"
+                android:textSize="20dp"
+                android:background="#e6e6e6"
 
-        </TableRow>
-        <TableRow>
+                android:shadowColor="#00ffffff"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/song1"/>
 
             <Button
                 android:id="@+id/song3"
-                android:layout_width="333dp"
+                android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:text="Song3"
+                android:text="Song 3"
                 android:textAlignment="textStart"
-                android:textSize="20dp" />
+                android:textSize="20dp"
+                android:background="#e6e6e6"
+                app:layout_constraintEnd_toStartOf="@+id/song2"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/song2"/>
 
             <Button
                 android:id="@+id/song3check"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:text="+" />
+                android:text="+"
+                android:textSize="20dp"
+                android:background="#e6e6e6"
 
-        </TableRow>
-        <TableRow>
+                android:shadowColor="#00ffffff"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/song2"/>
 
             <Button
                 android:id="@+id/song4"
-                android:layout_width="333dp"
+                android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:text="Song4"
+                android:background="#e6e6e6"
+                android:text="Song 4"
                 android:textAlignment="textStart"
-                android:textSize="20dp" />
+                android:textSize="20dp"
+                app:layout_constraintEnd_toStartOf="@+id/song3"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/song3" />
 
             <Button
                 android:id="@+id/song4check"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:text="+" />
+                android:text="+"
+                android:textSize="20dp"
+                android:background="#e6e6e6"
 
-        </TableRow>
-        <TableRow>
+                android:shadowColor="#00ffffff"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/song3"/>
 
             <Button
                 android:id="@+id/song5"
-                android:layout_width="333dp"
+                android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:text="Song5"
+                android:text="Song 5"
                 android:textAlignment="textStart"
-                android:textSize="20dp" />
+                android:textSize="20dp"
+                android:background="#e6e6e6"
+                app:layout_constraintEnd_toStartOf="@+id/song4"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/song4"/>
 
             <Button
                 android:id="@+id/song5check"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:text="+" />
+                android:text="+"
+                android:textSize="20dp"
+                android:background="#e6e6e6"
 
-        </TableRow>
-        <TableRow>
+                android:shadowColor="#00ffffff"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/song4"/>
 
             <Button
                 android:id="@+id/song6"
-                android:layout_width="333dp"
+                android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:text="Song6"
+                android:text="Song 6"
                 android:textAlignment="textStart"
-                android:textSize="20dp" />
+                android:textSize="20dp"
+                android:background="#e6e6e6"
+                app:layout_constraintEnd_toStartOf="@+id/song5"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/song5"/>
 
             <Button
                 android:id="@+id/song6check"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:text="+" />
+                android:text="+"
+                android:textSize="20dp"
+                android:background="#e6e6e6"
 
-        </TableRow>
-        <TableRow>
+                android:shadowColor="#00ffffff"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/song5"/>
 
             <Button
                 android:id="@+id/song7"
-                android:layout_width="333dp"
+                android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:text="Song7"
+                android:text="Song 7"
                 android:textAlignment="textStart"
-                android:textSize="20dp" />
+                android:textSize="20dp"
+                android:background="#e6e6e6"
+                app:layout_constraintEnd_toStartOf="@+id/song6"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/song6"/>
 
             <Button
                 android:id="@+id/song7check"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:text="+" />
+                android:text="+"
+                android:textSize="20dp"
+                android:background="#e6e6e6"
 
-        </TableRow>
-        <TableRow>
+                android:shadowColor="#00ffffff"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/song6"/>
 
             <Button
                 android:id="@+id/song8"
-                android:layout_width="333dp"
+                android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:text="Song8"
+                android:text="Song 8"
                 android:textAlignment="textStart"
-                android:textSize="20dp" />
+                android:textSize="20dp"
+                android:background="#e6e6e6"
+                app:layout_constraintEnd_toStartOf="@+id/song7"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/song7"/>
 
             <Button
                 android:id="@+id/song8check"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:text="+" />
-
-        </TableRow>
-        <TableRow>
-
-            <Button
-                android:id="@+id/song9"
-                android:layout_width="333dp"
-                android:layout_height="50dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:text="Song9"
-                android:textAlignment="textStart"
-                android:textSize="20dp" />
-
-            <Button
-                android:id="@+id/song9check"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:text="+" />
-
-        </TableRow>
-        <TableRow>
-
-            <Switch
-                android:id="@+id/flashSwitch"
-                android:layout_width="200dp"
-                android:layout_height="50dp"
-                android:text="FLASHBACK MODE"
+                android:text="+"
                 android:textSize="20dp"
-                android:textAlignment="center"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true" />
-        </TableRow>
+                android:background="#e6e6e6"
+
+                android:shadowColor="#00ffffff"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/song7"/>
 
 
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/flash"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.98"
+        app:layout_constraintHorizontal_bias="0.20"
+        />
 
-
-    </TableLayout>
-
-
-</ScrollView>
-
-
+    <Switch
+        android:id="@+id/flashSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.98"
+        app:layout_constraintHorizontal_bias="0.70"
+        />
+</android.support.constraint.ConstraintLayout>
 
 
