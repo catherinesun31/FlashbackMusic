@@ -9,30 +9,30 @@
     tools:showIn="@layout/activity_song_playing">
 
     <TextView
+        android:id="@+id/songsplaying"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:text="@string/playSongs"
         android:background="#d77979"
         android:textSize="20dp"
         android:gravity = "center"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="0dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.00"
         />
 
     <TextView
+        android:id="@+id/songinfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="PLACEHOLDER SONG INFO"
         android:textSize="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="200dp"
+        app:layout_constraintTop_toBottomOf="@id/songsplaying"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.40"
-        app:layout_constraintHorizontal_bias="0.45"
         />
 
     <Button
@@ -42,11 +42,8 @@
         android:text="queue"
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.75"
-        app:layout_constraintHorizontal_bias="0.10"
+        app:layout_constraintTop_toBottomOf="@id/songinfo"
+        android:layout_marginStart ="10dp"
 
 
         />
@@ -58,12 +55,9 @@
         android:text="skip"
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.75"
-        app:layout_constraintHorizontal_bias="0.50"
-
+        app:layout_constraintLeft_toLeftOf="@id/queue"
+        app:layout_constraintRight_toRightOf="@id/plus"
+        app:layout_constraintTop_toBottomOf="@id/songinfo"
 
         />
 
@@ -74,16 +68,15 @@
         android:text="+"
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.75"
-        app:layout_constraintHorizontal_bias="0.90"
+        app:layout_constraintLeft_toRightOf="@id/skip"
+        app:layout_constraintTop_toBottomOf="@id/songinfo"
+        android:layout_marginStart="60dp"
 
 
         />
 
     <TextView
+        android:id="@+id/flashtext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/flash"
@@ -91,9 +84,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.95"
-        app:layout_constraintHorizontal_bias="0.20"
+        app:layout_constraintTop_toBottomOf="@id/songinfo"
+        android:layout_marginRight="200dp"
+        android:layout_marginTop="210dp"
         />
 
     <Switch
@@ -102,10 +95,11 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.95"
-        app:layout_constraintHorizontal_bias="0.70"
+        app:layout_constraintRight_toRightOf="@id/flashtext"
+        app:layout_constraintTop_toBottomOf="@id/songinfo"
+        android:layout_marginTop="210dp"
+        android:layout_marginLeft="300dp"
+
         />
 
 </android.support.constraint.ConstraintLayout>
