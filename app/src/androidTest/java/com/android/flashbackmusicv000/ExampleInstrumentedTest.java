@@ -1,4 +1,4 @@
-package com.android.flashbackmusic;
+package com.android.flashbackmusicv000;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.android.flashbackmusic", appContext.getPackageName());
+        assertEquals("com.android.flashbackmusicv000", appContext.getPackageName());
     }
 }
