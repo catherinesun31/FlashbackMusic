@@ -23,6 +23,11 @@
             android:name=".SongPlayingActivity"
             android:label="@string/title_activity_song_playing"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".SongListActivity"
+            android:label="SongListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>
