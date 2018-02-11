@@ -25,6 +25,7 @@
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/scrollView"
         android:layout_marginBottom="40dp"
         android:layout_marginTop="50dp">
 
@@ -63,7 +64,6 @@
                 android:textSize="20dp"
                 android:background="#e6e6e6"
 
-                android:shadowColor="#00ffffff"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
