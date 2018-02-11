@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">FlashbackMusicV000</string>
     <string name="playSongs">SONGS PLAYING</string>
+    <string name="playAlbum">ALBUM PLAYING</string>
     <string name="action_settings">Settings</string>
     <string name="songs">SONGS</string>
     <string name="albums">ALBUMS</string>
@@ -16,9 +17,21 @@
     <string name="song8">Song 8</string>
     <string name="song9">Song 9</string>
     <string name="song10">Song 10</string>
+    <string name="album1">Album 1</string>
+    <string name="album2">Album 2</string>
+    <string name="album3">Album 3</string>
+    <string name="album4">Album 4</string>
+    <string name="album5">Album 5</string>
+    <string name="album6">Album 6</string>
+    <string name="album7">Album 7</string>
+    <string name="album8">Album 8</string>
+    <string name="album9">Album 9</string>
+    <string name="album10">Album 10</string>
     <string name="favorited">✓</string>
     <string name="disliked">ｘ</string>
     <string name="neutral">+</string>
+    <string name="title_activity_album_queue">AlbumQueue</string>
+
 
 
 </resources>
