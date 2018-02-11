@@ -55,66 +55,147 @@ public class SongListActivity extends AppCompatActivity {
         Button song9B = (Button) findViewById(R.id.song9);
         Button song10B = (Button) findViewById(R.id.song10);
 
-        song1B.setOnClickListener(new View.OnClickListener(){
+        song1B.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
+            public void onClick(View view) {
                 launchActivity();
             }
         });
-        song2B.setOnClickListener(new View.OnClickListener(){
+        song2B.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
+            public void onClick(View view) {
                 launchActivity();
             }
         });
-        song3B.setOnClickListener(new View.OnClickListener(){
+        song3B.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
+            public void onClick(View view) {
                 launchActivity();
             }
         });
-        song4B.setOnClickListener(new View.OnClickListener(){
+        song4B.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
+            public void onClick(View view) {
                 launchActivity();
             }
         });
-        song5B.setOnClickListener(new View.OnClickListener(){
+        song5B.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
+            public void onClick(View view) {
                 launchActivity();
             }
         });
-        song6B.setOnClickListener(new View.OnClickListener(){
+        song6B.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
+            public void onClick(View view) {
                 launchActivity();
             }
         });
-        song7B.setOnClickListener(new View.OnClickListener(){
+        song7B.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
+            public void onClick(View view) {
                 launchActivity();
             }
         });
-        song8B.setOnClickListener(new View.OnClickListener(){
+        song8B.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
+            public void onClick(View view) {
                 launchActivity();
             }
         });
-        song9B.setOnClickListener(new View.OnClickListener(){
+        song9B.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
+            public void onClick(View view) {
                 launchActivity();
             }
         });
-        song10B.setOnClickListener(new View.OnClickListener(){
+        song10B.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
+            public void onClick(View view) {
                 launchActivity();
             }
         });
+
+
+        final Button favorited1 = (Button) findViewById(R.id.button1);
+        final Button favorited2 = (Button) findViewById(R.id.button2);
+        final Button favorited3 = (Button) findViewById(R.id.button3);
+        final Button favorited4 = (Button) findViewById(R.id.button4);
+        final Button favorited5 = (Button) findViewById(R.id.button5);
+        final Button favorited6 = (Button) findViewById(R.id.button6);
+        final Button favorited7 = (Button) findViewById(R.id.button7);
+        final Button favorited8 = (Button) findViewById(R.id.button8);
+        final Button favorited9 = (Button) findViewById(R.id.button9);
+        final Button favorited10 = (Button) findViewById(R.id.button10);
+
+        favorited1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                buttonChange(favorited1);
+            }
+        });
+        favorited2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                buttonChange(favorited2);
+            }
+        });
+        favorited3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                buttonChange(favorited3);
+            }
+        });
+        favorited4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                buttonChange(favorited4);
+            }
+        });
+        favorited5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                buttonChange(favorited5);
+            }
+        });
+        favorited6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                buttonChange(favorited6);
+            }
+        });
+        favorited7.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                buttonChange(favorited7);
+            }
+        });
+        favorited8.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                buttonChange(favorited8);
+            }
+        });
+        favorited9.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                buttonChange(favorited9);
+            }
+        });
+        favorited10.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                buttonChange(favorited10);
+            }
+        });}
+
+    public void buttonChange(Button button) {
+        button.setText("✓");
+    }
+
+
+
+
 
         /*
         AssetFileDescriptor assetFileDescriptor = this.getResources().openRawResourceFd(MEDIA_RES_ID);
@@ -175,15 +256,7 @@ public class SongListActivity extends AppCompatActivity {
         }
         */
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-    }
+
 
     public void launchActivity(){
         Intent intent = new Intent(this, SongPlayingActivity.class);
