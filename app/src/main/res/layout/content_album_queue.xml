@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.android.flashbackmusicv000.AlbumQueue"
+    tools:showIn="@layout/activity_album_queue">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="ALBUMS"
+        android:background="#d77979"
+        android:textSize="20dp"
+        android:gravity = "center"
+        android:id="@+id/queueList"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="parent"/>
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="40dp"
+        android:layout_marginTop="50dp">
+        <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/album1"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="@string/album1"
+                android:textAlignment="textStart"
+                android:textSize="20dp"
+                android:background="#e6e6e6"
+                app:layout_constraintEnd_toStartOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="parent"/>
+
+            <!--<Button
+                android:id="@+id/song1check"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="+"
+                android:textSize="20dp"
+                android:background="#e6e6e6"
+
+                android:shadowColor="#00ffffff"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="parent"/>-->
+
+            <Button
+                android:id="@+id/album2"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="@string/album2"
+                android:textAlignment="textStart"
+                android:textSize="20dp"
+                android:background="#e6e6e6"
+                app:layout_constraintEnd_toStartOf="@+id/album1"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/album1"/>
+
+            <!--<Button
+                android:id="@+id/song2check"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="+"
+                android:textSize="20dp"
+                android:background="#e6e6e6"
+
+                android:shadowColor="#00ffffff"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/song1"/>-->
+
+            <Button
+                android:id="@+id/album3"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="@string/album3"
+                android:textAlignment="textStart"
+                android:textSize="20dp"
+                android:background="#e6e6e6"
+                app:layout_constraintEnd_toStartOf="@+id/album2"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/album2"/>
+
+            <!--<Button
+                android:id="@+id/song3check"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="+"
+                android:textSize="20dp"
+                android:background="#e6e6e6"
+
+                android:shadowColor="#00ffffff"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/song2"/>-->
+
+            <Button
+                android:id="@+id/album4"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="#e6e6e6"
+                android:text="@string/album4"
+                android:textAlignment="textStart"
+                android:textSize="20dp"
+                app:layout_constraintEnd_toStartOf="@+id/album3"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/album3" />
+
+            <!--<Button
+                android:id="@+id/song4check"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="+"
+                android:textSize="20dp"
+                android:background="#e6e6e6"
+
+                android:shadowColor="#00ffffff"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/song3"/>-->
+
+            <Button
+                android:id="@+id/album5"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="@string/album5"
+                android:textAlignment="textStart"
+                android:textSize="20dp"
+                android:background="#e6e6e6"
+                app:layout_constraintEnd_toStartOf="@+id/album4"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/album4"/>
+
+            <!--<Button
+                android:id="@+id/song5check"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="+"
+                android:textSize="20dp"
+                android:background="#e6e6e6"
+
+                android:shadowColor="#00ffffff"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/song4"/>-->
+
+            <Button
+                android:id="@+id/album6"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="@string/album6"
+                android:textAlignment="textStart"
+                android:textSize="20dp"
+                android:background="#e6e6e6"
+                app:layout_constraintEnd_toStartOf="@+id/album5"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/album5"/>
+
+            <!--<Button
+                android:id="@+id/song6check"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="+"
+                android:textSize="20dp"
+                android:background="#e6e6e6"
+
+                android:shadowColor="#00ffffff"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/song5"/>-->
+
+            <Button
+                android:id="@+id/album7"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="@string/album7"
+                android:textAlignment="textStart"
+                android:textSize="20dp"
+                android:background="#e6e6e6"
+                app:layout_constraintEnd_toStartOf="@+id/album6"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/album6"/>
+
+            <!--<Button
+                android:id="@+id/song7check"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="+"
+                android:textSize="20dp"
+                android:background="#e6e6e6"
+
+                android:shadowColor="#00ffffff"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/song6"/>-->
+
+            <Button
+                android:id="@+id/album8"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="@string/album8"
+                android:textAlignment="textStart"
+                android:textSize="20dp"
+                android:background="#e6e6e6"
+                app:layout_constraintEnd_toStartOf="@+id/album7"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/album7"/>
+
+            <!--<Button
+                android:id="@+id/song8check"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="+"
+                android:textSize="20dp"
+                android:background="#e6e6e6"
+
+                android:shadowColor="#00ffffff"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/song7"/>-->
+
+
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/flash"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.89"
+        app:layout_constraintHorizontal_bias="0.20"
+        />
+
+    <Switch
+        android:id="@+id/flashSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.89"
+        app:layout_constraintHorizontal_bias="0.70"
+        />
+</android.support.constraint.ConstraintLayout>
+
+
