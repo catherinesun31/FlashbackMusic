@@ -1,5 +1,6 @@
 package com.android.flashbackmusicv000;
 
+import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Color;
 import android.media.MediaPlayer;
@@ -22,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
+import com.android.flashbackmusicv000.Song;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -30,6 +32,14 @@ public class SongListActivity extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer;
     private static int[] MEDIA_RES_IDS;
+    int totalSongs = getNumberOfSongs();
+
+    //MEDIA_RES_IDS = new int[totalSongs];
+
+
+
+    // com.android.flashbackmusicv000.Song Instances
+    //Song song1 = new Song(int R.raw.a01_everything_i_love);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +49,80 @@ public class SongListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         int totalSongs = getNumberOfSongs();
-        //Log.d("Total Songs", totalSongs + "");
         MEDIA_RES_IDS = new int[totalSongs];
+
+        Button song1B = (Button) findViewById(R.id.song1);
+        Button song2B = (Button) findViewById(R.id.song2);
+        Button song3B = (Button) findViewById(R.id.song3);
+        Button song4B = (Button) findViewById(R.id.song4);
+        Button song5B = (Button) findViewById(R.id.song5);
+        Button song6B = (Button) findViewById(R.id.song6);
+        Button song7B = (Button) findViewById(R.id.song7);
+        Button song8B = (Button) findViewById(R.id.song8);
+        Button song9B = (Button) findViewById(R.id.song9);
+        Button song10B = (Button) findViewById(R.id.song10);
+
+        song1B.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                launchActivity();
+            }
+        });
+        song2B.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                launchActivity();
+            }
+        });
+        song3B.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                launchActivity();
+            }
+        });
+        song4B.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                launchActivity();
+            }
+        });
+        song5B.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                launchActivity();
+            }
+        });
+        song6B.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                launchActivity();
+            }
+        });
+        song7B.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                launchActivity();
+            }
+        });
+        song8B.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                launchActivity();
+            }
+        });
+        song9B.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                launchActivity();
+            }
+        });
+        song10B.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                launchActivity();
+            }
+        });
+
         /*
         AssetFileDescriptor assetFileDescriptor = this.getResources().openRawResourceFd(MEDIA_RES_ID);
         try {
@@ -153,6 +235,11 @@ public class SongListActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+    }
+
+    public void launchActivity(){
+        Intent intent = new Intent(this, SongPlayingActivity.class);
+        startActivity(intent);
     }
 
     private int getNumberOfSongs() {
