@@ -12,6 +12,10 @@ public class Song {
     private boolean favorite = false;
     private boolean dislike = false;
 
+    public Song (String name) {
+        title = name;
+    }
+
     public void setLocation(String newLocation) {
         lastLocation = newLocation;
     }
