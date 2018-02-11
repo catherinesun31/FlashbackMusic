@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
+import com.android.flashbackmusicv000.Song;
 
 import java.io.File;
 
@@ -24,6 +25,14 @@ public class SongListActivity extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer;
     private static int[] MEDIA_RES_IDS;
+    int totalSongs = getNumberOfSongs();
+
+    //MEDIA_RES_IDS = new int[totalSongs];
+
+
+
+    // com.android.flashbackmusicv000.Song Instances
+    //Song song1 = new Song(int R.raw.a01_everything_i_love);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +41,8 @@ public class SongListActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        int totalSongs = getNumberOfSongs();
-        MEDIA_RES_IDS = new int[totalSongs];
+        //int totalSongs = getNumberOfSongs();
+        //MEDIA_RES_IDS = new int[totalSongs];
 
         Button song1B = (Button) findViewById(R.id.song1);
         Button song2B = (Button) findViewById(R.id.song2);
