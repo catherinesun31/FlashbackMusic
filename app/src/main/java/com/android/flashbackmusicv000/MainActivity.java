@@ -1,5 +1,6 @@
 package com.android.flashbackmusicv000;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -8,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,16 +20,46 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        //Set onClickListener for songs button
+        Button songsList = (Button) findViewById(R.id.songs);
+        songsList.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                launchSongs();
+            }
+        });
+
+
+       Button albumList = (Button) findViewById(R.id.albums);
+
+        albumList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               launchAlbums();
             }
         });
     }
 
+    /*
+     * launchSongs:
+     * @params: none
+     * @return: void
+     *
+     * This starts the SongsListActivity, and migrates to the list of all of the current songs
+     */
+    public void launchSongs() {
+        Intent intent = new Intent(this, SongListActivity.class);
+        startActivity(intent);
+    }
+
+    /*
+     * launchAlbums:
+     */
+    public void launchAlbums() {
+        Intent albums  = new Intent(this, AlbumQueue.class);
+        startActivity(albums);
+
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
