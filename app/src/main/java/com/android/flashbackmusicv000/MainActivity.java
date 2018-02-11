@@ -29,12 +29,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+
+       Button albumList = (Button) findViewById(R.id.albums);
+
+        albumList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+               launchAlbums();
             }
         });
     }
@@ -51,6 +52,14 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    /*
+     * launchAlbums:
+     */
+    public void launchAlbums() {
+        Intent albums  = new Intent(this, AlbumQueue.class);
+        startActivity(albums);
+
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

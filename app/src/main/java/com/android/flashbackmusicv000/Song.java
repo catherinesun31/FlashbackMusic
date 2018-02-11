@@ -1,3 +1,5 @@
+package com.android.flashbackmusicv000;
+
 /**
  * Created by Sun on 2/9/2018.
  */
@@ -9,6 +11,10 @@ public class Song {
     private String lastDate;
     private boolean favorite = false;
     private boolean dislike = false;
+
+    public Song (String name) {
+        title = name;
+    }
 
     public void setLocation(String newLocation) {
         lastLocation = newLocation;
