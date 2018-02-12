@@ -164,7 +164,7 @@ public class AlbumQueue extends AppCompatActivity {
     }
 
     public void launchActivity(){
-        Intent intent = new Intent(this, SongPlayingActivity.class);
+        Intent intent = new Intent(this, AlbumSongList.class);
         startActivity(intent);
     }
 
