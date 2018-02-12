@@ -2,7 +2,9 @@ package com.android.flashbackmusicv000;
 
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Color;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.constraint.ConstraintLayout;
@@ -24,6 +26,7 @@ import android.widget.FrameLayout;
 import android.widget.ScrollView;
 
 import java.io.File;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 
 public class SongListActivity extends AppCompatActivity {
@@ -52,14 +55,9 @@ public class SongListActivity extends AppCompatActivity {
         }
         */
 
-        Log.d("Filepath", Environment.getExternalStorageDirectory().toString());
+        ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
 
-        java.io.File file = new java.io.File("/Users/cailintreseder/AndroidStudioProjects/FlashbackMusic/app/src/main/res/raw");
-        File[] files = file.listFiles();
-        android.support.constraint.ConstraintLayout constraintLayout =
-                (android.support.constraint.ConstraintLayout)findViewById(R.id.constraintLayout);
         //Button songButton;
-        Log.d("To beginning of for loop", "To beginning of for loop");
         Field[] fields = R.raw.class.getFields();
         final float scale = this.getResources().getDisplayMetrics().density;
         int songId = fields[0].getName().replace(".mp3", "").hashCode();
@@ -69,6 +67,11 @@ public class SongListActivity extends AppCompatActivity {
 
         for (int i = 0; i < fields.length; ++i) {
             String fileName = fields[i].getName().replace(".mp3", "");
+
+            Uri mediaPath = Uri.parse("android.resource://" + getPackageName() + "/" + fields[i].getName());
+            MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+            mmr.setDataSource(this, mediaPath);
+
             Button button = new Button(this);
             android.support.constraint.ConstraintLayout.LayoutParams params = new
                     android.support.constraint.ConstraintLayout.LayoutParams(
