@@ -68,9 +68,6 @@ public class SongListActivity extends AppCompatActivity {
         for (int i = 0; i < fields.length; ++i) {
             String fileName = fields[i].getName().replace(".mp3", "");
 
-            Uri mediaPath = Uri.parse("android.resource://" + getPackageName() + "/" + fields[i].getName());
-            MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-            mmr.setDataSource(this, mediaPath);
 
             Button button = new Button(this);
             android.support.constraint.ConstraintLayout.LayoutParams params = new
