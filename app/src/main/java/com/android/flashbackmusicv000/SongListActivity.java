@@ -54,6 +54,108 @@ public class SongListActivity extends AppCompatActivity {
         int totalSongs = getNumberOfSongs();
         MEDIA_RES_IDS = new int[totalSongs];
 
+
+        ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
+
+        //Button songButton;
+        Field[] fields = R.raw.class.getFields();
+        final float scale = this.getResources().getDisplayMetrics().density;
+        int songId = fields[0].getName().replace(".mp3", "").hashCode();
+        int pixels = (int) (50 * scale + 0.5f);
+        int textSize = (int) (15 * scale + 0.5f);
+        int buttonId = songId + 1;
+
+        for (int i = 0; i < fields.length; ++i) {
+            String fileName = fields[i].getName().replace(".mp3", "");
+
+            Uri mediaPath = Uri.parse("android.resource://" + getPackageName() + "/" + fields[i].getName());
+            MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+            mmr.setDataSource(this, mediaPath);
+
+            Button button = new Button(this);
+            android.support.constraint.ConstraintLayout.LayoutParams params = new
+                    android.support.constraint.ConstraintLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, pixels);
+            button.setId(fileName.toString().hashCode());
+            button.setText(fileName);
+            button.setBackgroundColor(Color.rgb(230, 230, 230));
+            button.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
+            button.setTextColor(Color.rgb(89,89,89));
+            button.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
+            button.setSingleLine(true);
+            button.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            button.setMarqueeRepeatLimit(1000);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    launchActivity();
+                }
+            });
+            constraintLayout.addView(button, params);
+
+
+            /*button.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View view) {
+                    //set button listener
+                }
+            });*/
+
+            Button add = new Button(this);
+            android.support.constraint.ConstraintLayout.LayoutParams smallParams = new
+                    android.support.constraint.ConstraintLayout.LayoutParams(
+                    pixels, pixels);
+            add.setId((int)button.getId() + 1);
+            add.setText("✓");
+            add.setBackgroundColor(Color.rgb(230, 230, 230));
+            add.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
+            constraintLayout.addView(add, smallParams);
+            //add = (Button) findViewById(add.getId());
+            /*add.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View view) {
+                    //set button listener
+                }
+            });*/
+
+            ConstraintSet constraintSet = new ConstraintSet();
+            constraintSet.clone(constraintLayout);
+            constraintSet.connect(
+                    button.getId(), ConstraintSet.LEFT,
+                    ConstraintSet.PARENT_ID, ConstraintSet.LEFT, 0);
+            constraintSet.connect(
+                    add.getId(), ConstraintSet.RIGHT,
+                    ConstraintSet.PARENT_ID, ConstraintSet.RIGHT, 0);
+            constraintSet.connect(
+                    button.getId(), ConstraintSet.END,
+                    add.getId(), ConstraintSet.START, pixels);
+
+
+            if (i == 0) {
+                constraintSet.connect(
+                        button.getId(), ConstraintSet.TOP,
+                        ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
+                constraintSet.connect(
+                        add.getId(), ConstraintSet.TOP,
+                        ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
+            }
+
+            else {
+                constraintSet.connect(
+                        button.getId(), ConstraintSet.TOP,
+                        songId, ConstraintSet.BOTTOM, 0);
+                constraintSet.connect(
+                        add.getId(), ConstraintSet.TOP,
+                        buttonId, ConstraintSet.BOTTOM, 0);
+            }
+            constraintSet.constrainDefaultHeight(button.getId(), pixels);
+            constraintSet.constrainDefaultHeight(add.getId(), pixels);
+            constraintSet.applyTo(constraintLayout);
+
+            songId = button.getId();
+            buttonId = songId + 1;
+        }
+
+
+        /*
         Button song1B = (Button) findViewById(R.id.song1);
         Button song2B = (Button) findViewById(R.id.song2);
         Button song3B = (Button) findViewById(R.id.song3);
@@ -127,6 +229,7 @@ public class SongListActivity extends AppCompatActivity {
         });
 
 
+
         final Button favorited1 = (Button) findViewById(R.id.button1);
         final Button favorited2 = (Button) findViewById(R.id.button2);
         final Button favorited3 = (Button) findViewById(R.id.button3);
@@ -197,121 +300,13 @@ public class SongListActivity extends AppCompatActivity {
             public void onClick(View view) {
                 buttonChange(favorited10);
             }
-        });}
+        });
+*/
+    }
 
     public void buttonChange(Button button) {
         button.setText("✓");
     }
-
-
-
-
-
-        /*
-        AssetFileDescriptor assetFileDescriptor = this.getResources().openRawResourceFd(MEDIA_RES_ID);
-        try {
-            mediaPlayer.setDataSource(assetFileDescriptor);
-            mediaPlayer.prepareAsync();
-        }
-        catch (Exception e) {
-            System.out.println(e.toString());
-        }
-        */
-
-        ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
-
-        //Button songButton;
-        Field[] fields = R.raw.class.getFields();
-        final float scale = this.getResources().getDisplayMetrics().density;
-        int songId = fields[0].getName().replace(".mp3", "").hashCode();
-        int pixels = (int) (50 * scale + 0.5f);
-        int textSize = (int) (15 * scale + 0.5f);
-        int buttonId = songId + 1;
-
-        for (int i = 0; i < fields.length; ++i) {
-            String fileName = fields[i].getName().replace(".mp3", "");
-
-            Uri mediaPath = Uri.parse("android.resource://" + getPackageName() + "/" + fields[i].getName());
-            MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-            mmr.setDataSource(this, mediaPath);
-
-            Button button = new Button(this);
-            android.support.constraint.ConstraintLayout.LayoutParams params = new
-                    android.support.constraint.ConstraintLayout.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT, pixels);
-            button.setId(fileName.toString().hashCode());
-            button.setText(fileName);
-            button.setBackgroundColor(Color.rgb(230, 230, 230));
-            button.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
-            button.setTextColor(Color.rgb(89,89,89));
-            button.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
-            button.setSingleLine(true);
-            button.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-            button.setMarqueeRepeatLimit(1000);
-            constraintLayout.addView(button, params);
-
-            /*button.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-                    //set button listener
-                }
-            });*/
-
-            Button add = new Button(this);
-            android.support.constraint.ConstraintLayout.LayoutParams smallParams = new
-                    android.support.constraint.ConstraintLayout.LayoutParams(
-                    pixels, pixels);
-            add.setId((int)button.getId() + 1);
-            add.setText("✓");
-            add.setBackgroundColor(Color.rgb(230, 230, 230));
-            add.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
-            constraintLayout.addView(add, smallParams);
-            //add = (Button) findViewById(add.getId());
-            /*add.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-                    //set button listener
-                }
-            });*/
-
-            ConstraintSet constraintSet = new ConstraintSet();
-            constraintSet.clone(constraintLayout);
-            constraintSet.connect(
-                    button.getId(), ConstraintSet.LEFT,
-                    ConstraintSet.PARENT_ID, ConstraintSet.LEFT, 0);
-            constraintSet.connect(
-                    add.getId(), ConstraintSet.RIGHT,
-                    ConstraintSet.PARENT_ID, ConstraintSet.RIGHT, 0);
-            constraintSet.connect(
-                    button.getId(), ConstraintSet.END,
-                    add.getId(), ConstraintSet.START, pixels);
-
-
-            if (i == 0) {
-                constraintSet.connect(
-                        button.getId(), ConstraintSet.TOP,
-                        ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
-                constraintSet.connect(
-                        add.getId(), ConstraintSet.TOP,
-                        ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
-            }
-
-            else {
-                constraintSet.connect(
-                        button.getId(), ConstraintSet.TOP,
-                        songId, ConstraintSet.BOTTOM, 0);
-                constraintSet.connect(
-                        add.getId(), ConstraintSet.TOP,
-                        buttonId, ConstraintSet.BOTTOM, 0);
-            }
-            constraintSet.constrainDefaultHeight(button.getId(), pixels);
-            constraintSet.constrainDefaultHeight(add.getId(), pixels);
-            constraintSet.applyTo(constraintLayout);
-
-            songId = button.getId();
-            buttonId = songId + 1;
-        }
-
-
-
 
     public void launchActivity(){
         Intent intent = new Intent(this, SongPlayingActivity.class);
