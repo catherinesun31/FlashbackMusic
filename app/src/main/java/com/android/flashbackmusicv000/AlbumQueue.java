@@ -40,9 +40,7 @@ public class AlbumQueue extends AppCompatActivity {
         Button album3 = (Button) findViewById(R.id.album3);
         Button album4 = (Button) findViewById(R.id.album4);
         Button album5 = (Button) findViewById(R.id.album5);
-        Button album6 = (Button) findViewById(R.id.album6);
-        Button album7 = (Button) findViewById(R.id.album7);
-        Button album8 = (Button) findViewById(R.id.album8);
+
 
         album1.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -74,24 +72,7 @@ public class AlbumQueue extends AppCompatActivity {
                 launchActivity();
             }
         });
-        album6.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                launchActivity();
-            }
-        });
-        album7.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                launchActivity();
-            }
-        });
-        album8.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                launchActivity();
-            }
-        });
+
 
 
         /*
