@@ -1,0 +1,7 @@
+Permission to merge James-Branch into master branch, my minions!
+
+Set the local branch upstream to the remote repository, git push -u...
+
+Before Git Merge ALWAYS run git status and ALWAYS run git fetch.
+
+git checkout master, then git merge the branch into master.
