@@ -59,16 +59,16 @@ public class AlbumSongList extends AppCompatActivity {
         ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
 
 
-        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-        mmr.setDataSource("/Users/keavila/Desktop/cse-110-team-project-team-35/FlashBack Music/cse-110-team-project-team-35/app/src/main/res/raw");
+        //MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        //mmr.setDataSource("/Users/keavila/Desktop/cse-110-team-project-team-35/FlashBack Music/cse-110-team-project-team-35/app/src/main/res/raw");
 
-        String albumName = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
+        //String albumName = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
+        //File[] files = fields.listFiles(new Mp3Filter());
 
 
         //Button songButton;
         Field[] fields = R.raw.class.getFields();
 
-        File[] files = fields.listFiles(new Mp3Filter());
         final float scale = this.getResources().getDisplayMetrics().density;
         int songId = fields[0].getName().replace(".mp3", "").hashCode();
         int pixels = (int) (50 * scale + 0.5f);
