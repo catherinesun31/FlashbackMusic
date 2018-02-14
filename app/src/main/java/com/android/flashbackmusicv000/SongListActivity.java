@@ -32,7 +32,7 @@ public class SongListActivity extends AppCompatActivity {
 
 
     // com.android.flashbackmusicv000.Song Instances
-    //Song song1 = new Song(int R.raw.a01_everything_i_love);
+    // Song song1 = new Song(int R.raw.a01_everything_i_love);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
