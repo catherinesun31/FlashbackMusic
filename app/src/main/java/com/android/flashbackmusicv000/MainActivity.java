@@ -16,7 +16,9 @@ import android.view.MenuItem;
 import android.widget.Button;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -29,6 +31,7 @@ String[] neutral;
 int favoritesNow;
 int dislikedNow;
 int neutralNow;
+List<Song> songs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +63,7 @@ int neutralNow;
         }
 
         //Set onClickListener for songs button
+        // JANICE EDIT: 02/13, PASSING IN SONGS[] SO THAT WE CAN ACCESS IT IN THE NEXT ACTIVITY
         Button songsList = (Button) findViewById(R.id.songs);
         songsList.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -143,11 +147,13 @@ int neutralNow;
      *
      * This starts the SongsListActivity, and migrates to the list of all of the current songs
      */
+    // JANICE EDIT 02/13: PASSING IN THE ARRAY OF SONGS SO WE CAN PASS THROUGH TO SONGSLIST AND SONGSPLAYING
     public void launchSongs() {
         Intent intent = new Intent(this, SongListActivity.class);
         intent.putExtra("Favorites", favorites);
         intent.putExtra("Disliked", disliked);
         intent.putExtra("Neutral", neutral);
+        intent.putParcelableArrayList("Song list", songs);
         startActivity(intent);
     }
 
