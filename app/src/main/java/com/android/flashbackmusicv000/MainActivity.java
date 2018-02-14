@@ -1,17 +1,34 @@
 package com.android.flashbackmusicv000;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 
+import java.lang.reflect.Field;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
 public class MainActivity extends AppCompatActivity {
+
+SharedPreferences currentSongState;
+String[] favorites;
+String[] disliked;
+String[] neutral;
+int favoritesNow;
+int dislikedNow;
+int neutralNow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +36,28 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        favoritesNow = 0;
+        dislikedNow = 0;
+        neutralNow = 0;
+
+        currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = currentSongState.edit();
+
+        Set<String> fave = currentSongState.getStringSet("favorites", null);
+        Set<String> dis = currentSongState.getStringSet("disliked", null);
+        Set<String> neut = currentSongState.getStringSet("neutral", null);
+
+        Song[] songs = getCurrentSongs(fave, dis, neut);
+        if (fave != null && disliked != null && neutral != null) {
+            songs = getCurrentSongs(fave, dis, neut);
+        }
+        else {
+            neutral = new String[songs.length];
+            for (int i = 0; i < songs.length; ++i) {
+                neutral[i] = songs[i].getTitle();
+            }
+        }
 
         //Set onClickListener for songs button
         Button songsList = (Button) findViewById(R.id.songs);
@@ -29,14 +68,72 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+
+       Button albumList = (Button) findViewById(R.id.albums);
+
+        albumList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+               launchAlbums();
             }
         });
+
+        /*
+         * I'm thinking that here, we should make a list of all of the Song objects from songs that
+         * the user has in their R.raw file, and store it in the phone's shared preferences.
+         */
+
+    }
+
+    public Song[] getCurrentSongs(Set<String> favorites, Set<String> disliked, Set<String> neutral) {
+        Field[] fields = R.raw.class.getFields();
+        Song[] songs = new Song[fields.length];
+        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        for (int i = 0; i < fields.length; ++i) {
+            String path = "android.resource://" + getPackageName() + "/raw/" + fields[i].getName();
+            final Uri uri = Uri.parse(path);
+
+            mmr.setDataSource(getApplication(), uri);
+            String title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+            String artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+            String albumName = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
+            String duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+            long mil = Long.parseLong(duration);
+            int seconds = (int)Math.ceil((mil / 1000) % 60);
+            int minutes = (int)Math.ceil((mil / (1000*60)) % 60);
+            duration = minutes + ":" + seconds;
+
+            Log.d("Information: ", "Title: " + title + "\n" +
+            "Artist: " + artist + "\n" +
+            "Album: " + albumName + "\n" +
+            "Duration: " + duration);
+            Song song = new Song(title);
+
+            if (favorites != null) {
+                if (favorites.contains(title)) {
+                    song.favorite();
+                    this.favorites[favoritesNow] = song.getTitle();
+                    ++favoritesNow;
+                }
+            }
+            if (disliked != null) {
+                if (disliked.contains(title)) {
+                    song.dislike();
+                    this.disliked[dislikedNow] = song.getTitle();
+                    ++dislikedNow;
+                }
+            }
+            if (neutral != null) {
+                if (neutral.contains(title)) {
+                    song.neutral();
+                    this.neutral[neutralNow] = song.getTitle();
+                    ++neutralNow;
+                }
+            }
+            songs[i] = song;
+        }
+
+        return songs;
     }
 
     /*
@@ -48,9 +145,20 @@ public class MainActivity extends AppCompatActivity {
      */
     public void launchSongs() {
         Intent intent = new Intent(this, SongListActivity.class);
+        intent.putExtra("Favorites", favorites);
+        intent.putExtra("Disliked", disliked);
+        intent.putExtra("Neutral", neutral);
         startActivity(intent);
     }
 
+    /*
+     * launchAlbums:
+     */
+    public void launchAlbums() {
+        Intent albums  = new Intent(this, AlbumQueue.class);
+        startActivity(albums);
+
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
