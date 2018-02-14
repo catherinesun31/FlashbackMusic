@@ -31,7 +31,7 @@ String[] neutral;
 int favoritesNow;
 int dislikedNow;
 int neutralNow;
-List<Song> songs;
+ArrayList<Song> songs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,7 +153,7 @@ List<Song> songs;
         intent.putExtra("Favorites", favorites);
         intent.putExtra("Disliked", disliked);
         intent.putExtra("Neutral", neutral);
-        intent.putParcelableArrayList("Song list", songs);
+        intent.putExtra("Song list", songs);
         startActivity(intent);
     }
 

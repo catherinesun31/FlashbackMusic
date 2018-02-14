@@ -68,7 +68,8 @@ public class SongListActivity extends AppCompatActivity{
             String[] f = (String[])b.get("Favorites");
             String[] d = (String[])b.get("Disliked");
             String[] n = (String[])b.get("Neutral");
-            ArrayList<Song> tempSongs = (Song) getIntent().getParcelableArrayList("Song list");
+            //CHANGED FROM GETPARCELABLEARRAYLIST TO GETPARCELABLEEXTRA
+            ArrayList<Song> tempSongs = getIntent().getParcelableExtra("Song list");
 
             if (f != null) { favorites = new ArrayList<>(Arrays.asList(f)); }
             else { favorites = new ArrayList<>(); }
@@ -79,7 +80,7 @@ public class SongListActivity extends AppCompatActivity{
             if (n != null) neutral = new ArrayList<>(Arrays.asList(n));
             else { neutral = new ArrayList<>(); }
 
-            if (tempSongs != null) actualSongs = new ArrayList<Song>(Arrays.asList(tempSongs));
+            if (tempSongs != null) actualSongs = tempSongs;
             else { actualSongs = new ArrayList<>(); }
         }
 
