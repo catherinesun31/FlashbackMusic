@@ -108,7 +108,7 @@ public class SongListActivity extends AppCompatActivity{
         int buttonId = songId + 1;
 
         // Janice: Not sure if this should be a final or not
-        for (index = 0; index < 9/*fields.length*/; ++index) {
+        for (index = 0; index < fields.length; ++index) {
             String fileName = songs.get(index);
 
             Button button = new Button(this);
@@ -124,11 +124,12 @@ public class SongListActivity extends AppCompatActivity{
             button.setSingleLine(true);
             button.setEllipsize(TextUtils.TruncateAt.MARQUEE);
             button.setMarqueeRepeatLimit(1000);
+            final Song newSong = actualSongs.get(index);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     System.out.println(index);
-                    launchActivity(actualSongs.get(index));
+                    launchActivity(newSong);
                 }
             });
             constraintLayout.addView(button, params);
