@@ -1,5 +1,6 @@
 package com.android.flashbackmusicv000;
 
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -7,6 +8,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.TextView;
 
 public class SongPlayingActivity extends AppCompatActivity {
     @Override
@@ -24,6 +26,12 @@ public class SongPlayingActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        Intent i = getIntent();
+        Song song = (Song) i.getParcelableExtra("name_of_extra");
+
+        TextView songTitle = (TextView) findViewById(R.id.songtitle);
+        songTitle.setText(song.getTitle());
     }
 
 }

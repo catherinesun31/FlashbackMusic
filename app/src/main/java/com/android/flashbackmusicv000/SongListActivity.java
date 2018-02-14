@@ -40,15 +40,17 @@ import java.util.Collections;
 public class SongListActivity extends AppCompatActivity{
 
     private MediaPlayer mediaPlayer;
+    public int index;
 
     SharedPreferences currentSongState;
     ArrayList<String> favorites;
     ArrayList<String> disliked;
     ArrayList<String> neutral;
     ArrayList<String> songs;
+    ArrayList<Song> actualSongs;
 
     // com.android.flashbackmusicv000.Song Instances
-    //Song song1 = new Song(int R.raw.a01_everything_i_love);
+    // Song song1 = new Song(int R.raw.a01_everything_i_love);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +68,7 @@ public class SongListActivity extends AppCompatActivity{
             String[] f = (String[])b.get("Favorites");
             String[] d = (String[])b.get("Disliked");
             String[] n = (String[])b.get("Neutral");
+            ArrayList<Song> tempSongs = (Song) getIntent().getParcelableArrayList("Song list");
 
             if (f != null) { favorites = new ArrayList<>(Arrays.asList(f)); }
             else { favorites = new ArrayList<>(); }
@@ -76,8 +79,11 @@ public class SongListActivity extends AppCompatActivity{
             if (n != null) neutral = new ArrayList<>(Arrays.asList(n));
             else { neutral = new ArrayList<>(); }
 
+            if (tempSongs != null) actualSongs = new ArrayList<Song>(Arrays.asList(tempSongs));
+            else { actualSongs = new ArrayList<>(); }
         }
 
+        // TODO: Janice, we don't need to pass in favorites/disliked/neutral list since we now pass in the entire Songs themselves
         songs = new ArrayList<String>();
         if (favorites != null) {
             songs.addAll(favorites);
@@ -100,8 +106,9 @@ public class SongListActivity extends AppCompatActivity{
         int textSize = (int) (15 * scale + 0.5f);
         int buttonId = songId + 1;
 
-        for (int i = 0; i < fields.length; ++i) {
-            String fileName = songs.get(i);
+        // Janice: Not sure if this should be a final or not
+        for (index = 0; index < fields.length; ++index) {
+            String fileName = songs.get(index);
 
             Button button = new Button(this);
             android.support.constraint.ConstraintLayout.LayoutParams params = new
@@ -119,7 +126,7 @@ public class SongListActivity extends AppCompatActivity{
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    launchActivity();
+                    launchActivity(actualSongs.get(index));
                 }
             });
             constraintLayout.addView(button, params);
@@ -158,7 +165,7 @@ public class SongListActivity extends AppCompatActivity{
                     add.getId(), ConstraintSet.START, pixels);
 
 
-            if (i == 0) {
+            if (index == 0) {
                 constraintSet.connect(
                         button.getId(), ConstraintSet.TOP,
                         ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
@@ -215,8 +222,9 @@ public class SongListActivity extends AppCompatActivity{
         intent.putExtra("Neutral", neutral.toArray());
     }
 
-    public void launchActivity() {
+    public void launchActivity(Song song) {
         Intent intent = new Intent(this, SongPlayingActivity.class);
+        intent.putExtra("name_of_extra", song);
         startActivity(intent);
     }
 
