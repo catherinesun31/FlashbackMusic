@@ -17,6 +17,7 @@ import android.widget.Button;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -31,7 +32,7 @@ String[] neutral;
 int favoritesNow;
 int dislikedNow;
 int neutralNow;
-ArrayList<Song> songs;
+ArrayList<Song> songs1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +53,7 @@ ArrayList<Song> songs;
         Set<String> neut = currentSongState.getStringSet("neutral", null);
 
         Song[] songs = getCurrentSongs(fave, dis, neut);
+        songs1 = new ArrayList<Song>(Arrays.asList(songs));
         if (fave != null && disliked != null && neutral != null) {
             songs = getCurrentSongs(fave, dis, neut);
         }
@@ -153,7 +155,7 @@ ArrayList<Song> songs;
         intent.putExtra("Favorites", favorites);
         intent.putExtra("Disliked", disliked);
         intent.putExtra("Neutral", neutral);
-        intent.putExtra("Song list", songs);
+        intent.putExtra("Song list", songs1);
         startActivity(intent);
     }
 

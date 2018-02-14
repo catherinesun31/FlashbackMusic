@@ -68,8 +68,8 @@ public class SongListActivity extends AppCompatActivity{
             String[] f = (String[])b.get("Favorites");
             String[] d = (String[])b.get("Disliked");
             String[] n = (String[])b.get("Neutral");
-            //CHANGED FROM GETPARCELABLEARRAYLIST TO GETPARCELABLEEXTRA
-            ArrayList<Song> tempSongs = getIntent().getParcelableExtra("Song list");
+            ArrayList<Song> tempSongs = getIntent().getParcelableArrayListExtra("Song list");
+            System.out.println(tempSongs.size());
 
             if (f != null) { favorites = new ArrayList<>(Arrays.asList(f)); }
             else { favorites = new ArrayList<>(); }
@@ -108,7 +108,7 @@ public class SongListActivity extends AppCompatActivity{
         int buttonId = songId + 1;
 
         // Janice: Not sure if this should be a final or not
-        for (index = 0; index < fields.length; ++index) {
+        for (index = 0; index < 9/*fields.length*/; ++index) {
             String fileName = songs.get(index);
 
             Button button = new Button(this);
@@ -127,6 +127,7 @@ public class SongListActivity extends AppCompatActivity{
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    System.out.println(index);
                     launchActivity(actualSongs.get(index));
                 }
             });
