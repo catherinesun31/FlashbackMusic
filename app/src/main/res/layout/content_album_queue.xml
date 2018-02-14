@@ -34,7 +34,7 @@
                 android:id="@+id/album1"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:text="@string/album1"
+                android:text="I Will Not Be Afraid (A Sampler)"
                 android:textAlignment="textStart"
                 android:textSize="20dp"
                 android:background="#e6e6e6"
@@ -59,7 +59,7 @@
                 android:id="@+id/album2"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:text="@string/album2"
+                android:text="Love Is Everywhere"
                 android:textAlignment="textStart"
                 android:textSize="20dp"
                 android:background="#e6e6e6"
@@ -84,7 +84,7 @@
                 android:id="@+id/album3"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:text="@string/album3"
+                android:text="New and Best of Keaton Simons"
                 android:textAlignment="textStart"
                 android:textSize="20dp"
                 android:background="#e6e6e6"
@@ -110,7 +110,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="#e6e6e6"
-                android:text="@string/album4"
+                android:text="Origins - The Best of Terry Oldfield"
                 android:textAlignment="textStart"
                 android:textSize="20dp"
                 app:layout_constraintEnd_toStartOf="@+id/album3"
@@ -134,7 +134,7 @@
                 android:id="@+id/album5"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:text="@string/album5"
+                android:text="Take Yourself Too Seriously"
                 android:textAlignment="textStart"
                 android:textSize="20dp"
                 android:background="#e6e6e6"
@@ -155,68 +155,6 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/song4"/>-->
 
-            <Button
-                android:id="@+id/album6"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:text="@string/album6"
-                android:textAlignment="textStart"
-                android:textSize="20dp"
-                android:background="#e6e6e6"
-                app:layout_constraintEnd_toStartOf="@+id/album5"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/album5"/>
-
-            <!--<Button
-                android:id="@+id/song6check"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:text="+"
-                android:textSize="20dp"
-                android:background="#e6e6e6"
-
-                android:shadowColor="#00ffffff"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/song5"/>-->
-
-            <Button
-                android:id="@+id/album7"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:text="@string/album7"
-                android:textAlignment="textStart"
-                android:textSize="20dp"
-                android:background="#e6e6e6"
-                app:layout_constraintEnd_toStartOf="@+id/album6"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/album6"/>
-
-            <!--<Button
-                android:id="@+id/song7check"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:text="+"
-                android:textSize="20dp"
-                android:background="#e6e6e6"
-
-                android:shadowColor="#00ffffff"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/song6"/>-->
-
-            <Button
-                android:id="@+id/album8"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:text="@string/album8"
-                android:textAlignment="textStart"
-                android:textSize="20dp"
-                android:background="#e6e6e6"
-                app:layout_constraintEnd_toStartOf="@+id/album7"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/album7"/>
 
             <!--<Button
                 android:id="@+id/song8check"
@@ -242,7 +180,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.86"
+        app:layout_constraintVertical_bias="0.98"
         app:layout_constraintHorizontal_bias="0.20"
         />
 
@@ -254,7 +192,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.86"
+        app:layout_constraintVertical_bias="0.98"
         app:layout_constraintHorizontal_bias="0.70"
         />
 </android.support.constraint.ConstraintLayout>

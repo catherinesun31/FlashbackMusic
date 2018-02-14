@@ -1,29 +1,54 @@
 package com.android.flashbackmusicv000;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Color;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
+import com.android.flashbackmusicv000.Song;
 
 import java.io.File;
+import java.io.InputStream;
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 
-public class SongListActivity extends AppCompatActivity {
+public class SongListActivity extends AppCompatActivity{
 
     private MediaPlayer mediaPlayer;
-    private static int[] MEDIA_RES_IDS;
+
+    SharedPreferences currentSongState;
+    ArrayList<String> favorites;
+    ArrayList<String> disliked;
+    ArrayList<String> neutral;
+    ArrayList<String> songs;
+
+    // com.android.flashbackmusicv000.Song Instances
+    //Song song1 = new Song(int R.raw.a01_everything_i_love);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,159 +57,167 @@ public class SongListActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        int totalSongs = getNumberOfSongs();
-        MEDIA_RES_IDS = new int[totalSongs];
+        currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
+        //SharedPreferences.Editor editor = currentSongState.edit();
 
-        Button song1B = (Button) findViewById(R.id.song1);
-        Button song2B = (Button) findViewById(R.id.song2);
-        Button song3B = (Button) findViewById(R.id.song3);
-        Button song4B = (Button) findViewById(R.id.song4);
-        Button song5B = (Button) findViewById(R.id.song5);
-        Button song6B = (Button) findViewById(R.id.song6);
-        Button song7B = (Button) findViewById(R.id.song7);
-        Button song8B = (Button) findViewById(R.id.song8);
-        Button song9B = (Button) findViewById(R.id.song9);
-        Button song10B = (Button) findViewById(R.id.song10);
+        Intent in = getIntent();
+        Bundle b = in.getExtras();
+        if (b != null) {
+            String[] f = (String[])b.get("Favorites");
+            String[] d = (String[])b.get("Disliked");
+            String[] n = (String[])b.get("Neutral");
 
-        song1B.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                launchActivity();
-            }
-        });
-        song2B.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                launchActivity();
-            }
-        });
-        song3B.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                launchActivity();
-            }
-        });
-        song4B.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                launchActivity();
-            }
-        });
-        song5B.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                launchActivity();
-            }
-        });
-        song6B.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                launchActivity();
-            }
-        });
-        song7B.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                launchActivity();
-            }
-        });
-        song8B.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                launchActivity();
-            }
-        });
-        song9B.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                launchActivity();
-            }
-        });
-        song10B.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                launchActivity();
-            }
-        });
+            if (f != null) { favorites = new ArrayList<>(Arrays.asList(f)); }
+            else { favorites = new ArrayList<>(); }
 
-        /*
-        AssetFileDescriptor assetFileDescriptor = this.getResources().openRawResourceFd(MEDIA_RES_ID);
-        try {
-            mediaPlayer.setDataSource(assetFileDescriptor);
-            mediaPlayer.prepareAsync();
-        }
-        catch (Exception e) {
-            System.out.println(e.toString());
+            if (d != null) disliked = new ArrayList<>(Arrays.asList(d));
+            else { disliked = new ArrayList<>(); }
+
+            if (n != null) neutral = new ArrayList<>(Arrays.asList(n));
+            else { neutral = new ArrayList<>(); }
+
         }
 
-        java.io.File file = new java.io.File("/Users/cailintreseder/AndroidStudioProjects/FlashbackMusic/app/src/main/res/raw");
-        File[] files = file.listFiles();
-        ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
-        Button songButton;
+        songs = new ArrayList<String>();
+        if (favorites != null) {
+            songs.addAll(favorites);
+        }
+        if (disliked != null) {
+            songs.addAll(disliked);
 
-        for (int i = 0; i < totalSongs; ++i) {
-            String fileName = files[i].getName().replace(".mp3", "");
+        }
+        if (neutral != null) {
+            songs.addAll(neutral);
+        }
+        Collections.sort(songs);
+
+        ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
+
+        Field[] fields = R.raw.class.getFields();
+        final float scale = this.getResources().getDisplayMetrics().density;
+        int songId = neutral.get(0).hashCode();
+        int pixels = (int) (50 * scale + 0.5f);
+        int textSize = (int) (15 * scale + 0.5f);
+        int buttonId = songId + 1;
+
+        for (int i = 0; i < fields.length; ++i) {
+            String fileName = songs.get(i);
+
             Button button = new Button(this);
-            ScrollView.LayoutParams params = new ScrollView.LayoutParams(
-                    ScrollView.LayoutParams.MATCH_PARENT,
-                    50,
-                    Gravity.CENTER_VERTICAL
-            );
-            button.setId(button.toString().hashCode());
+            android.support.constraint.ConstraintLayout.LayoutParams params = new
+                    android.support.constraint.ConstraintLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, pixels);
+            button.setId(fileName.hashCode());
             button.setText(fileName);
             button.setBackgroundColor(Color.rgb(230, 230, 230));
-            button.setTextAlignment(View.TEXT_ALIGNMENT_GRAVITY);
-            button.setTextColor(Color.rgb(89,89,89));
-            button.setTextSize(20f);
+            button.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
+            button.setTextColor(Color.rgb(89, 89, 89));
+            button.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
             button.setSingleLine(true);
             button.setEllipsize(TextUtils.TruncateAt.MARQUEE);
             button.setMarqueeRepeatLimit(1000);
-            scrollView.addView(button, params);
-            songButton = (Button) findViewById(button.getId());
-            songButton.setOnClickListener(new View.OnClickListener() {
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
                 public void onClick(View view) {
-                    //set button listener
+                    launchActivity();
                 }
             });
+            constraintLayout.addView(button, params);
 
-            Button add = new Button(this);
-            ScrollView.LayoutParams smallParams = new ScrollView.LayoutParams(
-                    50,
-                    50
-            );
-            add.setId(add.toString().hashCode());
-            add.setText("@string/favorited");
+            final Button add = new Button(this);
+            android.support.constraint.ConstraintLayout.LayoutParams smallParams = new
+                    android.support.constraint.ConstraintLayout.LayoutParams(
+                    pixels, pixels);
+            add.setId((int) button.getId() + 1);
+
+            if (neutral.contains(fileName)) add.setText("+");
+            else if (disliked.contains(fileName)) add.setText("x");
+            else add.setText("✓");
+
             add.setBackgroundColor(Color.rgb(230, 230, 230));
-            add.setTextSize(20f);
-            scrollView.addView(add, smallParams);
-            add = (Button) findViewById(add.getId());
+            add.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
+            constraintLayout.addView(add, smallParams);
+
             add.setOnClickListener(new View.OnClickListener() {
+                @Override
                 public void onClick(View view) {
-                    //set button listener
+                    buttonChange(add);
                 }
             });
-        }
-        */
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            ConstraintSet constraintSet = new ConstraintSet();
+            constraintSet.clone(constraintLayout);
+            constraintSet.connect(
+                    button.getId(), ConstraintSet.LEFT,
+                    ConstraintSet.PARENT_ID, ConstraintSet.LEFT, 0);
+            constraintSet.connect(
+                    add.getId(), ConstraintSet.RIGHT,
+                    ConstraintSet.PARENT_ID, ConstraintSet.RIGHT, 0);
+            constraintSet.connect(
+                    button.getId(), ConstraintSet.END,
+                    add.getId(), ConstraintSet.START, pixels);
+
+
+            if (i == 0) {
+                constraintSet.connect(
+                        button.getId(), ConstraintSet.TOP,
+                        ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
+                constraintSet.connect(
+                        add.getId(), ConstraintSet.TOP,
+                        ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
+            } else {
+                constraintSet.connect(
+                        button.getId(), ConstraintSet.TOP,
+                        songId, ConstraintSet.BOTTOM, 0);
+                constraintSet.connect(
+                        add.getId(), ConstraintSet.TOP,
+                        buttonId, ConstraintSet.BOTTOM, 0);
             }
-        });
+            constraintSet.constrainDefaultHeight(button.getId(), pixels);
+            constraintSet.constrainDefaultHeight(add.getId(), pixels);
+            constraintSet.applyTo(constraintLayout);
+
+            songId = button.getId();
+            buttonId = songId + 1;
+        }
     }
 
-    public void launchActivity(){
+    public boolean contains(String[] songs, String string) {
+        for(String name: songs) {
+            if (name.equals(string)) return true;
+        }
+        return false;
+    }
+
+    protected void buttonChange(Button button) {
+        Intent intent = new Intent(this, SongListActivity.class);
+        String name = button.getText().toString();
+        switch (name) {
+            case "+":
+                button.setText("✓");
+                neutral.remove(name);
+                favorites.add(name);
+                return;
+            case "ｘ":
+                button.setText("+");
+                disliked.remove(name);
+                neutral.add(name);
+                return;
+            case "✓":
+                button.setText("ｘ");
+                favorites.remove(name);
+                disliked.add(name);
+                return;
+        }
+
+        intent.putExtra("Favorites", favorites.toArray());
+        intent.putExtra("Disliked", disliked.toArray());
+        intent.putExtra("Neutral", neutral.toArray());
+    }
+
+    public void launchActivity() {
         Intent intent = new Intent(this, SongPlayingActivity.class);
         startActivity(intent);
-    }
-
-    private int getNumberOfSongs() {
-        java.io.File file = new java.io.File("/Users/cailintreseder/AndroidStudioProjects/FlashbackMusic/app/src/main/res/raw");
-        System.out.println(file.length());
-        return (int)file.length();
     }
 
     @Override
