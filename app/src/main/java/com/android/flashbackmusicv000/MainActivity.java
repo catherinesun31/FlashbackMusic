@@ -100,6 +100,10 @@ ArrayList<Song> songs1;
             final Uri uri = Uri.parse(path);
 
             mmr.setDataSource(getApplication(), uri);
+
+            // Janice add in: wanted to pass in the file location as Song variable
+            int songId = this.getResources().getIdentifier(fields[i].getName(), "raw", this.getPackageName());
+
             String title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
             String artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
             String albumName = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
@@ -113,7 +117,7 @@ ArrayList<Song> songs1;
             "Artist: " + artist + "\n" +
             "Album: " + albumName + "\n" +
             "Duration: " + duration);
-            Song song = new Song(title);
+            Song song = new Song(title, songId);
 
             if (favorites != null) {
                 if (favorites.contains(title)) {

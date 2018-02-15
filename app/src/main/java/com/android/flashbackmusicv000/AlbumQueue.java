@@ -32,9 +32,6 @@ public class AlbumQueue extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //int totalSongs = getNumberOfSongs();
-        //MEDIA_RES_IDS = new int[totalSongs];
-
         Button album1 = (Button) findViewById(R.id.album1);
         Button album2 = (Button) findViewById(R.id.album2);
         Button album3 = (Button) findViewById(R.id.album3);
