@@ -11,6 +11,7 @@ import android.view.View;
 public class SongPlayingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_song_playing);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
