@@ -1,3 +1,9 @@
+/**
+ * Main activity, backend activity file for activity_main.xml.This file represents the controller for the inputs
+ * of the user. When they select either the song or album button, it will bring up the next activity
+ * consisting of albums or songs. This activity allows the user options for what they want their app
+ * to do.
+ */
 package com.android.flashbackmusicv000;
 
 import android.content.Intent;
@@ -34,6 +40,16 @@ int dislikedNow;
 int neutralNow;
 ArrayList<Song> songs1;
 
+    /**
+     * onCreate Method represents the beginning state of the main activity whenever it is started.
+     * @param savedInstanceState is the previous state of this activity represented from the Bundle
+     * object.
+     * The current song list is loaded from the shared preference across the entire app, restoring the
+     * songslist from when it was last played.                          .
+     * If none of the the string sets obtained from the shared preferences have empty data,
+     * then we know that there was an album. Then the songslist gets updated.
+     * Anonymous listeners are then set for each of the buttons on activity_main.xml.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,7 +107,26 @@ ArrayList<Song> songs1;
 
     }
 
+    /**
+     * To make the code less fragile we would rather get the list of strings and put them inside the
+     * song object, so we can pass an array of the current songs.
+     * @param favorites the set of unique titles that have been favourited.
+     * @param disliked the set of unique titles that have been disliked.
+     * @param neutral the set of unique titles that have been classified as neutral.
+     *
+     * Thefields are obtained from the directory R.raw's contents
+     * An array for storing the songs to return is created.
+     *                for as long as the length of the fields array,
+     *                MediaMetaDataRetriever obtains the metadata(data that describes other data)source from the URI.
+     *                The URI was an absolute path from the string 'path', pointing to the raw directory containing
+     *                the media files. the MMDR then. A song object is created and has the Strings, extracted
+     *                from the MMDR passed into it. This is added to the songs array.
+     *                Once the loop is finised, the current list of songs is returned.
+     *
+     * @return the list of songs
+     */
     public Song[] getCurrentSongs(Set<String> favorites, Set<String> disliked, Set<String> neutral) {
+
         Field[] fields = R.raw.class.getFields();
         Song[] songs = new Song[fields.length];
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
@@ -150,7 +185,8 @@ ArrayList<Song> songs1;
      * launchSongs:
      * @params: none
      * @return: void
-     *
+     * The intents are created and the list of strings, with favourite titles, disliked titles, neutral titles
+     * and songs are put inside.
      * This starts the SongsListActivity, and migrates to the list of all of the current songs
      */
     // JANICE EDIT 02/13: PASSING IN THE ARRAY OF SONGS SO WE CAN PASS THROUGH TO SONGSLIST AND SONGSPLAYING
@@ -171,6 +207,12 @@ ArrayList<Song> songs1;
         startActivity(albums);
 
     }
+
+    /**
+     *
+     * @param menu
+     * @return boolean
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -178,6 +220,11 @@ ArrayList<Song> songs1;
         return true;
     }
 
+    /**
+     *
+     * @param item
+     * @return boolean
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
