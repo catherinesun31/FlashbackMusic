@@ -32,6 +32,10 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.List;
 
+/* AlbumSongList is an Activity that displays all the songs in a specific album
+ * Previous Activity:   AlbumQueue
+ * Next Activity:       SongPlaying Activity
+ */
 public class AlbumSongList extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer;
@@ -45,6 +49,7 @@ public class AlbumSongList extends AppCompatActivity {
     // com.android.flashbackmusicv000.Song Instances
     //Song song1 = new Song(int R.raw.a01_everything_i_love);
 
+    /* onCreate creates all the buttons corresponding to their correct songs */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -311,15 +316,18 @@ public class AlbumSongList extends AppCompatActivity {
 */
     }
 
+    /* buttonChange changes the icon for dislike/favorite/neutral */
     public void buttonChange(Button button) {
         button.setText("✓");
     }
 
+    /* launchActivity launches the next activity */
     public void launchActivity(){
         Intent intent = new Intent(this, SongPlayingActivity.class);
         startActivity(intent);
     }
 
+    /* get the number of songs in the album */
     private int getNumberOfSongs() {
         java.io.File file = new java.io.File("/Users/cailintreseder/AndroidStudioProjects/FlashbackMusic/app/src/main/res/raw");
         System.out.println(file.length());
