@@ -21,10 +21,16 @@ import com.android.flashbackmusicv000.Song;
 
 import java.io.File;
 
+
+/* AlbumQueue is an Activity that displays the list of albums
+ * Previous Activity:   MainActivity
+ * Next Activity:       TODO The list of songs in the album selected
+ */
 public class AlbumQueue extends AppCompatActivity {
 
 
-
+    /* onCreate makes all the buttons for each album in our raw files
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -141,11 +147,13 @@ public class AlbumQueue extends AppCompatActivity {
         });
     }
 
+    /* launchActivity launches the album's song list activity */
     public void launchActivity(){
         Intent intent = new Intent(this, AlbumSongList.class);
         startActivity(intent);
     }
 
+    /* Gets the number of songs */
     private int getNumberOfSongs() {
         java.io.File file = new java.io.File("/Users/cailintreseder/AndroidStudioProjects/FlashbackMusic/app/src/main/res/raw");
         System.out.println(file.length());
