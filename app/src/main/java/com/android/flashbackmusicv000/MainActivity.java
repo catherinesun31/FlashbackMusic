@@ -24,8 +24,10 @@ import android.widget.Button;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -149,7 +151,16 @@ ArrayList<Album> albums;
             int minutes = (int)Math.ceil((mil / (1000*60)) % 60);
             duration = minutes + ":" + seconds;
 
-            if( checkAlbum(albumName)){
+            //if the album does not exist within the set of albums, add a new album to it with the
+            //set of songs. else simply add to a currently existing album.
+            if(!checkAlbum(albumName)){
+
+                albums.add(new Album<Song>(albumName, new Song(title, songId)));
+
+            } else {
+
+                Album albumToAddSong = retrieveAlbum(albumName);
+                albumToAddSong.addSong(new Song(title, songId));
 
             }
 
@@ -218,6 +229,44 @@ ArrayList<Album> albums;
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    private boolean checkAlbum(String albumName){
+
+        for(Album album: albums){
+
+            if(album.getName().equals(albumName)){
+
+                return true;
+
+            }
+
+        }
+
+        return false;
+    }
+
+    private Album retrieveAlbum(String albumName){
+
+        int index = 0;
+
+        Album currentAlbum = null;
+
+        ListIterator<Album> it = albums.listIterator();
+
+        while(it.hasNext()){
+
+            currentAlbum = it.next();
+            if(currentAlbum.getName().equals(albumName)){
+
+                return currentAlbum;
+
+            }
+
+        }
+
+        return currentAlbum;
+
     }
 
     /**
