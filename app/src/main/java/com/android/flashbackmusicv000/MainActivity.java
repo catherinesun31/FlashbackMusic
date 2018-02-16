@@ -153,6 +153,8 @@ ArrayList<Album> albums;
 
             //if the album does not exist within the set of albums, add a new album to it with the
             //set of songs. else simply add to a currently existing album.
+
+
             if(!checkAlbum(albumName)){
 
                 albums.add(new Album<Song>(albumName, new Song(title, songId)));
