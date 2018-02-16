@@ -8,7 +8,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-
+/* Class that holds the list of songs that is created by switching on Flashback mode, ordered
+ * based on matched location, matched time, and favorited location
+ *
+ */
 public class QueueList extends AppCompatActivity {
 
     @Override

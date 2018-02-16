@@ -7,6 +7,12 @@ import android.os.Parcelable;
  * Created by Sun on 2/9/2018.
  */
 
+
+/*
+ * Class that establishes the Song object. Contains song information such as title, last location,
+ * last date, and whether the song is favorited or disliked. Contains getters/setters. Uses a parcel
+ * to pass Song information between classes.
+ */
 public class Song implements Parcelable{
     //Janice add in:
     private int songId;
@@ -18,11 +24,13 @@ public class Song implements Parcelable{
     private boolean favorite = false;
     private boolean dislike = false;
 
+    // Song Constructor
     public Song (String name, int songId) {
         title = name;
         this.songId = songId;
     }
 
+    // Setters for Song
     public void setLocation(String newLocation) {
         lastLocation = newLocation;
     }
@@ -48,7 +56,7 @@ public class Song implements Parcelable{
         dislike = false;
     }
 
-    // Janice add in:
+    // Getters for Song
     public int getSongId() {return songId;}
 
     public String getTitle() {
@@ -67,18 +75,17 @@ public class Song implements Parcelable{
         return lastDate;
     }
 
-    // 99.9% of the time you can just ignore this
+    // Parcel uses this
     @Override
     public int describeContents() {
         return 0;
     }
 
-    // write your object's data to the passed-in Parcel
+    // write object's data to the passed-in Parcel
     @Override
     public void writeToParcel(Parcel out, int flags) {
-        // Janice add in:
-        out.writeInt(songId);
 
+        out.writeInt(songId);
         out.writeString(title);
         out.writeString(lastLocation);
         out.writeString(lastTime);
@@ -98,11 +105,10 @@ public class Song implements Parcelable{
         }
     };
 
-    // example constructor that takes a Parcel and gives you an object populated with it's values
+    // constructor that takes a Parcel and gives you an object populated with it's values
     private Song(Parcel in) {
-        // Janice add in:
-        songId = in.readInt();
 
+        songId = in.readInt();
         title = in.readString();
         lastLocation = in.readString();
         lastTime = in.readString();
