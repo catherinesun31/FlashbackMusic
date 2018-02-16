@@ -1,10 +1,10 @@
-/**
+package com.android.flashbackmusicv000; /**
  * Created by janic on 2/10/18.
  */
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-/* Album is a class to store each of our songs by their corresponding album.
+/* com.android.flashbackmusicv000.Album is a class to store each of our songs by their corresponding album.
  * It is iterable so it can hold an array of songs.
  */
 public class Album<T> implements Iterable<T> {
@@ -44,6 +44,10 @@ public class Album<T> implements Iterable<T> {
 
     public Iterator<T> iterator() {
         return new MyIterator();
+    }
+
+    public String getName(){
+        return name;
     }
 
     // Return the value at a given index
