@@ -4,6 +4,9 @@
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+/* Album is a class to store each of our songs by their corresponding album.
+ * It is iterable so it can hold an array of songs.
+ */
 public class Album<T> implements Iterable<T> {
     T[] songs;  // this contains the actual elements of the album
     String name;
