@@ -17,6 +17,7 @@ import android.widget.Button;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -31,7 +32,7 @@ String[] neutral;
 int favoritesNow;
 int dislikedNow;
 int neutralNow;
-ArrayList<Song> songs;
+ArrayList<Song> songs1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +53,7 @@ ArrayList<Song> songs;
         Set<String> neut = currentSongState.getStringSet("neutral", null);
 
         Song[] songs = getCurrentSongs(fave, dis, neut);
+        songs1 = new ArrayList<Song>(Arrays.asList(songs));
         if (fave != null && disliked != null && neutral != null) {
             songs = getCurrentSongs(fave, dis, neut);
         }
@@ -98,6 +100,10 @@ ArrayList<Song> songs;
             final Uri uri = Uri.parse(path);
 
             mmr.setDataSource(getApplication(), uri);
+
+            // Janice add in: wanted to pass in the file location as Song variable
+            int songId = this.getResources().getIdentifier(fields[i].getName(), "raw", this.getPackageName());
+
             String title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
             String artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
             String albumName = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
@@ -111,7 +117,7 @@ ArrayList<Song> songs;
             "Artist: " + artist + "\n" +
             "Album: " + albumName + "\n" +
             "Duration: " + duration);
-            Song song = new Song(title);
+            Song song = new Song(title, songId);
 
             if (favorites != null) {
                 if (favorites.contains(title)) {
@@ -153,7 +159,7 @@ ArrayList<Song> songs;
         intent.putExtra("Favorites", favorites);
         intent.putExtra("Disliked", disliked);
         intent.putExtra("Neutral", neutral);
-        intent.putExtra("Song list", songs);
+        intent.putExtra("Song list", songs1);
         startActivity(intent);
     }
 

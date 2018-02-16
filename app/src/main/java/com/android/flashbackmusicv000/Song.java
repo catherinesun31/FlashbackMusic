@@ -8,6 +8,9 @@ import android.os.Parcelable;
  */
 
 public class Song implements Parcelable{
+    //Janice add in:
+    private int songId;
+
     private String title;
     private String lastLocation;
     private String lastTime;
@@ -15,8 +18,9 @@ public class Song implements Parcelable{
     private boolean favorite = false;
     private boolean dislike = false;
 
-    public Song (String name) {
+    public Song (String name, int songId) {
         title = name;
+        this.songId = songId;
     }
 
     public void setLocation(String newLocation) {
@@ -44,6 +48,9 @@ public class Song implements Parcelable{
         dislike = false;
     }
 
+    // Janice add in:
+    public int getSongId() {return songId;}
+
     public String getTitle() {
         return title;
     }
@@ -69,6 +76,9 @@ public class Song implements Parcelable{
     // write your object's data to the passed-in Parcel
     @Override
     public void writeToParcel(Parcel out, int flags) {
+        // Janice add in:
+        out.writeInt(songId);
+
         out.writeString(title);
         out.writeString(lastLocation);
         out.writeString(lastTime);
@@ -90,6 +100,9 @@ public class Song implements Parcelable{
 
     // example constructor that takes a Parcel and gives you an object populated with it's values
     private Song(Parcel in) {
+        // Janice add in:
+        songId = in.readInt();
+
         title = in.readString();
         lastLocation = in.readString();
         lastTime = in.readString();
