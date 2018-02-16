@@ -33,6 +33,7 @@ int favoritesNow;
 int dislikedNow;
 int neutralNow;
 ArrayList<Song> songs1;
+ArrayList<Album> albums;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,9 +114,13 @@ ArrayList<Song> songs1;
             int minutes = (int)Math.ceil((mil / (1000*60)) % 60);
             duration = minutes + ":" + seconds;
 
+            if( checkAlbum(albumName)){
+
+            }
+
             Log.d("Information: ", "Title: " + title + "\n" +
             "Artist: " + artist + "\n" +
-            "Album: " + albumName + "\n" +
+            "com.android.flashbackmusicv000.Album: " + albumName + "\n" +
             "Duration: " + duration);
             Song song = new Song(title, songId);
 
@@ -171,6 +176,22 @@ ArrayList<Song> songs1;
         startActivity(albums);
 
     }
+
+    //
+    public boolean checkAlbum(String albumName){
+        for(Album album:albums){
+
+            if(album.getName().equals(albumName)){
+
+                return true;
+
+            }
+
+        }
+
+        return false;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
