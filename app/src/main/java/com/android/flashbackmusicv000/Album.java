@@ -13,13 +13,10 @@ import java.util.NoSuchElementException;
 /* com.android.flashbackmusicv000.Album is a class to store each of our songs by their corresponding album.
  * It is iterable so it can hold an array of songs.
  */
-<<<<<<< HEAD
-public class Album<T> implements Iterable<T>{
-    ArrayList<T> songs;  // this contains the actual elements of the album
-=======
-public class Album implements /*Iterable<T>,*/ Parcelable {
+
+public class Album implements /*Iterable<T>8*/ Parcelable {
     ArrayList<Song> songs;  // this contains the actual elements of the album
->>>>>>> ad962cef826d8027b67812cd59f5906c10a6a408
+
     String name;
 
     // Constructor that takes a "raw" array and stores it
