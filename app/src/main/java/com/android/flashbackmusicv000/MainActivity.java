@@ -160,7 +160,7 @@ ArrayList<Album> albums;
 
             if(!checkAlbum(albumName)){
 
-                albums.add(new Album<Song>(albumName, new Song(title, songId)));
+                albums.add(new Album(albumName, new Song(title, songId)));
 
             } else {
 
