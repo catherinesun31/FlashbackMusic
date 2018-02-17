@@ -153,13 +153,6 @@ public class AlbumQueue extends AppCompatActivity {
         startActivity(intent);
     }
 
-    /* Gets the number of songs */
-    private int getNumberOfSongs() {
-        java.io.File file = new java.io.File("/Users/cailintreseder/AndroidStudioProjects/FlashbackMusic/app/src/main/res/raw");
-        System.out.println(file.length());
-        return (int)file.length();
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
