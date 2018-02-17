@@ -122,6 +122,7 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="title_activity_album_song_list">AlbumSongList</string>
+    <string name="title_activity_get_location">Map</string>
 
 
 </resources>
