@@ -20,6 +20,9 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.Switch;
+import android.widget.Toast;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -34,12 +37,17 @@ import java.util.concurrent.TimeUnit;
 public class MainActivity extends AppCompatActivity {
 
 SharedPreferences currentSongState;
+//SharedPreferences widgetState;
 String[] favorites;
 String[] disliked;
 String[] neutral;
 int favoritesNow;
 int dislikedNow;
 int neutralNow;
+private boolean isFlashBackOn;
+private Switch flashSwitch;
+private SharedPreferences flashBackState;
+
 ArrayList<Song> songs1;
 ArrayList<Album> albums;
 
@@ -100,6 +108,29 @@ ArrayList<Album> albums;
             @Override
             public void onClick(View view) {
                launchAlbums();
+            }
+        });
+
+        flashSwitch = (Switch) findViewById(R.id.flashSwitch);
+
+        flashSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+
+                if(isChecked) {
+
+                    //run event;
+                    isFlashBackOn = true;
+                    Toast.makeText(getApplicationContext(), "flashback mode is on", Toast.LENGTH_SHORT).show();
+
+                } else {
+
+
+                    //close event
+                    isFlashBackOn = false;
+                    Toast.makeText(getApplicationContext(), "flashback mode is off", Toast.LENGTH_SHORT).show();
+                    //
+                }
             }
         });
 
@@ -217,6 +248,7 @@ ArrayList<Album> albums;
         intent.putExtra("Disliked", disliked);
         intent.putExtra("Neutral", neutral);
         intent.putExtra("Song list", songs1);
+        intent.putExtra("isOn", isFlashBackOn);
         startActivity(intent);
     }
 
@@ -225,6 +257,7 @@ ArrayList<Album> albums;
      */
     public void launchAlbums() {
         Intent albums  = new Intent(this, AlbumQueue.class);
+        albums.putExtra("isOn", isFlashBackOn);
         startActivity(albums);
 
     }

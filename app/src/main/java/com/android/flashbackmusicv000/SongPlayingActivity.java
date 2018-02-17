@@ -9,10 +9,16 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class SongPlayingActivity extends AppCompatActivity {
     private MediaPlayer mediaPlayer;
+    private Intent intent;
+    private boolean isFlashBackOn;
+    private Switch switchy;
 
 
     @Override
@@ -31,6 +37,8 @@ public class SongPlayingActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        setWidgets();
 
         Intent i = getIntent();
         Song song = (Song) i.getParcelableExtra("name_of_extra");
@@ -64,6 +72,35 @@ public class SongPlayingActivity extends AppCompatActivity {
         catch(Exception e){
             System.out.println(e.toString());
         }
+    }
+
+    private void setWidgets(){
+
+        intent = getIntent();
+        switchy = (Switch) findViewById(R.id.flashSwitch);
+        isFlashBackOn = intent.getBooleanExtra("isOn",isFlashBackOn);
+
+        switchy.setChecked(isFlashBackOn);
+
+        switchy.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+
+                if(isChecked) {
+                    //run event;
+                    isFlashBackOn = true;
+                    Toast.makeText(getApplicationContext(), "flashback mode is on", Toast.LENGTH_SHORT).show();
+
+                } else {
+
+
+                    //close event
+                    isFlashBackOn = false;
+                    Toast.makeText(getApplicationContext(), "flashback mode is off", Toast.LENGTH_SHORT).show();
+                    //
+                }
+            }
+        });
     }
 
     @Override

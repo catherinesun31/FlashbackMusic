@@ -24,8 +24,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
+import android.widget.Switch;
+import android.widget.Toast;
+
 import com.android.flashbackmusicv000.Song;
 
 import java.io.File;
@@ -40,6 +44,7 @@ import java.util.Collections;
 public class SongListActivity extends AppCompatActivity{
 
     private MediaPlayer mediaPlayer;
+    private boolean isFlashBackOn;
     public int index;
 
     SharedPreferences currentSongState;
@@ -48,6 +53,8 @@ public class SongListActivity extends AppCompatActivity{
     ArrayList<String> neutral;
     ArrayList<String> songs;
     ArrayList<Song> actualSongs;
+    private Switch switchy;
+    private Intent intent;
 
     // com.android.flashbackmusicv000.Song Instances
 
@@ -60,7 +67,7 @@ public class SongListActivity extends AppCompatActivity{
 
         currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
         //SharedPreferences.Editor editor = currentSongState.edit();
-
+        setWidgets();
         Intent in = getIntent();
         Bundle b = in.getExtras();
         if (b != null) {
@@ -228,6 +235,7 @@ public class SongListActivity extends AppCompatActivity{
     public void launchActivity(Song song) {
         Intent intent = new Intent(this, SongPlayingActivity.class);
         intent.putExtra("name_of_extra", song);
+        intent.putExtra("isOn", isFlashBackOn);
         startActivity(intent);
     }
 
@@ -251,5 +259,35 @@ public class SongListActivity extends AppCompatActivity{
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    // Sets the flashback mode switch across activities
+    private void setWidgets(){
+
+        Intent intent = getIntent();
+        switchy = (Switch) findViewById(R.id.flashSwitch);
+        isFlashBackOn = intent.getBooleanExtra("isOn",isFlashBackOn);
+        switchy.setChecked(isFlashBackOn);
+
+        switchy.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+
+                if(isChecked) {
+
+                    //run event;
+                    isFlashBackOn = true;
+                    Toast.makeText(getApplicationContext(), "flashback mode is on", Toast.LENGTH_SHORT).show();
+
+                } else {
+
+
+                    //close event
+                    isFlashBackOn = false;
+                    Toast.makeText(getApplicationContext(), "flashback mode is off", Toast.LENGTH_SHORT).show();
+                    //
+                }
+            }
+        });
     }
 }

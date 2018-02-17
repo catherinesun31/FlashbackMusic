@@ -15,8 +15,12 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
+import android.widget.Switch;
+import android.widget.Toast;
+
 import com.android.flashbackmusicv000.Song;
 
 import java.io.File;
@@ -28,6 +32,9 @@ import java.io.File;
  */
 public class AlbumQueue extends AppCompatActivity {
 
+    private Intent intent;
+    private boolean isFlashBackOn;
+    private Switch switchy;
 
     /* onCreate makes all the buttons for each album in our raw files
      */
@@ -76,6 +83,7 @@ public class AlbumQueue extends AppCompatActivity {
             }
         });
 
+        setWidgets();
 
 
         /*
@@ -150,6 +158,7 @@ public class AlbumQueue extends AppCompatActivity {
     /* launchActivity launches the album's song list activity */
     public void launchActivity(){
         Intent intent = new Intent(this, AlbumSongList.class);
+        intent.putExtra("isOn",isFlashBackOn);
         startActivity(intent);
     }
 
@@ -180,5 +189,34 @@ public class AlbumQueue extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setWidgets(){
+
+        intent = getIntent();
+        switchy = (Switch) findViewById(R.id.flashSwitch);
+        isFlashBackOn = intent.getBooleanExtra("isOn",isFlashBackOn);
+        switchy.setChecked(isFlashBackOn);
+
+        switchy.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+
+                if(isChecked) {
+
+                    //run event;
+                    isFlashBackOn = true;
+                    Toast.makeText(getApplicationContext(), "flashback mode is on", Toast.LENGTH_SHORT).show();
+
+                } else {
+
+
+                    //close event
+                    isFlashBackOn = false;
+                    Toast.makeText(getApplicationContext(), "flashback mode is off", Toast.LENGTH_SHORT).show();
+                    //
+                }
+            }
+        });
     }
 }
