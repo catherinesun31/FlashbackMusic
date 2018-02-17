@@ -235,6 +235,10 @@ ArrayList<Album> albums;
     }
 
     private boolean checkAlbum(String albumName){
+        if (albums == null) {
+            albums = new ArrayList<Album>();
+            return false;
+        }
 
         for(Album album: albums){
 
