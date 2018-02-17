@@ -7,16 +7,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1c7ae422-2a75-4758-8bdf-7b1f54c91d93" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/debug/res/values/google_maps_api.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/GetLocation.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_get_location.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/release/res/values/google_maps_api.xml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/cse-110-team-project-team-35.iml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/gradle.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/runConfigurations.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/.idea/workspace.xml" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build.gradle" afterPath="$PROJECT_DIR$/app/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/Album.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/Album.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/MainActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/MainActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/SongPlayingActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/SongPlayingActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cse-110-team-project-team-35.iml" afterPath="$PROJECT_DIR$/cse-110-team-project-team-35.iml" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -60,8 +62,8 @@
             <state relative-caret-position="375">
               <caret line="25" column="68" lean-forward="false" selection-start-line="25" selection-start-column="68" selection-end-line="25" selection-end-column="68" />
               <folding>
-                <marker date="1518829367949" expanded="true" signature="2619:2629" ph="..." />
-                <marker date="1518829367949" expanded="true" signature="2619:2648" ph="..." />
+                <marker date="1518829722184" expanded="true" signature="2619:2629" ph="..." />
+                <marker date="1518829722184" expanded="true" signature="2619:2648" ph="..." />
               </folding>
             </state>
           </provider>
@@ -111,8 +113,12 @@
             <state relative-caret-position="120">
               <caret line="8" column="14" lean-forward="false" selection-start-line="8" selection-start-column="14" selection-end-line="8" selection-end-column="14" />
               <folding>
-                <element signature="e#923#1191#0" expanded="true" />
-                <element signature="e#1190#1191#0" expanded="true" />
+                <marker date="1518829858747" expanded="true" signature="924:1019" ph="(view) → {" />
+                <marker date="1518829858747" expanded="true" signature="1177:1192" ph="}" />
+                <marker date="1518829858747" expanded="true" signature="1562:2203" ph="{...}" />
+                <marker date="1518829858747" expanded="false" signature="1822:1841" ph=" { " />
+                <marker date="1518829858747" expanded="false" signature="1861:1875" ph=" }" />
+                <marker date="1518829858747" expanded="true" signature="2246:2311" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -121,9 +127,11 @@
       <file leaf-file-name="Album.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/Album.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="10" column="65" lean-forward="false" selection-start-line="10" selection-start-column="65" selection-end-line="10" selection-end-column="65" />
-              <folding />
+            <state relative-caret-position="240">
+              <caret line="16" column="65" lean-forward="false" selection-start-line="16" selection-start-column="65" selection-end-line="16" selection-end-column="65" />
+              <folding>
+                <marker date="1518829858746" expanded="true" signature="3783:3785" ph="{...}" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -132,7 +140,7 @@
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/GetLocation.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="375">
-              <caret line="33" column="80" lean-forward="true" selection-start-line="33" selection-start-column="80" selection-end-line="33" selection-end-column="80" />
+              <caret line="33" column="80" lean-forward="false" selection-start-line="33" selection-start-column="80" selection-end-line="33" selection-end-column="80" />
               <folding />
             </state>
           </provider>
@@ -153,8 +161,8 @@
       <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="25" column="13" lean-forward="false" selection-start-line="25" selection-start-column="13" selection-end-line="25" selection-end-column="13" />
+            <state relative-caret-position="495">
+              <caret line="33" column="13" lean-forward="false" selection-start-line="33" selection-start-column="13" selection-end-line="33" selection-end-column="13" />
               <folding />
             </state>
           </provider>
@@ -1884,6 +1892,7 @@
         <option value="$PROJECT_DIR$/app/src/main/res/layout/content_queue_list.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/SongPlayingActivity.java" />
         <option value="$PROJECT_DIR$/app/src/debug/res/values/google_maps_api.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/GetLocation.java" />
       </list>
     </option>
   </component>
@@ -1891,6 +1900,7 @@
     <option name="width" value="1680" />
     <option name="height" value="1050" />
   </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
       <flattenPackages />
@@ -2032,6 +2042,24 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="FlashbackMusic" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="FlashbackMusic" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value=".idea" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="Scratches" />
@@ -2150,7 +2178,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1518829590683" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1518829913279" />
       </method>
     </configuration>
     <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Instrumented Tests">
@@ -2198,7 +2226,7 @@
       </Profilers>
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1518829590683" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1518829913279" />
       </method>
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -2381,7 +2409,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1518829590684" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1518829913280" />
       </method>
     </configuration>
     <list size="1">
@@ -2441,13 +2469,13 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="16" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32891247" sideWeight="0.5" order="16" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25306123" sideWeight="0.5" order="16" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25306123" sideWeight="0.5" order="16" side_tool="false" content_ui="tabs" />
       <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26312578" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26312578" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32934132" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Device File Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
@@ -2513,8 +2541,8 @@
         <state relative-caret-position="75">
           <caret line="5" column="34" lean-forward="false" selection-start-line="5" selection-start-column="34" selection-end-line="5" selection-end-column="34" />
           <folding>
-            <marker date="1518829367949" expanded="true" signature="2619:2629" ph="..." />
-            <marker date="1518829367949" expanded="true" signature="2619:2648" ph="..." />
+            <marker date="1518829722184" expanded="true" signature="2619:2629" ph="..." />
+            <marker date="1518829722184" expanded="true" signature="2619:2648" ph="..." />
           </folding>
         </state>
       </provider>
@@ -2524,8 +2552,12 @@
         <state relative-caret-position="60">
           <caret line="9" column="13" lean-forward="false" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
           <folding>
-            <element signature="e#923#1191#0" expanded="true" />
-            <element signature="e#1190#1191#0" expanded="true" />
+            <marker date="1518829858747" expanded="true" signature="924:1019" ph="(view) → {" />
+            <marker date="1518829858747" expanded="true" signature="1177:1192" ph="}" />
+            <marker date="1518829858747" expanded="true" signature="1562:2203" ph="{...}" />
+            <marker date="1518829858747" expanded="false" signature="1822:1841" ph=" { " />
+            <marker date="1518829858747" expanded="false" signature="1861:1875" ph=" }" />
+            <marker date="1518829858747" expanded="true" signature="2246:2311" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -2555,8 +2587,8 @@
         <state relative-caret-position="75">
           <caret line="5" column="34" lean-forward="true" selection-start-line="5" selection-start-column="34" selection-end-line="5" selection-end-column="34" />
           <folding>
-            <marker date="1518829367949" expanded="true" signature="2619:2629" ph="..." />
-            <marker date="1518829367949" expanded="true" signature="2619:2648" ph="..." />
+            <marker date="1518829722184" expanded="true" signature="2619:2629" ph="..." />
+            <marker date="1518829722184" expanded="true" signature="2619:2648" ph="..." />
           </folding>
         </state>
       </provider>
@@ -2566,8 +2598,12 @@
         <state relative-caret-position="360">
           <caret line="29" column="0" lean-forward="true" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
           <folding>
-            <element signature="e#923#1191#0" expanded="true" />
-            <element signature="e#1190#1191#0" expanded="true" />
+            <marker date="1518829858747" expanded="true" signature="924:1019" ph="(view) → {" />
+            <marker date="1518829858747" expanded="true" signature="1177:1192" ph="}" />
+            <marker date="1518829858747" expanded="true" signature="1562:2203" ph="{...}" />
+            <marker date="1518829858747" expanded="false" signature="1822:1841" ph=" { " />
+            <marker date="1518829858747" expanded="false" signature="1861:1875" ph=" }" />
+            <marker date="1518829858747" expanded="true" signature="2246:2311" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -2616,8 +2652,12 @@
         <state relative-caret-position="120">
           <caret line="8" column="14" lean-forward="false" selection-start-line="8" selection-start-column="14" selection-end-line="8" selection-end-column="14" />
           <folding>
-            <element signature="e#923#1191#0" expanded="true" />
-            <element signature="e#1190#1191#0" expanded="true" />
+            <marker date="1518829858747" expanded="true" signature="924:1019" ph="(view) → {" />
+            <marker date="1518829858747" expanded="true" signature="1177:1192" ph="}" />
+            <marker date="1518829858747" expanded="true" signature="1562:2203" ph="{...}" />
+            <marker date="1518829858747" expanded="false" signature="1822:1841" ph=" { " />
+            <marker date="1518829858747" expanded="false" signature="1861:1875" ph=" }" />
+            <marker date="1518829858747" expanded="true" signature="2246:2311" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -2758,8 +2798,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="25" column="13" lean-forward="false" selection-start-line="25" selection-start-column="13" selection-end-line="25" selection-end-column="13" />
+        <state relative-caret-position="495">
+          <caret line="33" column="13" lean-forward="false" selection-start-line="33" selection-start-column="13" selection-end-line="33" selection-end-column="13" />
           <folding />
         </state>
       </provider>
@@ -2789,8 +2829,8 @@
         <state relative-caret-position="375">
           <caret line="25" column="68" lean-forward="false" selection-start-line="25" selection-start-column="68" selection-end-line="25" selection-end-column="68" />
           <folding>
-            <marker date="1518829367949" expanded="true" signature="2619:2629" ph="..." />
-            <marker date="1518829367949" expanded="true" signature="2619:2648" ph="..." />
+            <marker date="1518829722184" expanded="true" signature="2619:2629" ph="..." />
+            <marker date="1518829722184" expanded="true" signature="2619:2648" ph="..." />
           </folding>
         </state>
       </provider>
@@ -2842,9 +2882,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/Album.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="10" column="65" lean-forward="false" selection-start-line="10" selection-start-column="65" selection-end-line="10" selection-end-column="65" />
-          <folding />
+        <state relative-caret-position="240">
+          <caret line="16" column="65" lean-forward="false" selection-start-line="16" selection-start-column="65" selection-end-line="16" selection-end-column="65" />
+          <folding>
+            <marker date="1518829858746" expanded="true" signature="3783:3785" ph="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -2875,7 +2917,7 @@
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/GetLocation.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="375">
-          <caret line="33" column="80" lean-forward="true" selection-start-line="33" selection-start-column="80" selection-end-line="33" selection-end-column="80" />
+          <caret line="33" column="80" lean-forward="false" selection-start-line="33" selection-start-column="80" selection-end-line="33" selection-end-column="80" />
           <folding />
         </state>
       </provider>
