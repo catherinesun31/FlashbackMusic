@@ -30,7 +30,7 @@ public class Album<T> implements Iterable<T> {
     public Album(String name, T song){
 
         this.name = name;
-
+        songs = new ArrayList<T>();
         songs.add(song);
 
     }
