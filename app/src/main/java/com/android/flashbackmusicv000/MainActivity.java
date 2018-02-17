@@ -133,6 +133,9 @@ ArrayList<Album> albums;
         Field[] fields = R.raw.class.getFields();
         Song[] songs = new Song[fields.length];
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+
+
+
         for (int i = 0; i < fields.length; ++i) {
             String path = "android.resource://" + getPackageName() + "/raw/" + fields[i].getName();
             final Uri uri = Uri.parse(path);
@@ -248,6 +251,7 @@ ArrayList<Album> albums;
 
         return false;
     }
+
 
     private Album retrieveAlbum(String albumName){
 
