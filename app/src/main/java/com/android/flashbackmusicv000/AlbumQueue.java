@@ -118,7 +118,8 @@ public class AlbumQueue extends AppCompatActivity {
         //songs are parcelable
         toSongListIntent.putExtra("songs",songs);
         //temporary
-        toSongListIntent.putExtra("albumOrigin",true);
+
+        toSongListIntent.putExtra("isOn",isFlashBackOn);
 
         //for loop.... loook at the class.
 
