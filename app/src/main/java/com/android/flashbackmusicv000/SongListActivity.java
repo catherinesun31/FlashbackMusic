@@ -48,10 +48,10 @@ public class SongListActivity extends AppCompatActivity{
     public int index;
 
     SharedPreferences currentSongState;
-    ArrayList<String> favorites;
-    ArrayList<String> disliked;
-    ArrayList<String> neutral;
-    ArrayList<String> songs;
+    public ArrayList<String> favorites;
+    public ArrayList<String> disliked;
+    public ArrayList<String> neutral;
+    public ArrayList<String> songs;
     ArrayList<Song> actualSongs;
     private Switch switchy;
     private Intent in;
