@@ -1,14 +1,19 @@
+import android.app.Instrumentation;
 import android.support.test.rule.ActivityTestRule;
 import android.view.View;
 import android.widget.Button;
 
+import com.android.flashbackmusicv000.MainActivity;
 import com.android.flashbackmusicv000.R;
 import com.android.flashbackmusicv000.SongListActivity;
+import com.android.flashbackmusicv000.SongPlayingActivity;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 
 /**
  * Created by Chelsea on 2/18/18.
@@ -25,6 +30,10 @@ public class JUnitSongListActivityTest {
 
     }
 
+
+    /*
+    Check buttons correctly add songs to favorites/disliked/netural
+     */
     @Test
     public void testButtonChange(){
         SongListActivity activity = rule.getActivity();
@@ -68,9 +77,28 @@ public class JUnitSongListActivityTest {
 
     }
 
+    /*
+    Check that the Song button takes to correct screen for that song to play
+     */
     @Test
     public void testLaunchActivity(){
 
+        SongListActivity activity = rule.getActivity();
+
+        Instrumentation.ActivityMonitor sm =
+                getInstrumentation().addMonitor(SongPlayingActivity.class.getName(), null, false);
+
+        final Button songButton = (Button) activity.findViewById(R.id.songs);
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                // click button and open next activity.
+                songButton.performClick();
+            }
+        });
+        SongPlayingActivity sq = (SongPlayingActivity) getInstrumentation().waitForMonitorWithTimeout(sm, 5000);
+        assertNotNull(sq);
+        sq.finish();
 
     }
 
