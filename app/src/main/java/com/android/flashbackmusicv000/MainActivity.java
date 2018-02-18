@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -46,12 +47,14 @@ int dislikedNow;
 int neutralNow;
 private boolean isFlashBackOn;
 private Switch flashSwitch;
-private SharedPreferences flashBackState;
+public static SharedPreferences flashBackState;
 
 ArrayList<Song> songs1;
 
+private Album allSongs;
+
 //albums need to be passed...
-ArrayList<Album> albums;
+private ArrayList<Album> albums;
 
     /**
      * onCreate Method represents the beginning state of the main activity whenever it is started.
@@ -70,6 +73,8 @@ ArrayList<Album> albums;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //create a shared preference for flashback service state.
+
         favoritesNow = 0;
         dislikedNow = 0;
         neutralNow = 0;
@@ -85,8 +90,7 @@ ArrayList<Album> albums;
         songs1 = new ArrayList<Song>(Arrays.asList(songs));
         if (fave != null && disliked != null && neutral != null) {
             songs = getCurrentSongs(fave, dis, neut);
-        }
-        else {
+        } else {
             neutral = new String[songs.length];
             for (int i = 0; i < songs.length; ++i) {
                 neutral[i] = songs[i].getTitle();
@@ -96,50 +100,25 @@ ArrayList<Album> albums;
         //Set onClickListener for songs button
         // JANICE EDIT: 02/13, PASSING IN SONGS[] SO THAT WE CAN ACCESS IT IN THE NEXT ACTIVITY
         Button songsList = (Button) findViewById(R.id.songs);
-        songsList.setOnClickListener(new View.OnClickListener(){
+        songsList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                launchSongs();
+                launchSongs(allSongs);
             }
         });
 
 
-       Button albumList = (Button) findViewById(R.id.albums);
+        Button albumList = (Button) findViewById(R.id.albums);
 
         albumList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               launchAlbums();
+                launchAlbums();
             }
         });
 
-        flashSwitch = (Switch) findViewById(R.id.flashSwitch);
+        setSwitch();
 
-        flashSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-
-                if(isChecked) {
-
-                    //run event;
-                    isFlashBackOn = true;
-                    Toast.makeText(getApplicationContext(), "flashback mode is on", Toast.LENGTH_SHORT).show();
-
-                } else {
-
-
-                    //close event
-                    isFlashBackOn = false;
-                    Toast.makeText(getApplicationContext(), "flashback mode is off", Toast.LENGTH_SHORT).show();
-                    //
-                }
-            }
-        });
-
-        /*
-         * I'm thinking that here, we should make a list of all of the Song objects from songs that
-         * the user has in their R.raw file, and store it in the phone's shared preferences.
-         */
 
     }
 
@@ -167,9 +146,9 @@ ArrayList<Album> albums;
         Song[] songs = new Song[fields.length];
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
 
-
-
         for (int i = 0; i < fields.length; ++i) {
+
+
             String path = "android.resource://" + getPackageName() + "/raw/" + fields[i].getName();
             final Uri uri = Uri.parse(path);
 
@@ -187,13 +166,50 @@ ArrayList<Album> albums;
             int minutes = (int)Math.ceil((mil / (1000*60)) % 60);
             duration = minutes + ":" + seconds;
 
+
+
+            Log.d("Information: ", "Title: " + title + "\n" +
+            "Artist: " + artist + "\n" +
+            "com.android.flashbackmusicv000.Album: " + albumName + "\n" +
+            "Duration: " + duration);
+
+            Song currentSong = new Song(title, songId);
+
+            /* The following conditional statements add to the ArrayLists of strings.
+            * will instead add the strings to the songs... and pass them as albums.
+             */
+
+            if (favorites != null) {
+
+                //
+                if (favorites.contains(title)) {
+                    currentSong.favorite();
+                    //adding to the string arrayList.
+                    this.favorites[favoritesNow] = currentSong.getTitle();
+                    ++favoritesNow;
+                }
+
+            } else if (disliked != null) {
+                if (disliked.contains(title)) {
+                    currentSong.dislike();
+                    this.disliked[dislikedNow] = currentSong.getTitle();
+                    ++dislikedNow;
+                }
+
+            } else if (neutral != null) {
+                if (neutral.contains(title)) {
+                    currentSong.neutral();
+                    this.neutral[neutralNow] = currentSong.getTitle();
+                    ++neutralNow;
+                }
+            }
+
             //if the album does not exist within the set of albums, add a new album to it with the
             //set of songs. else simply add to a currently existing album.
 
-
             if(!checkAlbum(albumName)){
 
-                albums.add(new Album(albumName, new Song(title, songId)));
+                albums.add(new Album(albumName, currentSong));
 
             } else {
 
@@ -202,34 +218,18 @@ ArrayList<Album> albums;
 
             }
 
-            Log.d("Information: ", "Title: " + title + "\n" +
-            "Artist: " + artist + "\n" +
-            "com.android.flashbackmusicv000.Album: " + albumName + "\n" +
-            "Duration: " + duration);
-            Song song = new Song(title, songId);
+            if(i == 0){
 
-            if (favorites != null) {
-                if (favorites.contains(title)) {
-                    song.favorite();
-                    this.favorites[favoritesNow] = song.getTitle();
-                    ++favoritesNow;
-                }
+                this.allSongs = new Album("All Songs From Main Activity",currentSong);
+
+            } else {
+
+                this.allSongs.addSong(currentSong);
+
             }
-            if (disliked != null) {
-                if (disliked.contains(title)) {
-                    song.dislike();
-                    this.disliked[dislikedNow] = song.getTitle();
-                    ++dislikedNow;
-                }
-            }
-            if (neutral != null) {
-                if (neutral.contains(title)) {
-                    song.neutral();
-                    this.neutral[neutralNow] = song.getTitle();
-                    ++neutralNow;
-                }
-            }
-            songs[i] = song;
+
+            songs[i] = currentSong;
+
         }
 
         return songs;
@@ -244,27 +244,40 @@ ArrayList<Album> albums;
      * This starts the SongsListActivity, and migrates to the list of all of the current songs
      */
     // JANICE EDIT 02/13: PASSING IN THE ARRAY OF SONGS SO WE CAN PASS THROUGH TO SONGSLIST AND SONGSPLAYING
-    public void launchSongs() {
+
+    public void launchSongs(Album allSongs) {
 
         //strings to be sent in an activity towards the SongListActivity
-        Intent intent = new Intent(this, SongListActivity.class);
 
+        Intent toSongListIntent = new Intent(this, SongListActivity.class);
 
+        //songs are parcelable
+
+        //only want to send all of the songs displayed here.....
+
+        //All songs.....
+        toSongListIntent.putExtra("songs",allSongs);
+        //temporary
+
+        //try to put the strings from this activity inside the object and pass that object.
+        /*
         intent.putExtra("Favorites", favorites);
         intent.putExtra("Disliked", disliked);
         intent.putExtra("Neutral", neutral);
         intent.putExtra("Song list", songs1);
-        intent.putExtra("isOn", isFlashBackOn);
+        */
+
+        toSongListIntent.putExtra("isOn", isFlashBackOn);
         //temporary, whilst passing strings.
-        intent.putExtra("albumOrigin", false);
-        startActivity(intent);
+        // need to change this...
+        startActivity(toSongListIntent);
     }
 
     /*
      * launchAlbums:
      */
     public void launchAlbums() {
-        //where it comes from -> where it is going.
+
         Intent albumsIntent  = new Intent(this, AlbumQueue.class);
         Bundle args = new Bundle();
         args.putSerializable("ARRAYLIST",albums);
@@ -344,4 +357,55 @@ ArrayList<Album> albums;
 
         return super.onOptionsItemSelected(item);
     }
+
+
+
+    private void setSwitch(){
+
+        flashSwitch = (Switch) findViewById(R.id.flashSwitch);
+        flashBackState = getApplicationContext().getSharedPreferences("isOn", MODE_PRIVATE);
+
+        flashSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+
+                if(isChecked) {
+
+                    //run event;
+                    isFlashBackOn = true;
+                    Toast.makeText(getApplicationContext(), "flashback mode is on", Toast.LENGTH_SHORT).show();
+
+                } else {
+
+                    //close event
+                    isFlashBackOn = false;
+                    Toast.makeText(getApplicationContext(), "flashback mode is off", Toast.LENGTH_SHORT).show();
+                    //
+                }
+            }
+        });
+
+        /*
+         * I'm thinking that here, we should make a list of all of the Song objects from songs that
+         * the user has in their R.raw file, and store it in the phone's shared preferences.
+         */
+
+    }
+
+
+
+
+    @Override
+    public void onRestart(){
+
+        super.onRestart();
+
+        isFlashBackOn = MainActivity.flashBackState.getBoolean("isOn", isFlashBackOn);
+
+        flashSwitch.setChecked(isFlashBackOn);
+
+
+    }
+
+
 }

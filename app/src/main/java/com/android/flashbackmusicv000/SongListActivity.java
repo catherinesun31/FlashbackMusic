@@ -70,12 +70,10 @@ public class SongListActivity extends AppCompatActivity{
 
         /*a modification James Rich*/
         // just mocking up to get it working
-        if(in.getBooleanExtra("albumOrigin",true)){
 
-            Album albumSelected = in.getExtras().getParcelable("songs");
-            actualSongs = albumSelected.getSongs();
 
-        }
+        Album albumSelected = in.getExtras().getParcelable("songs");
+        actualSongs = albumSelected.getSongs();
 
         currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
         //SharedPreferences.Editor editor = currentSongState.edit();
@@ -313,4 +311,30 @@ public class SongListActivity extends AppCompatActivity{
             }
         });
     }
+
+    @Override
+    public void onBackPressed(){
+
+        //super.onBackPressed();
+        //sharedPreferences switch state.
+
+        SharedPreferences.Editor editor = MainActivity.flashBackState.edit();
+        editor.putBoolean("isOn", isFlashBackOn);
+
+        editor.apply();
+        finish();
+
+    }
+
+    public void onRestart(){
+
+        super.onRestart();
+
+        isFlashBackOn = MainActivity.flashBackState.getBoolean("isOn", isFlashBackOn);
+
+        switchy.setChecked(isFlashBackOn);
+
+
+    }
+
 }
