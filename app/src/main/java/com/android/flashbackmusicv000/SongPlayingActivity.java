@@ -85,7 +85,7 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
 
         //song being passed a parcelable, through the intent... but no parcelable was sent...???
 
-        Song song = (Song) i.getParcelableExtra("name_of_extra");
+        final Song song = (Song) i.getParcelableExtra("name_of_extra");
 
         TextView songTitle = (TextView) findViewById(R.id.songtitle);
         songTitle.setText(song.getTitle());
