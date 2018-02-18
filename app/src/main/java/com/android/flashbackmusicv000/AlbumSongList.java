@@ -23,24 +23,35 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
+import android.widget.Switch;
+import android.widget.Toast;
+
 import com.android.flashbackmusicv000.Song;
 
 import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
 /* AlbumSongList is an Activity that displays all the songs in a specific album
  * Previous Activity:   AlbumQueue
  * Next Activity:       SongPlaying Activity
  */
+
+
 public class AlbumSongList extends AppCompatActivity {
 
+    private boolean isFlashBackOn;
     private MediaPlayer mediaPlayer;
     private static int[] MEDIA_RES_IDS;
     int totalSongs = getNumberOfSongs();
+    private Switch switchy;
+    private Intent intent;
+    private ArrayList<Song> actualSongs;
 
     //MEDIA_RES_IDS = new int[totalSongs];
 
@@ -53,25 +64,18 @@ public class AlbumSongList extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        intent = getIntent();
         setContentView(R.layout.activity_album_song_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         int totalSongs = getNumberOfSongs();
         MEDIA_RES_IDS = new int[totalSongs];
-
+        setWidgets();
 
         ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
 
-
-        //MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-        //mmr.setDataSource("/Users/keavila/Desktop/cse-110-team-project-team-35/FlashBack Music/cse-110-team-project-team-35/app/src/main/res/raw");
-
-        //String albumName = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
-        //File[] files = fields.listFiles(new Mp3Filter());
-
-
-        //Button songButton;
         Field[] fields = R.raw.class.getFields();
 
         final float scale = this.getResources().getDisplayMetrics().density;
@@ -97,10 +101,15 @@ public class AlbumSongList extends AppCompatActivity {
             button.setSingleLine(true);
             button.setEllipsize(TextUtils.TruncateAt.MARQUEE);
             button.setMarqueeRepeatLimit(1000);
+
+            final Song newSong = actualSongs.get(i);
+
+            //song attached to a button for the launch activity, so we can apply the new song to the
+            //media player.....
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    launchActivity();
+                    launchActivity(newSong);
                 }
             });
             constraintLayout.addView(button, params);
@@ -322,8 +331,13 @@ public class AlbumSongList extends AppCompatActivity {
     }
 
     /* launchActivity launches the next activity */
-    public void launchActivity(){
+    public void launchActivity(Song song){
+
+        Toast.makeText(getApplicationContext(), "making intents", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, SongPlayingActivity.class);
+        intent.putExtra("name_of_extra", song);
+        intent.putExtra("isOn", isFlashBackOn);
+        //Toast.makeText(getApplicationContext(), "launching song playing activity", Toast.LENGTH_SHORT).show();
         startActivity(intent);
     }
 
@@ -354,6 +368,34 @@ public class AlbumSongList extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setWidgets(){
+
+        switchy = (Switch) findViewById(R.id.flashSwitch);
+        isFlashBackOn = intent.getBooleanExtra("isOn",isFlashBackOn);
+        switchy.setChecked(isFlashBackOn);
+
+        switchy.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+
+                if(isChecked) {
+
+                    //run event;
+                    isFlashBackOn = true;
+                    Toast.makeText(getApplicationContext(), "flashback mode is on", Toast.LENGTH_SHORT).show();
+
+                } else {
+
+
+                    //close event
+                    isFlashBackOn = false;
+                    Toast.makeText(getApplicationContext(), "flashback mode is off", Toast.LENGTH_SHORT).show();
+                    //
+                }
+            }
+        });
     }
 }
 
