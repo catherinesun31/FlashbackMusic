@@ -9,6 +9,7 @@
     tools:showIn="@layout/activity_main">
 
     <TextView
+        android:id="@+id/flashbackMusictitle"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:text="@string/app_name"
@@ -29,12 +30,9 @@
         android:text="@string/songs"
         android:textSize="31dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.45"
-        app:layout_constraintHorizontal_bias="0.20"
-
+        app:layout_constraintTop_toBottomOf="@id/flashbackMusictitle"
+        app:layout_constraintLeft_toRightOf="parent"
+        android:layout_marginLeft="50dp"
 
         />
 
@@ -45,16 +43,14 @@
         android:text="@string/albums"
         android:textSize="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.45"
-        app:layout_constraintHorizontal_bias="0.80"
-
+        android:layout_marginStart="20dp"
+        app:layout_constraintLeft_toRightOf="@id/songs"
+        app:layout_constraintTop_toBottomOf="@id/flashbackMusictitle"
 
         />
 
     <TextView
+        android:id="@+id/flashtext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/flash"
@@ -62,9 +58,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.95"
-        app:layout_constraintHorizontal_bias="0.20"
+        app:layout_constraintTop_toBottomOf="@id/flashbackMusictitle"
+        android:layout_marginRight="200dp"
+        android:layout_marginTop="400dp"
         />
 
     <Switch
@@ -73,10 +69,12 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.95"
-        app:layout_constraintHorizontal_bias="0.70"
+        app:layout_constraintRight_toRightOf="@id/flashtext"
+        app:layout_constraintTop_toBottomOf="@id/flashbackMusictitle"
+        android:layout_marginTop="400dp"
+        android:layout_marginLeft="300dp"
+
         />
+
 
 </android.support.constraint.ConstraintLayout>
