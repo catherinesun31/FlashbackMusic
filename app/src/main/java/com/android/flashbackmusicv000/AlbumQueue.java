@@ -1,6 +1,7 @@
 package com.android.flashbackmusicv000;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Color;
 import android.media.MediaPlayer;
@@ -192,4 +193,44 @@ public class AlbumQueue extends AppCompatActivity {
             }
         });
     }
+
+    /*
+    @Override
+    public void onResume(){
+
+        super.onResume();
+// then you use
+        isFlashBackOn = MainActivity.flashBackState.getBoolean("isOn", isFlashBackOn);
+
+        switchy.setChecked(isFlashBackOn);
+    }
+    */
+
+
+    @Override
+    public void onBackPressed(){
+
+        //super.onBackPressed();
+        //sharedPreferences switch state.
+
+        SharedPreferences.Editor editor = MainActivity.flashBackState.edit();
+        editor.putBoolean("isOn", isFlashBackOn);
+
+        editor.apply();
+        finish();
+
+    }
+
+    @Override
+    public void onRestart(){
+
+        super.onRestart();
+
+        isFlashBackOn = MainActivity.flashBackState.getBoolean("isOn", isFlashBackOn);
+
+        switchy.setChecked(isFlashBackOn);
+
+
+    }
+
 }

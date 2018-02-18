@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -46,7 +47,7 @@ int dislikedNow;
 int neutralNow;
 private boolean isFlashBackOn;
 private Switch flashSwitch;
-private SharedPreferences flashBackState;
+public static SharedPreferences flashBackState;
 
 ArrayList<Song> songs1;
 
@@ -71,6 +72,8 @@ private ArrayList<Album> albums;
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //create a shared preference for flashback service state.
 
         favoritesNow = 0;
         dislikedNow = 0;
@@ -97,7 +100,7 @@ private ArrayList<Album> albums;
         //Set onClickListener for songs button
         // JANICE EDIT: 02/13, PASSING IN SONGS[] SO THAT WE CAN ACCESS IT IN THE NEXT ACTIVITY
         Button songsList = (Button) findViewById(R.id.songs);
-        songsList.setOnClickListener(new View.OnClickListener(){
+        songsList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 launchSongs(allSongs);
@@ -110,37 +113,12 @@ private ArrayList<Album> albums;
         albumList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               launchAlbums();
+                launchAlbums();
             }
         });
 
-        flashSwitch = (Switch) findViewById(R.id.flashSwitch);
+        setSwitch();
 
-        flashSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-
-                if(isChecked) {
-
-                    //run event;
-                    isFlashBackOn = true;
-                    Toast.makeText(getApplicationContext(), "flashback mode is on", Toast.LENGTH_SHORT).show();
-
-                } else {
-
-
-                    //close event
-                    isFlashBackOn = false;
-                    Toast.makeText(getApplicationContext(), "flashback mode is off", Toast.LENGTH_SHORT).show();
-                    //
-                }
-            }
-        });
-
-        /*
-         * I'm thinking that here, we should make a list of all of the Song objects from songs that
-         * the user has in their R.raw file, and store it in the phone's shared preferences.
-         */
 
     }
 
@@ -249,6 +227,7 @@ private ArrayList<Album> albums;
                 this.allSongs.addSong(currentSong);
 
             }
+
             songs[i] = currentSong;
 
         }
@@ -378,4 +357,55 @@ private ArrayList<Album> albums;
 
         return super.onOptionsItemSelected(item);
     }
+
+
+
+    private void setSwitch(){
+
+        flashSwitch = (Switch) findViewById(R.id.flashSwitch);
+        flashBackState = getApplicationContext().getSharedPreferences("isOn", MODE_PRIVATE);
+
+        flashSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+
+                if(isChecked) {
+
+                    //run event;
+                    isFlashBackOn = true;
+                    Toast.makeText(getApplicationContext(), "flashback mode is on", Toast.LENGTH_SHORT).show();
+
+                } else {
+
+                    //close event
+                    isFlashBackOn = false;
+                    Toast.makeText(getApplicationContext(), "flashback mode is off", Toast.LENGTH_SHORT).show();
+                    //
+                }
+            }
+        });
+
+        /*
+         * I'm thinking that here, we should make a list of all of the Song objects from songs that
+         * the user has in their R.raw file, and store it in the phone's shared preferences.
+         */
+
+    }
+
+
+
+
+    @Override
+    public void onRestart(){
+
+        super.onRestart();
+
+        isFlashBackOn = MainActivity.flashBackState.getBoolean("isOn", isFlashBackOn);
+
+        flashSwitch.setChecked(isFlashBackOn);
+
+
+    }
+
+
 }

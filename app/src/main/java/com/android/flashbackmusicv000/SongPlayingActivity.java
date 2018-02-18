@@ -2,6 +2,7 @@ package com.android.flashbackmusicv000;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
 import android.location.Address;
@@ -269,9 +270,17 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
     */
 
     @Override
-    public void onDestroy(){
-        super.onDestroy();
-        mediaPlayer.release();
+    public void onBackPressed(){
+
+        //super.onBackPressed();
+        //sharedPreferences switch state.
+
+        SharedPreferences.Editor editor = MainActivity.flashBackState.edit();
+        editor.putBoolean("isOn", isFlashBackOn);
+
+        editor.apply();
+        finish();
+
     }
 
     protected void startIntentService() {
@@ -301,5 +310,6 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
 
         }
     }
+
 
 }
