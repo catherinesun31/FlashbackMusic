@@ -177,7 +177,7 @@ public class SongListActivity extends AppCompatActivity{
             add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    buttonChange(add);
+                    buttonChange(add, newSong);
                 }
             });
 
@@ -225,7 +225,7 @@ public class SongListActivity extends AppCompatActivity{
         return false;
     }
 
-    protected void buttonChange(Button button) {
+    protected void buttonChange(Button button, Song song) {
         Intent intent = new Intent(this, SongListActivity.class);
         String name = button.getText().toString();
         switch (name) {
@@ -233,16 +233,19 @@ public class SongListActivity extends AppCompatActivity{
                 button.setText("✓");
                 neutral.remove(name);
                 favorites.add(name);
+                song.favorite();
                 return;
             case "ｘ":
                 button.setText("+");
                 disliked.remove(name);
                 neutral.add(name);
+                song.neutral();
                 return;
             case "✓":
                 button.setText("ｘ");
                 favorites.remove(name);
                 disliked.add(name);
+                song.dislike();
                 return;
         }
 
