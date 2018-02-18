@@ -21,6 +21,7 @@ public class Song implements Parcelable{
     private String lastLocation;
     private String lastTime;
     private String lastDate;
+    private String lastDay;
     private boolean favorite = false;
     private boolean dislike = false;
 
@@ -42,6 +43,8 @@ public class Song implements Parcelable{
     public void setDate(String newDate) {
         lastDate = newDate;
     }
+
+    public void setDay(String newDay) { lastDay = newDay; }
 
     public void dislike() {
         dislike = true;
@@ -74,6 +77,14 @@ public class Song implements Parcelable{
     public String getLastDate() {
         return lastDate;
     }
+
+    public String getLastDay() { return lastDay; }
+
+    public boolean isNeutral() { return !(favorite || dislike); }
+
+    public boolean isFavorite() { return favorite; }
+
+    public boolean isDislike() { return dislike; }
 
     // Parcel uses this
     @Override
@@ -115,6 +126,16 @@ public class Song implements Parcelable{
         lastDate = in.readString();
         favorite = in.readByte() != 0;
         dislike = in.readByte() != 0;
+    }
+
+    public boolean Undo() {
+        try {
+
+            return true;
+        }
+        catch (Exception e) {
+            return false;
+        }
     }
 
 }
