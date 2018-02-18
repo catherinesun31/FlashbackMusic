@@ -69,20 +69,21 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
             ActivityCompat.requestPermissions(this,
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     100);
-            Log.d("test1","ins");
+            Log.d("test1", "ins");
         }
-
-        mFusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                //logic to handle location
-                if (location != null) {
-                    locationManager = location;
-                    Log.d("Current Location", "Longitude: " + locationManager.getLongitude() + "\n"
-                            + "Latitude: " + locationManager.getLatitude());
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mFusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    //logic to handle location
+                    if (location != null) {
+                        locationManager = location;
+                        Log.d("Current Location", "Longitude: " + locationManager.getLongitude() + "\n"
+                                + "Latitude: " + locationManager.getLatitude());
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     public void loadMedia(int resourceId){
