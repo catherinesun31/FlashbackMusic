@@ -70,12 +70,10 @@ public class SongListActivity extends AppCompatActivity{
 
         /*a modification James Rich*/
         // just mocking up to get it working
-        if(in.getBooleanExtra("albumOrigin",true)){
 
-            Album albumSelected = in.getExtras().getParcelable("songs");
-            actualSongs = albumSelected.getSongs();
 
-        }
+        Album albumSelected = in.getExtras().getParcelable("songs");
+        actualSongs = albumSelected.getSongs();
 
         currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
         //SharedPreferences.Editor editor = currentSongState.edit();

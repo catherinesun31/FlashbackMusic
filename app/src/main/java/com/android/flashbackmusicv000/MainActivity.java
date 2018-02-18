@@ -50,8 +50,10 @@ private SharedPreferences flashBackState;
 
 ArrayList<Song> songs1;
 
+private Album allSongs;
+
 //albums need to be passed...
-ArrayList<Album> albums;
+private ArrayList<Album> albums;
 
     /**
      * onCreate Method represents the beginning state of the main activity whenever it is started.
@@ -99,12 +101,12 @@ ArrayList<Album> albums;
         songsList.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                launchSongs();
+                launchSongs(allSongs);
             }
         });
 
 
-       Button albumList = (Button) findViewById(R.id.albums);
+        Button albumList = (Button) findViewById(R.id.albums);
 
         albumList.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -187,13 +189,50 @@ ArrayList<Album> albums;
             int minutes = (int)Math.ceil((mil / (1000*60)) % 60);
             duration = minutes + ":" + seconds;
 
+
+
+            Log.d("Information: ", "Title: " + title + "\n" +
+            "Artist: " + artist + "\n" +
+            "com.android.flashbackmusicv000.Album: " + albumName + "\n" +
+            "Duration: " + duration);
+
+            Song currentSong = new Song(title, songId);
+
+            /* The following conditional statements add to the ArrayLists of strings.
+            * will instead add the strings to the songs... and pass them as albums.
+             */
+
+            if (favorites != null) {
+
+                //
+                if (favorites.contains(title)) {
+                    currentSong.favorite();
+                    //adding to the string arrayList.
+                    this.favorites[favoritesNow] = currentSong.getTitle();
+                    ++favoritesNow;
+                }
+
+            } else if (disliked != null) {
+                if (disliked.contains(title)) {
+                    currentSong.dislike();
+                    this.disliked[dislikedNow] = currentSong.getTitle();
+                    ++dislikedNow;
+                }
+
+            } else if (neutral != null) {
+                if (neutral.contains(title)) {
+                    currentSong.neutral();
+                    this.neutral[neutralNow] = currentSong.getTitle();
+                    ++neutralNow;
+                }
+            }
+
             //if the album does not exist within the set of albums, add a new album to it with the
             //set of songs. else simply add to a currently existing album.
 
-
             if(!checkAlbum(albumName)){
 
-                albums.add(new Album(albumName, new Song(title, songId)));
+                albums.add(new Album(albumName, currentSong));
 
             } else {
 
@@ -202,34 +241,10 @@ ArrayList<Album> albums;
 
             }
 
-            Log.d("Information: ", "Title: " + title + "\n" +
-            "Artist: " + artist + "\n" +
-            "com.android.flashbackmusicv000.Album: " + albumName + "\n" +
-            "Duration: " + duration);
-            Song song = new Song(title, songId);
+            allSongs.addSong(currentSong);
 
-            if (favorites != null) {
-                if (favorites.contains(title)) {
-                    song.favorite();
-                    this.favorites[favoritesNow] = song.getTitle();
-                    ++favoritesNow;
-                }
-            }
-            if (disliked != null) {
-                if (disliked.contains(title)) {
-                    song.dislike();
-                    this.disliked[dislikedNow] = song.getTitle();
-                    ++dislikedNow;
-                }
-            }
-            if (neutral != null) {
-                if (neutral.contains(title)) {
-                    song.neutral();
-                    this.neutral[neutralNow] = song.getTitle();
-                    ++neutralNow;
-                }
-            }
-            songs[i] = song;
+            songs[i] = currentSong;
+
         }
 
         return songs;
@@ -244,27 +259,40 @@ ArrayList<Album> albums;
      * This starts the SongsListActivity, and migrates to the list of all of the current songs
      */
     // JANICE EDIT 02/13: PASSING IN THE ARRAY OF SONGS SO WE CAN PASS THROUGH TO SONGSLIST AND SONGSPLAYING
-    public void launchSongs() {
+
+    public void launchSongs(Album allSongs) {
 
         //strings to be sent in an activity towards the SongListActivity
-        Intent intent = new Intent(this, SongListActivity.class);
 
+        Intent toSongListIntent = new Intent(this, SongListActivity.class);
 
+        //songs are parcelable
+
+        //only want to send all of the songs displayed here.....
+
+        //All songs.....
+        toSongListIntent.putExtra("songs",allSongs);
+        //temporary
+
+        //try to put the strings from this activity inside the object and pass that object.
+        /*
         intent.putExtra("Favorites", favorites);
         intent.putExtra("Disliked", disliked);
         intent.putExtra("Neutral", neutral);
         intent.putExtra("Song list", songs1);
-        intent.putExtra("isOn", isFlashBackOn);
+        */
+
+        toSongListIntent.putExtra("isOn", isFlashBackOn);
         //temporary, whilst passing strings.
-        intent.putExtra("albumOrigin", false);
-        startActivity(intent);
+        // need to change this...
+        startActivity(toSongListIntent);
     }
 
     /*
      * launchAlbums:
      */
     public void launchAlbums() {
-        //where it comes from -> where it is going.
+
         Intent albumsIntent  = new Intent(this, AlbumQueue.class);
         Bundle args = new Bundle();
         args.putSerializable("ARRAYLIST",albums);
