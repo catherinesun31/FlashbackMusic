@@ -23,11 +23,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class SongPlayingActivity extends AppCompatActivity implements OnMapReadyCallback {
     private MediaPlayer mediaPlayer;
+
+    private Intent intent;
+    private boolean isFlashBackOn;
+    private Switch switchy;
+
     private FusedLocationProviderClient mFusedLocationClient;
+
 
     private Location locationManager;
 
@@ -54,6 +63,13 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
         });
 
         Intent i = getIntent();
+        setWidgets();
+        //bug could be here.... something to do with the intents....
+
+
+
+        //song being passed a parcelable, through the intent... but no parcelable was sent...???
+
         Song song = (Song) i.getParcelableExtra("name_of_extra");
 
         TextView songTitle = (TextView) findViewById(R.id.songtitle);
@@ -107,6 +123,51 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
             System.out.println(e.toString());
         }
     }
+
+    private void setWidgets(){
+
+        intent = getIntent();
+        switchy = (Switch) findViewById(R.id.flashSwitch);
+        isFlashBackOn = intent.getBooleanExtra("isOn",isFlashBackOn);
+
+        switchy.setChecked(isFlashBackOn);
+
+        switchy.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+
+                if(isChecked) {
+                    //run event;
+                    isFlashBackOn = true;
+                    Toast.makeText(getApplicationContext(), "flashback mode is on", Toast.LENGTH_SHORT).show();
+
+                } else {
+
+
+                    //close event
+                    isFlashBackOn = false;
+                    Toast.makeText(getApplicationContext(), "flashback mode is off", Toast.LENGTH_SHORT).show();
+                    //
+                }
+            }
+        });
+    }
+
+    /*
+    public static String printIntent(Intent intent){
+
+
+        if (intent == null) {
+
+            return null;
+
+        }
+
+        return intent.toString() + " " + bundleToString(intent.getExtras());
+
+
+    }
+    */
 
     @Override
     public void onDestroy(){

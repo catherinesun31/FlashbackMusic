@@ -15,11 +15,16 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
+import android.widget.Switch;
+import android.widget.Toast;
+
 import com.android.flashbackmusicv000.Song;
 
 import java.io.File;
+import java.util.ArrayList;
 
 
 /* AlbumQueue is an Activity that displays the list of albums
@@ -28,6 +33,11 @@ import java.io.File;
  */
 public class AlbumQueue extends AppCompatActivity {
 
+    private Intent mainIntent;
+    private boolean isFlashBackOn;
+    private Switch switchy;
+
+    private ArrayList<Album> albums;
 
     /* onCreate makes all the buttons for each album in our raw files
      */
@@ -38,104 +48,53 @@ public class AlbumQueue extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // set intent items
+        setSentItems();
+
+
+        // may need to consider an instance where the number of albums are unknown.
+
         Button album1 = (Button) findViewById(R.id.album1);
         Button album2 = (Button) findViewById(R.id.album2);
         Button album3 = (Button) findViewById(R.id.album3);
         Button album4 = (Button) findViewById(R.id.album4);
         Button album5 = (Button) findViewById(R.id.album5);
 
+        //get songs to load... and
+
 
         album1.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                launchActivity();
+                launchActivity(albums.get(0));
             }
         });
         album2.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                launchActivity();
+                launchActivity(albums.get(1));
             }
         });
         album3.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                launchActivity();
+                launchActivity(albums.get(2));
             }
         });
         album4.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                launchActivity();
+                launchActivity(albums.get(3));
             }
         });
         album5.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                launchActivity();
+                launchActivity(albums.get(4));
             }
         });
 
-
-
-        /*
-        AssetFileDescriptor assetFileDescriptor = this.getResources().openRawResourceFd(MEDIA_RES_ID);
-        try {
-            mediaPlayer.setDataSource(assetFileDescriptor);
-            mediaPlayer.prepareAsync();
-        }
-        catch (Exception e) {
-            System.out.println(e.toString());
-        }
-
-        java.io.File file = new java.io.File("/Users/cailintreseder/AndroidStudioProjects/FlashbackMusic/app/src/main/res/raw");
-        File[] files = file.listFiles();
-        ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
-        Button songButton;
-
-        for (int i = 0; i < totalSongs; ++i) {
-            String fileName = files[i].getName().replace(".mp3", "");
-            Button button = new Button(this);
-            ScrollView.LayoutParams params = new ScrollView.LayoutParams(
-                    ScrollView.LayoutParams.MATCH_PARENT,
-                    50,
-                    Gravity.CENTER_VERTICAL
-            );
-            button.setId(button.toString().hashCode());
-            button.setText(fileName);
-            button.setBackgroundColor(Color.rgb(230, 230, 230));
-            button.setTextAlignment(View.TEXT_ALIGNMENT_GRAVITY);
-            button.setTextColor(Color.rgb(89,89,89));
-            button.setTextSize(20f);
-            button.setSingleLine(true);
-            button.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-            button.setMarqueeRepeatLimit(1000);
-            scrollView.addView(button, params);
-            songButton = (Button) findViewById(button.getId());
-            songButton.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-                    //set button listener
-                }
-            });
-
-            Button add = new Button(this);
-            ScrollView.LayoutParams smallParams = new ScrollView.LayoutParams(
-                    50,
-                    50
-            );
-            add.setId(add.toString().hashCode());
-            add.setText("@string/favorited");
-            add.setBackgroundColor(Color.rgb(230, 230, 230));
-            add.setTextSize(20f);
-            scrollView.addView(add, smallParams);
-            add = (Button) findViewById(add.getId());
-            add.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-                    //set button listener
-                }
-            });
-        }
-        */
+        setSwitch();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -148,9 +107,24 @@ public class AlbumQueue extends AppCompatActivity {
     }
 
     /* launchActivity launches the album's song list activity */
-    public void launchActivity(){
-        Intent intent = new Intent(this, AlbumSongList.class);
-        startActivity(intent);
+    public void launchActivity(Album songs){
+
+        //get all the songs from the album and add them to the intent...???
+
+
+        //Toast.makeText(getApplicationContext(), "making intents", Toast.LENGTH_SHORT).show();
+        Intent toSongListIntent = new Intent(this, SongListActivity.class);
+
+        //songs are parcelable
+        toSongListIntent.putExtra("songs",songs);
+        //temporary
+        toSongListIntent.putExtra("albumOrigin",true);
+
+        //for loop.... loook at the class.
+
+
+        //Toast.makeText(getApplicationContext(), "launching song playing activity", Toast.LENGTH_SHORT).show();
+        startActivity(toSongListIntent);
     }
 
     @Override
@@ -173,5 +147,48 @@ public class AlbumQueue extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setSentItems(){
+
+        mainIntent = this.getIntent();
+        Bundle args = mainIntent.getBundleExtra("BUNDLE");
+        albums = (ArrayList<Album>) args.getSerializable("ARRAYLIST");
+        isFlashBackOn = mainIntent.getBooleanExtra("isOn",isFlashBackOn);
+
+    }
+    //TODO clean up code.
+    private void setButtons(){
+
+
+
+    }
+    private void setSwitch(){
+
+        mainIntent = getIntent();
+        switchy = (Switch) findViewById(R.id.flashSwitch);
+
+        switchy.setChecked(isFlashBackOn);
+
+        switchy.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+
+                if(isChecked) {
+
+                    //run event;
+                    isFlashBackOn = true;
+                    Toast.makeText(getApplicationContext(), "flashback mode is on", Toast.LENGTH_SHORT).show();
+
+                } else {
+
+
+                    //close event
+                    isFlashBackOn = false;
+                    Toast.makeText(getApplicationContext(), "flashback mode is off", Toast.LENGTH_SHORT).show();
+                    //
+                }
+            }
+        });
     }
 }
