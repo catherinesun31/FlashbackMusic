@@ -54,7 +54,7 @@ public class SongListActivity extends AppCompatActivity{
     ArrayList<String> songs;
     ArrayList<Song> actualSongs;
     private Switch switchy;
-    private Intent intent;
+    private Intent in;
 
     // com.android.flashbackmusicv000.Song Instances
 
@@ -65,10 +65,25 @@ public class SongListActivity extends AppCompatActivity{
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //
+        in = getIntent();
+
+        /*a modification James Rich*/
+        // just mocking up to get it working
+        if(in.getBooleanExtra("albumOrigin",true)){
+
+            Album albumSelected = in.getExtras().getParcelable("songs");
+            actualSongs = albumSelected.getSongs();
+
+        }
+
         currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
         //SharedPreferences.Editor editor = currentSongState.edit();
         setWidgets();
-        Intent in = getIntent();
+
+
+        //getExtras.... passing strings????
+        /*
         Bundle b = in.getExtras();
         if (b != null) {
             String[] f = (String[])b.get("Favorites");
@@ -91,6 +106,7 @@ public class SongListActivity extends AppCompatActivity{
         }
 
         // TODO, Janice: we might not need to pass in favorites/disliked/neutral list since we now pass in the entire Songs themselves
+        */
         songs = new ArrayList<String>();
         if (favorites != null) {
             songs.addAll(favorites);
@@ -108,13 +124,15 @@ public class SongListActivity extends AppCompatActivity{
 
         Field[] fields = R.raw.class.getFields();
         final float scale = this.getResources().getDisplayMetrics().density;
-        int songId = neutral.get(0).hashCode();
+        int songId = actualSongs.get(0).getSongId();//neutral.get(0).hashCode();
         int pixels = (int) (50 * scale + 0.5f);
         int textSize = (int) (15 * scale + 0.5f);
         int buttonId = songId + 1;
 
-        for (index = 0; index < fields.length; ++index) {
-            String fileName = songs.get(index);
+        //counter loop creates a new button. Attaches a 'new song' to the click listener.
+
+        for (index = 0; index < actualSongs.size(); index++) {
+            String fileName = actualSongs.get(index).getTitle();
 
             Button button = new Button(this);
             android.support.constraint.ConstraintLayout.LayoutParams params = new
@@ -131,6 +149,7 @@ public class SongListActivity extends AppCompatActivity{
             button.setMarqueeRepeatLimit(1000);
 
             // Janice edit: passing songs through to songslist activity
+            //newSong from actualSongs.get(index)
             final Song newSong = actualSongs.get(index);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -147,8 +166,8 @@ public class SongListActivity extends AppCompatActivity{
                     pixels, pixels);
             add.setId((int) button.getId() + 1);
 
-            if (neutral.contains(fileName)) add.setText("+");
-            else if (disliked.contains(fileName)) add.setText("x");
+            if (actualSongs.contains(fileName)) add.setText("+");
+            else if (actualSongs.contains(fileName)) add.setText("x");
             else add.setText("✓");
 
             add.setBackgroundColor(Color.rgb(230, 230, 230));
@@ -233,7 +252,9 @@ public class SongListActivity extends AppCompatActivity{
     }
 
     public void launchActivity(Song song) {
+        //new intent ... should have the
         Intent intent = new Intent(this, SongPlayingActivity.class);
+
         intent.putExtra("name_of_extra", song);
         intent.putExtra("isOn", isFlashBackOn);
         startActivity(intent);
@@ -264,9 +285,8 @@ public class SongListActivity extends AppCompatActivity{
     // Sets the flashback mode switch across activities
     private void setWidgets(){
 
-        Intent intent = getIntent();
         switchy = (Switch) findViewById(R.id.flashSwitch);
-        isFlashBackOn = intent.getBooleanExtra("isOn",isFlashBackOn);
+        isFlashBackOn = in.getBooleanExtra("isOn",isFlashBackOn);
         switchy.setChecked(isFlashBackOn);
 
         switchy.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

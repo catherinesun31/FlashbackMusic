@@ -38,9 +38,14 @@ public class SongPlayingActivity extends AppCompatActivity {
             }
         });
 
-        setWidgets();
-
         Intent i = getIntent();
+        setWidgets();
+        //bug could be here.... something to do with the intents....
+
+
+
+        //song being passed a parcelable, through the intent... but no parcelable was sent...???
+
         Song song = (Song) i.getParcelableExtra("name_of_extra");
 
         TextView songTitle = (TextView) findViewById(R.id.songtitle);
@@ -102,6 +107,22 @@ public class SongPlayingActivity extends AppCompatActivity {
             }
         });
     }
+
+    /*
+    public static String printIntent(Intent intent){
+
+
+        if (intent == null) {
+
+            return null;
+
+        }
+
+        return intent.toString() + " " + bundleToString(intent.getExtras());
+
+
+    }
+    */
 
     @Override
     public void onDestroy(){

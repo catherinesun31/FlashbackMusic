@@ -34,6 +34,7 @@ import com.android.flashbackmusicv000.Song;
 import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
 /* AlbumSongList is an Activity that displays all the songs in a specific album
@@ -50,6 +51,7 @@ public class AlbumSongList extends AppCompatActivity {
     int totalSongs = getNumberOfSongs();
     private Switch switchy;
     private Intent intent;
+    private ArrayList<Song> actualSongs;
 
     //MEDIA_RES_IDS = new int[totalSongs];
 
@@ -74,15 +76,6 @@ public class AlbumSongList extends AppCompatActivity {
 
         ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
 
-
-        //MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-        //mmr.setDataSource("/Users/keavila/Desktop/cse-110-team-project-team-35/FlashBack Music/cse-110-team-project-team-35/app/src/main/res/raw");
-
-        //String albumName = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
-        //File[] files = fields.listFiles(new Mp3Filter());
-
-
-        //Button songButton;
         Field[] fields = R.raw.class.getFields();
 
         final float scale = this.getResources().getDisplayMetrics().density;
@@ -108,10 +101,15 @@ public class AlbumSongList extends AppCompatActivity {
             button.setSingleLine(true);
             button.setEllipsize(TextUtils.TruncateAt.MARQUEE);
             button.setMarqueeRepeatLimit(1000);
+
+            final Song newSong = actualSongs.get(i);
+
+            //song attached to a button for the launch activity, so we can apply the new song to the
+            //media player.....
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    launchActivity();
+                    launchActivity(newSong);
                 }
             });
             constraintLayout.addView(button, params);
@@ -333,9 +331,13 @@ public class AlbumSongList extends AppCompatActivity {
     }
 
     /* launchActivity launches the next activity */
-    public void launchActivity(){
+    public void launchActivity(Song song){
+
+        Toast.makeText(getApplicationContext(), "making intents", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, SongPlayingActivity.class);
+        intent.putExtra("name_of_extra", song);
         intent.putExtra("isOn", isFlashBackOn);
+        //Toast.makeText(getApplicationContext(), "launching song playing activity", Toast.LENGTH_SHORT).show();
         startActivity(intent);
     }
 

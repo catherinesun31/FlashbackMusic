@@ -49,6 +49,8 @@ private Switch flashSwitch;
 private SharedPreferences flashBackState;
 
 ArrayList<Song> songs1;
+
+//albums need to be passed...
 ArrayList<Album> albums;
 
     /**
@@ -243,12 +245,18 @@ ArrayList<Album> albums;
      */
     // JANICE EDIT 02/13: PASSING IN THE ARRAY OF SONGS SO WE CAN PASS THROUGH TO SONGSLIST AND SONGSPLAYING
     public void launchSongs() {
+
+        //strings to be sent in an activity towards the SongListActivity
         Intent intent = new Intent(this, SongListActivity.class);
+
+
         intent.putExtra("Favorites", favorites);
         intent.putExtra("Disliked", disliked);
         intent.putExtra("Neutral", neutral);
         intent.putExtra("Song list", songs1);
         intent.putExtra("isOn", isFlashBackOn);
+        //temporary, whilst passing strings.
+        intent.putExtra("albumOrigin", false);
         startActivity(intent);
     }
 
@@ -256,9 +264,13 @@ ArrayList<Album> albums;
      * launchAlbums:
      */
     public void launchAlbums() {
-        Intent albums  = new Intent(this, AlbumQueue.class);
-        albums.putExtra("isOn", isFlashBackOn);
-        startActivity(albums);
+        //where it comes from -> where it is going.
+        Intent albumsIntent  = new Intent(this, AlbumQueue.class);
+        Bundle args = new Bundle();
+        args.putSerializable("ARRAYLIST",albums);
+        albumsIntent.putExtra("BUNDLE",args);
+        albumsIntent.putExtra("isOn", isFlashBackOn);
+        startActivity(albumsIntent);
 
     }
 

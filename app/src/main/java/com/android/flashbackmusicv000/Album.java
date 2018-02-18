@@ -21,6 +21,7 @@ public class Album implements /*Iterable<T>8*/ Parcelable {
 
     // Constructor that takes a "raw" array and stores it
     public Album(String name, ArrayList<Song> songs) {
+
         this.name = name;
 
         this.songs = songs;
@@ -50,6 +51,12 @@ public class Album implements /*Iterable<T>8*/ Parcelable {
     public void addSongs(Collection<Song> songsToAdd){
 
         this.songs.addAll(songsToAdd);
+
+    }
+
+    public ArrayList<Song> getSongs(){
+
+        return songs;
 
     }
 
