@@ -87,8 +87,7 @@ private ArrayList<Album> albums;
         songs1 = new ArrayList<Song>(Arrays.asList(songs));
         if (fave != null && disliked != null && neutral != null) {
             songs = getCurrentSongs(fave, dis, neut);
-        }
-        else {
+        } else {
             neutral = new String[songs.length];
             for (int i = 0; i < songs.length; ++i) {
                 neutral[i] = songs[i].getTitle();
@@ -169,9 +168,9 @@ private ArrayList<Album> albums;
         Song[] songs = new Song[fields.length];
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
 
-
-
         for (int i = 0; i < fields.length; ++i) {
+
+
             String path = "android.resource://" + getPackageName() + "/raw/" + fields[i].getName();
             final Uri uri = Uri.parse(path);
 
@@ -241,8 +240,15 @@ private ArrayList<Album> albums;
 
             }
 
-            allSongs.addSong(currentSong);
+            if(i == 0){
 
+                this.allSongs = new Album("All Songs From Main Activity",currentSong);
+
+            } else {
+
+                this.allSongs.addSong(currentSong);
+
+            }
             songs[i] = currentSong;
 
         }
