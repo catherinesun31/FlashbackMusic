@@ -39,9 +39,18 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
+import android.widget.CompoundButton;
+import android.widget.Switch;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class SongPlayingActivity extends AppCompatActivity implements OnMapReadyCallback {
     private MediaPlayer mediaPlayer;
+
+    private Intent intent;
+    private boolean isFlashBackOn;
+    private Switch switchy;
+
     private FusedLocationProviderClient mFusedLocationClient;
     private AddressResultReceiver mResultReceiver;
     private Location locationManager;
@@ -69,7 +78,14 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
         });
 
         Intent i = getIntent();
-        final Song song = (Song) i.getParcelableExtra("name_of_extra");
+        setWidgets();
+        //bug could be here.... something to do with the intents....
+
+
+
+        //song being passed a parcelable, through the intent... but no parcelable was sent...???
+
+        Song song = (Song) i.getParcelableExtra("name_of_extra");
 
         TextView songTitle = (TextView) findViewById(R.id.songtitle);
         songTitle.setText(song.getTitle());
@@ -144,7 +160,7 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
             ActivityCompat.requestPermissions(this,
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     100);
-            Log.d("test1","ins");
+            Log.d("test1", "ins");
         }
 
         mFusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
@@ -176,7 +192,19 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
             }
         });
 
-
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mFusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    //logic to handle location
+                    if (location != null) {
+                        locationManager = location;
+                        Log.d("Current Location", "Longitude: " + locationManager.getLongitude() + "\n"
+                                + "Latitude: " + locationManager.getLatitude());
+                    }
+                }
+            });
+        }
     }
 
     public void loadMedia(int resourceId){
@@ -200,6 +228,51 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
             System.out.println(e.toString());
         }
     }
+
+    private void setWidgets(){
+
+        intent = getIntent();
+        switchy = (Switch) findViewById(R.id.flashSwitch);
+        isFlashBackOn = intent.getBooleanExtra("isOn",isFlashBackOn);
+
+        switchy.setChecked(isFlashBackOn);
+
+        switchy.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+
+                if(isChecked) {
+                    //run event;
+                    isFlashBackOn = true;
+                    Toast.makeText(getApplicationContext(), "flashback mode is on", Toast.LENGTH_SHORT).show();
+
+                } else {
+
+
+                    //close event
+                    isFlashBackOn = false;
+                    Toast.makeText(getApplicationContext(), "flashback mode is off", Toast.LENGTH_SHORT).show();
+                    //
+                }
+            }
+        });
+    }
+
+    /*
+    public static String printIntent(Intent intent){
+
+
+        if (intent == null) {
+
+            return null;
+
+        }
+
+        return intent.toString() + " " + bundleToString(intent.getExtras());
+
+
+    }
+    */
 
     @Override
     public void onDestroy(){
