@@ -45,6 +45,12 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+import android.content.ServiceConnection;
+import android.content.Context;
+import android.content.ComponentName;
+import android.os.IBinder;
+
 public class SongPlayingActivity extends AppCompatActivity implements OnMapReadyCallback {
     private MediaPlayer mediaPlayer;
 
@@ -56,10 +62,43 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
     private AddressResultReceiver mResultReceiver;
     private Location locationManager;
 
+
+    private boolean mIsBound = false;
+    private MusicBackgroundSerivce mServ;
+
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         //do nothing
     }
+
+
+
+    private ServiceConnection SCon = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            mServ = ((MusicBackgroundSerivce.ServiceBinder)iBinder).getService();
+            //MusicService.ServiceBinder binder = (MusicService.ServiceBinder) service;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            mServ = null;
+        }
+    };
+    void doBindService(){
+        bindService(new Intent(this, MusicBackgroundSerivce.class), SCon, Context.BIND_AUTO_CREATE);
+        mIsBound = true;
+    }
+    void doUnbindService(){
+        if (mIsBound) {
+
+            unbindService(SCon);
+            mIsBound = false;
+        }
+    }
+    //end Karla and Chelsea add in
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +122,9 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
         //bug could be here.... something to do with the intents....
 
 
+        Intent music = new Intent();
+        music.setClass(this, MusicBackgroundSerivce.class);
+        startService(music);
 
         //song being passed a parcelable, through the intent... but no parcelable was sent...???
 
@@ -289,6 +331,14 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
         intent.putExtra(FetchAddressIntentService.Constants.LOCATION_DATA_EXTRA, locationManager);
         startService(intent);
     }
+
+
+    /*protected void startMusicBackgroundService(){
+        Intent music = new Intent();
+        music.setClass(this, MusicBackgroundSerivce.class);
+        startService(music);
+    }*/
+
 
     class AddressResultReceiver extends ResultReceiver {
         String mAddressOutput;

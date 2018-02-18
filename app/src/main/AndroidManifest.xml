@@ -7,9 +7,9 @@
          Google Maps Android API v2, but you must specify either coarse or fine
          location permissions for the 'MyLocation' functionality. 
     -->
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -44,9 +44,10 @@
             android:name=".AlbumSongList"
             android:label="@string/title_activity_album_song_list"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <service
             android:name=".FetchAddressIntentService"
-            android:exported="false"/>
+            android:exported="false" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -61,7 +62,12 @@
 
         <activity
             android:name=".GetLocation"
-            android:label="@string/title_activity_get_location"></activity>
+            android:label="@string/title_activity_get_location" />
+
+        <service
+            android:name=".MusicBackgroundSerivce"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>
