@@ -142,17 +142,33 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         neutral = new ArraySet<String>();
         disliked = new ArraySet<String>();
 
-        Song[] songs = getCurrentSongs(fave, dis, neut);
-        songs1 = new ArrayList<Song>(Arrays.asList(songs));
+        Song[] songs = {};
 
-        if (fave != null && dis != null && neut != null) {
-            if (fave.isEmpty() && dis.isEmpty() && neut.isEmpty()) {
-                neutral = new ArraySet<>();
-                for (int i = 0; i < songs.length; ++i) {
-                    neutral.add(songs[i].getTitle());
-                }
+        boolean f = false;
+        if (fave != null) {
+            f = true;
+        }
+        boolean d = false;
+        if (dis != null) {
+            d = true;
+        }
+        boolean n = false;
+        if (neut != null) {
+            n = true;
+        }
+
+        if (f || d || n) {
+            songs = getCurrentSongs(fave, dis, neut);
+        }
+        if (!f && !d && !n) {
+            neutral = new ArraySet<>();
+            for (int i = 0; i < songs.length; ++i) {
+                neutral.add(songs[i].getTitle());
+
             }
         }
+        songs1 = new ArrayList<Song>(Arrays.asList(songs));
+
 
         //Add list of favorited/disliked/neutral songs to shared preferences
         editor.putStringSet("favorites", favorites);

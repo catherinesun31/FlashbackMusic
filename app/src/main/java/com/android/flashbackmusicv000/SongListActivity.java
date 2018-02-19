@@ -74,7 +74,7 @@ public class SongListActivity extends AppCompatActivity{
         flashback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                //launchActivity();
             }
         });
         //
@@ -103,9 +103,9 @@ public class SongListActivity extends AppCompatActivity{
             neutral.addAll(neut);
             disliked.addAll(dis);
 
-            setWidgets();
-        //SharedPreferences.Editor editor = currentSongState.edit();
         setWidgets();
+        //SharedPreferences.Editor editor = currentSongState.edit();
+
 
 
         //getExtras.... passing strings????
