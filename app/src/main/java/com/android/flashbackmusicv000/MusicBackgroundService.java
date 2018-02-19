@@ -181,6 +181,7 @@ public class MusicBackgroundService extends IntentService implements MediaPlayer
         mPlayer.stop();
         Toast.makeText(this, "Music is stoped", Toast.LENGTH_LONG).show();
         mPlayer.release();
+        mPlayer.reset();
         mPlayer = null;
     }
 

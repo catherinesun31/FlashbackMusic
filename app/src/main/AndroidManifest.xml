@@ -40,6 +40,10 @@
             android:name=".AlbumSongList"
             android:label="@string/title_activity_album_song_list"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SongPlayingActivity"
+            android:label="SongPlayingActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <service
             android:name=".FetchAddressIntentService"
