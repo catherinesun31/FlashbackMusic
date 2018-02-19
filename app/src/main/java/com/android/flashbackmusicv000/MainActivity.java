@@ -51,28 +51,29 @@ import java.util.ListIterator;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-public class MainActivity extends AppCompatActivity implements
-        LocationListener, OnMapReadyCallback {
+public class MainActivity extends AppCompatActivity implements LocationListener, OnMapReadyCallback {
 
-SharedPreferences currentSongState;
-//SharedPreferences widgetState;
-String[] favorites;
-String[] disliked;
-String[] neutral;
-int favoritesNow;
-int dislikedNow;
-int neutralNow;
-private boolean isFlashBackOn;
-private Switch flashSwitch;
-public static SharedPreferences flashBackState;
+    SharedPreferences currentSongState;
+    //SharedPreferences widgetState;
+    String[] favorites;
+    String[] disliked;
+    String[] neutral;
+    int favoritesNow;
+    int dislikedNow;
+    int neutralNow;
+    private boolean isFlashBackOn;
+    private Switch flashSwitch;
+    public static SharedPreferences flashBackState;
 
-ArrayList<Song> songs1;
 
-private Album allSongs;
+    ArrayList<Song> songs1;
 
-//albums need to be passed...
-ArrayList<Album> albums;
-Context mContext;
+    private Album allSongs;
+
+    //albums need to be passed...
+    //ArrayList<Album> albums;
+    Context mContext;
+
 
     private FusedLocationProviderClient mFusedLocationClient;
     private Location locationManager;
@@ -90,18 +91,19 @@ Context mContext;
     protected String mAreaOutput;
     protected String mCityOutput;
     protected String mStateOutput;
-private ArrayList<Album> albums;
+    private ArrayList<Album> albums;
 
 
     /**
      * onCreate Method represents the beginning state of the main activity whenever it is started.
+     *
      * @param savedInstanceState is the previous state of this activity represented from the Bundle
-     * object.
-     * The current song list is loaded from the shared preference across the entire app, restoring the
-     * songslist from when it was last played.                          .
-     * If none of the the string sets obtained from the shared preferences have empty data,
-     * then we know that there was an album. Then the songslist gets updated.
-     * Anonymous listeners are then set for each of the buttons on activity_main.xml.
+     *                           object.
+     *                           The current song list is loaded from the shared preference across the entire app, restoring the
+     *                           songslist from when it was last played.                          .
+     *                           If none of the the string sets obtained from the shared preferences have empty data,
+     *                           then we know that there was an album. Then the songslist gets updated.
+     *                           Anonymous listeners are then set for each of the buttons on activity_main.xml.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,13 +160,11 @@ private ArrayList<Album> albums;
         setSwitch();
 
 
-                    //close event
-                    isFlashBackOn = false;
-                    Toast.makeText(getApplicationContext(), "flashback mode is off", Toast.LENGTH_SHORT).show();
-                    //
-                }
-            }
-        });
+        //close event
+        isFlashBackOn = false;
+        Toast.makeText(getApplicationContext(), "flashback mode is off", Toast.LENGTH_SHORT).show();
+        //
+
 
         /*
          * I'm thinking that here, we should make a list of all of the Song objects from songs that
@@ -177,6 +177,7 @@ private ArrayList<Album> albums;
         mContext = this;
 
     }
+
     @Override
     protected void onStart() {
         Log.i("In: ", "MainActivity.onStart");
@@ -582,5 +583,5 @@ private ArrayList<Album> albums;
 
 
     }
-
 }
+
