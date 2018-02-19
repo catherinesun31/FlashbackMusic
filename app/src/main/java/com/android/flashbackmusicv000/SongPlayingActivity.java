@@ -2,8 +2,10 @@ package com.android.flashbackmusicv000;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
@@ -13,6 +15,7 @@ import android.location.Location;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.ResultReceiver;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -47,8 +50,18 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 public class SongPlayingActivity extends AppCompatActivity implements
         OnMapReadyCallback {
+
+
+
+import android.content.ServiceConnection;
+import android.content.Context;
+import android.content.ComponentName;
+import android.os.IBinder;
+
+public class SongPlayingActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private MediaPlayer mediaPlayer;
     Context mContext;
@@ -69,16 +82,58 @@ public class SongPlayingActivity extends AppCompatActivity implements
     private GoogleApiClient mGoogleApiClient;
     private AddressResultReceiver mResultReceiver;
 
+
     protected String mAddressOutput;
     protected String mAreaOutput;
     protected String mCityOutput;
     protected String mStateOutput;
+
+
+    private boolean mIsBound = false;
+    private MusicBackgroundService mServ;
+    private Intent toMusicServiceIntent;
+
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        //do nothing
+    }
+
+
+
+    //Karla add in
+    private ServiceConnection SCon = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            //mServ = ((MusicBackgroundService.ServiceBinder)iBinder).getService();
+            //MusicService.ServiceBinder binder = (MusicService.ServiceBinder) service;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            mServ = null;
+        }
+    };
+    void doBindService(){
+        bindService(new Intent(this, MusicBackgroundService.class), SCon, Context.BIND_AUTO_CREATE);
+        mIsBound = true;
+    }
+    void doUnbindService(){
+        if (mIsBound) {
+
+            unbindService(SCon);
+            mIsBound = false;
+        }
+    }
+    //end Karla add in
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i("In: ", "SongPlayingActivity.onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_song_playing);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mContext = this;
@@ -92,21 +147,27 @@ public class SongPlayingActivity extends AppCompatActivity implements
             }
         });
 
+
         Intent i = getIntent();
         setWidgets();
         //bug could be here.... something to do with the intents....
-
 
 
         //song being passed a parcelable, through the intent... but no parcelable was sent...???
 
         final Song song = (Song) i.getParcelableExtra("name_of_extra");
 
+        //temporary, will restore
+        //startMusicService(song);
+        sendIntentToMusicService();
+
+
         TextView songTitle = (TextView) findViewById(R.id.songtitle);
         songTitle.setText(song.getTitle());
 
         final int nameInt = song.getSongId();
         loadMedia(nameInt);
+        //THE MEDIAPLAYER BUTTON
         mediaPlayer.start();
 
         song.setTime(getTime());
@@ -198,6 +259,16 @@ public class SongPlayingActivity extends AppCompatActivity implements
 
 
     //TODO (if enough time): change this to a Time class, so that it's SRP (but also who cares)
+
+    private void sendIntentToMusicService(){
+
+        Intent toMusicService = new Intent(this,MusicBackgroundService.class);
+        intent.putExtra("message", "toMusicService");
+        startService(intent);
+
+    }
+
+
     private String getTime() {
         Calendar calendar = Calendar.getInstance();
         Date currentTime = calendar.getTime();
@@ -320,6 +391,12 @@ public class SongPlayingActivity extends AppCompatActivity implements
             System.out.println(e.toString());
         }
     }
+
+
+    /**
+     * sets the flashback switch
+     */
+
     private void setWidgets(){
 
         intent = getIntent();
@@ -349,6 +426,19 @@ public class SongPlayingActivity extends AppCompatActivity implements
         });
     }
 
+    /**
+     * method starting a background service to keep music playing on a seperqte thread
+     * @param song
+     */
+    private void startMusicService(Song song){
+
+        toMusicServiceIntent = new Intent();
+        toMusicServiceIntent.setClass(this, MusicBackgroundService.class);
+        toMusicServiceIntent.putExtra("song", song);
+        startService(toMusicServiceIntent);
+
+    }
+
     /*
     public static String printIntent(Intent intent){
         if (intent == null) {
@@ -358,6 +448,9 @@ public class SongPlayingActivity extends AppCompatActivity implements
     }
     */
 
+    /**
+     * Tells activity to save the flash back switch state and finish of when popping from the activity stack.
+     */
     @Override
     public void onBackPressed(){
 
@@ -378,6 +471,14 @@ public class SongPlayingActivity extends AppCompatActivity implements
         intent.putExtra(FetchAddressIntentService.Constants.LOCATION_DATA_EXTRA, locationManager);
         startService(intent);
     }
+
+
+    /*protected void startMusicBackgroundService(){
+        Intent music = new Intent();
+        music.setClass(this, MusicBackgroundSerivce.class);
+        startService(music);
+    }*/
+
 
     class AddressResultReceiver extends ResultReceiver {
         String mAddressOutput;
