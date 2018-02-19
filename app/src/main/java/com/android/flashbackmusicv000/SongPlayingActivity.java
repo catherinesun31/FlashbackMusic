@@ -126,7 +126,7 @@ public class SongPlayingActivity extends AppCompatActivity implements
                 public void onCompletion(MediaPlayer mediaPlayer) {
                     System.out.println("Supposed to change song info");
                     //getLocation(savedInstanceState);
-                    song1.setTime(getTime());
+                    /*song1.setTime(getTime());
                     song1.setDate(getDate());
                     song1.setDay(getDay());
 
@@ -156,7 +156,7 @@ public class SongPlayingActivity extends AppCompatActivity implements
                                 //skip the song here
                             }
                         }
-                    });
+                    });*/
                 }
 
             });
