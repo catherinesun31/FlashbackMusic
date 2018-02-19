@@ -71,7 +71,6 @@ ArrayList<Song> songs1;
 private Album allSongs;
 
 //albums need to be passed...
-ArrayList<Album> albums;
 Context mContext;
 
     private FusedLocationProviderClient mFusedLocationClient;
@@ -162,9 +161,7 @@ private ArrayList<Album> albums;
                     isFlashBackOn = false;
                     Toast.makeText(getApplicationContext(), "flashback mode is off", Toast.LENGTH_SHORT).show();
                     //
-                }
-            }
-        });
+
 
         /*
          * I'm thinking that here, we should make a list of all of the Song objects from songs that
@@ -175,8 +172,9 @@ private ArrayList<Album> albums;
         mResultReceiver = new AddressResultReceiver(new Handler());
         mLocationCallback = new LocationCallback();
         mContext = this;
-
     }
+
+
     @Override
     protected void onStart() {
         Log.i("In: ", "MainActivity.onStart");
