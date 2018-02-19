@@ -115,7 +115,7 @@ public class SongPlayingActivity extends AppCompatActivity implements
         MediaPlayer tempPlayer = mediaPlayer;
         //getLocation(savedInstanceState);  TODO Janice: took this out, kept making errors in merge conflict
 
-        for(songIndex++ ; songIndex < songList.size(); songIndex++){
+        for(++songIndex ; songIndex < songList.size(); songIndex++){
             final Song song1 = songList.get(songIndex);
             MediaPlayer nextPlayer = MediaPlayer.create(this, songList.get(songIndex).getSongId());
             nextPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -178,6 +178,7 @@ public class SongPlayingActivity extends AppCompatActivity implements
 
         TextView songLocation = (TextView) findViewById(R.id.song_location);
         String location = song.getLocation();
+        Log.d("Location", getLocation());
         songLocation.setText(location);
 
         final Button statusButton = (Button) findViewById(R.id.status);
@@ -201,7 +202,7 @@ public class SongPlayingActivity extends AppCompatActivity implements
                 }
         });
         mResultReceiver = new AddressResultReceiver(new Handler());
-
+        songLocation.setText(mAddressOutput);
     }
 
     @Override
@@ -441,23 +442,33 @@ public class SongPlayingActivity extends AppCompatActivity implements
     }
 
     class AddressResultReceiver extends ResultReceiver {
-        String mAddressOutput;
-        public AddressResultReceiver(Handler handler) {
+        AddressResultReceiver(Handler handler) {
             super(handler);
         }
 
+        /**
+         *  Receives data sent from FetchAddressIntentService and updates the UI in MainActivity.
+         */
         @Override
         protected void onReceiveResult(int resultCode, Bundle resultData) {
 
-            // Display the address string
-            // or an error message sent from the intent service.
+            // Display the address string or an error message sent from the intent service.
             mAddressOutput = resultData.getString(FetchAddressIntentService.Constants.RESULT_DATA_KEY);
+            displayAddressOutput();
 
             // Show a toast message if an address was found.
             if (resultCode == FetchAddressIntentService.Constants.SUCCESS_RESULT) {
-
+                //showToast(getString(R.string.address_found));
             }
 
+            // Reset. Enable the Fetch Address button and stop showing the progress bar.
         }
     }
+
+    public void displayAddressOutput() {
+        Log.d("address", mAddressOutput);
+        TextView location = findViewById(R.id.song_location);
+        location.setText(mAddressOutput);
+    }
+
 }

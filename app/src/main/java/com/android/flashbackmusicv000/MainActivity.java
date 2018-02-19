@@ -23,6 +23,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.ArraySet;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
@@ -56,9 +57,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
     SharedPreferences currentSongState;
     //SharedPreferences widgetState;
-    String[] favorites;
-    String[] disliked;
-    String[] neutral;
+    Set<String> favorites;
+    Set<String> disliked;
+    Set<String> neutral;
     int favoritesNow;
     int dislikedNow;
     int neutralNow;
@@ -90,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
 
-    private AddressResultReceiver mResultReceiver;
+    private SongPlayingActivity.AddressResultReceiver mResultReceiver;
     protected String mAddressOutput;
     protected String mAreaOutput;
     protected String mCityOutput;
@@ -130,16 +131,25 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         Set<String> dis = currentSongState.getStringSet("disliked", null);
         Set<String> neut = currentSongState.getStringSet("neutral", null);
 
+        favorites = new ArraySet<String>();
+        neutral = new ArraySet<String>();
+        disliked = new ArraySet<String>();
+
         Song[] songs = getCurrentSongs(fave, dis, neut);
         songs1 = new ArrayList<Song>(Arrays.asList(songs));
-        if (fave != null && disliked != null && neutral != null) {
-            songs = getCurrentSongs(fave, dis, neut);
-        } else {
-            neutral = new String[songs.length];
+
+        if (fave.isEmpty() && dis.isEmpty() && neut.isEmpty()) {
+            neutral = new ArraySet<>();
             for (int i = 0; i < songs.length; ++i) {
-                neutral[i] = songs[i].getTitle();
+                neutral.add(songs[i].getTitle());
             }
         }
+
+        //Add list of favorited/disliked/neutral songs to shared preferences
+        editor.putStringSet("favorites", favorites);
+        editor.putStringSet("disliked", disliked);
+        editor.putStringSet("neutral", neutral);
+        editor.commit();
 
         //Set onClickListener for songs button
         Button songsList = (Button) findViewById(R.id.songs);
@@ -171,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
          */
 
         //Create the IntentService to automatically update the user's location every minute or so
-        mResultReceiver = new AddressResultReceiver(new Handler());
+        //mResultReceiver = new SongPlayingActivity.AddressResultReceiver(new Handler());
         mLocationCallback = new LocationCallback();
         mContext = this;
     }
@@ -276,7 +286,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
         for (int i = 0; i < fields.length; ++i) {
 
-
             String path = "android.resource://" + getPackageName() + "/raw/" + fields[i].getName();
             final Uri uri = Uri.parse(path);
 
@@ -289,12 +298,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             String artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
             String albumName = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
             String duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+
             long mil = Long.parseLong(duration);
             int seconds = (int)Math.ceil((mil / 1000) % 60);
             int minutes = (int)Math.ceil((mil / (1000*60)) % 60);
             duration = minutes + ":" + seconds;
-
-
 
             Log.d("Information: ", "Title: " + title + "\n" +
             "Artist: " + artist + "\n" +
@@ -307,27 +315,32 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             * will instead add the strings to the songs... and pass them as albums.
              */
 
-            if (favorites != null) {
-
-                //
-                if (favorites.contains(title)) {
+            boolean flag = false;
+            if (!favorites.isEmpty()) {
+                if (favorites.contains(title) && !flag) {
                     currentSong.favorite();
                     //adding to the string arrayList.
-                    this.favorites[favoritesNow] = currentSong.getTitle();
+                    this.favorites.add(currentSong.getTitle());
+                    //this.favorites[favoritesNow] = currentSong.getTitle();
                     ++favoritesNow;
+                    flag = true;
                 }
 
-            } else if (disliked != null) {
-                if (disliked.contains(title)) {
+            }
+            if (!disliked.isEmpty()) {
+                if (disliked.contains(title) && !flag) {
                     currentSong.dislike();
-                    this.disliked[dislikedNow] = currentSong.getTitle();
+                    this.disliked.add(currentSong.getTitle());
+                    //this.disliked[dislikedNow] = currentSong.getTitle();
                     ++dislikedNow;
                 }
 
-            } else if (neutral != null) {
-                if (neutral.contains(title)) {
+            }
+            if (!neutral.isEmpty()) {
+                if (neutral.contains(title) && !flag) {
                     currentSong.neutral();
-                    this.neutral[neutralNow] = currentSong.getTitle();
+                    this.neutral.add(currentSong.getTitle());
+                    //this.neutral[neutralNow] = currentSong.getTitle();
                     ++neutralNow;
                 }
             }
@@ -339,25 +352,18 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
                 albums.add(new Album(albumName, currentSong));
 
-            } else {
-
+            }
+            else {
                 Album albumToAddSong = retrieveAlbum(albumName);
                 albumToAddSong.addSong(new Song(title, songId));
-
             }
-
-            if(i == 0){
-
+            if(i == 0) {
                 this.allSongs = new Album("All Songs From Main Activity",currentSong);
-
-            } else {
-
-                this.allSongs.addSong(currentSong);
-
             }
-
+            else {
+                this.allSongs.addSong(currentSong);
+            }
             songs[i] = currentSong;
-
         }
 
         return songs;
