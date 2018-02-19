@@ -34,6 +34,7 @@ import android.widget.Toast;
 
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -46,6 +47,7 @@ import android.widget.Toast;
 
 public class SongPlayingActivity extends AppCompatActivity implements OnMapReadyCallback {
     private MediaPlayer mediaPlayer;
+    private ArrayList<Song> songList;
 
     private Intent intent;
     private boolean isFlashBackOn;
@@ -54,6 +56,8 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
     private FusedLocationProviderClient mFusedLocationClient;
     private AddressResultReceiver mResultReceiver;
     private Location locationManager;
+
+    private int songIndex = 0;
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -81,18 +85,71 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
         setWidgets();
         //bug could be here.... something to do with the intents....
 
-
-
         //song being passed a parcelable, through the intent... but no parcelable was sent...???
 
-        Song song = (Song) i.getParcelableExtra("name_of_extra");
+        //final Song song = i.getParcelableExtra("name_of_extra");
+        songList = i.getParcelableArrayListExtra("name_of_extra");
+        final Song song = songList.get(songIndex);
+
 
         TextView songTitle = (TextView) findViewById(R.id.songtitle);
         songTitle.setText(song.getTitle());
 
         final int nameInt = song.getSongId();
-        loadMedia(nameInt);
+
+        mediaPlayer = MediaPlayer.create(this, songList.get(songIndex).getSongId());
+
+        MediaPlayer tempPlayer = mediaPlayer;
+        getLocation(savedInstanceState);
+        for(songIndex++ ; songIndex < songList.size(); songIndex++){
+            final Song song1 = songList.get(songIndex);
+            MediaPlayer nextPlayer = MediaPlayer.create(this, songList.get(songIndex).getSongId());
+            nextPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mediaPlayer) {
+                    System.out.println("Supposed to change song info");
+                    //getLocation(savedInstanceState);
+                    song1.setTime(getTime());
+                    song1.setDate(getDate());
+                    song1.setDay(getDay());
+
+                    TextView songTime = (TextView) findViewById(R.id.song_time);
+                    String time = song1.getLastDay() + " " + song1.getLastDate() + " " + song1.getLastTime();
+                    songTime.setText(time);
+
+                    TextView songLocation = (TextView) findViewById(R.id.song_location);
+                    String location = song1.getLocation();
+                    songLocation.setText(location);
+
+                    final Button statusButton = (Button) findViewById(R.id.status);
+                    boolean favorited = song1.isFavorite();
+                    if (favorited) {
+                        //song is favorited
+                        statusButton.setText("✓");
+                    }
+                    statusButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (song1.isNeutral()) {
+                                song1.favorite();
+                                statusButton.setText("✓");
+                            }
+                            if (song1.isFavorite()) {
+                                song1.dislike();
+                                //skip the song here
+                            }
+                        }
+                    });
+                }
+
+            });
+            tempPlayer.setNextMediaPlayer(nextPlayer);
+            tempPlayer = nextPlayer;
+        }
+
         mediaPlayer.start();
+        //songIndex++;
+
         getLocation(savedInstanceState);
         song.setTime(getTime());
         song.setDate(getDate());
@@ -113,17 +170,17 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
             statusButton.setText("✓");
         }
         statusButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (song.isNeutral()) {
-                    song.favorite();
-                    statusButton.setText("✓");
+                @Override
+                public void onClick(View view) {
+                    if (song.isNeutral()) {
+                        song.favorite();
+                        statusButton.setText("✓");
+                    }
+                    if (song.isFavorite()) {
+                        song.dislike();
+                        //skip the song here
+                    }
                 }
-                if (song.isFavorite()) {
-                    song.dislike();
-                    //skip the song here
-                }
-            }
         });
     }
 
@@ -207,22 +264,21 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
         }
     }
 
-    public void loadMedia(int resourceId){
+    public void loadMedia(MediaPlayer mediaPlayer, int index){
         if (mediaPlayer == null){
             mediaPlayer = new MediaPlayer();
         }
 
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                mediaPlayer.start();
-            }
-        });
+        System.out.println("Loading media...");
 
-        AssetFileDescriptor assetFileDescriptor = this.getResources().openRawResourceFd(resourceId);
+        AssetFileDescriptor assetFileDescriptor = this.getResources().openRawResourceFd(songList.get(index).getSongId());
         try {
             mediaPlayer.setDataSource(assetFileDescriptor);
             mediaPlayer.prepareAsync();
+            //songIndex++;
+            //MediaPlayer nextPlayer = new MediaPlayer();
+            //loadMedia(nextPlayer);
+            //mediaPlayer.setNextMediaPlayer(nextPlayer);
         }
         catch(Exception e){
             System.out.println(e.toString());

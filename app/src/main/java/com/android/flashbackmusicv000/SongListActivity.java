@@ -45,6 +45,7 @@ public class SongListActivity extends AppCompatActivity{
 
     private MediaPlayer mediaPlayer;
     private boolean isFlashBackOn;
+    private boolean isFromAlbum = false;
     public int index;
 
     SharedPreferences currentSongState;
@@ -53,6 +54,7 @@ public class SongListActivity extends AppCompatActivity{
     ArrayList<String> neutral;
     ArrayList<String> songs;
     ArrayList<Song> actualSongs;
+    ArrayList<Song> songsToPlay = new ArrayList<Song>();    // Janice add in
     private Switch switchy;
     private Intent in;
 
@@ -71,7 +73,7 @@ public class SongListActivity extends AppCompatActivity{
         /*a modification James Rich*/
         // just mocking up to get it working
         if(in.getBooleanExtra("albumOrigin",true)){
-
+            isFromAlbum = true;
             Album albumSelected = in.getExtras().getParcelable("songs");
             actualSongs = albumSelected.getSongs();
 
@@ -105,7 +107,6 @@ public class SongListActivity extends AppCompatActivity{
             else { actualSongs = new ArrayList<>(); }
         }
 
-        // TODO, Janice: we might not need to pass in favorites/disliked/neutral list since we now pass in the entire Songs themselves
         */
         songs = new ArrayList<String>();
         if (favorites != null) {
@@ -148,13 +149,21 @@ public class SongListActivity extends AppCompatActivity{
             button.setEllipsize(TextUtils.TruncateAt.MARQUEE);
             button.setMarqueeRepeatLimit(1000);
 
-            // Janice edit: passing songs through to songslist activity
-            //newSong from actualSongs.get(index)
             final Song newSong = actualSongs.get(index);
+
+            // Janice: Checking whether to play whole album or just the single song
+            if(isFromAlbum){
+                songsToPlay = actualSongs;
+            }
+            else {
+                songsToPlay.add(newSong);
+            }
+
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    launchActivity(newSong);
+                    //launchActivity(newSong);
+                    launchActivity(songsToPlay);
                 }
             });
 
@@ -254,11 +263,12 @@ public class SongListActivity extends AppCompatActivity{
         intent.putExtra("Neutral", neutral.toArray());
     }
 
-    public void launchActivity(Song song) {
+    public void launchActivity(ArrayList<Song> songList /*Song song*/) {
         //new intent ... should have the
         Intent intent = new Intent(this, SongPlayingActivity.class);
 
-        intent.putExtra("name_of_extra", song);
+        intent.putExtra("name_of_extra", songList);
+        //intent.putExtra("name_of_extra", song);
         intent.putExtra("isOn", isFlashBackOn);
         startActivity(intent);
     }

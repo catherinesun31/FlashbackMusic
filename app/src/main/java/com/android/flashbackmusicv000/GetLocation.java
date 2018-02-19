@@ -60,6 +60,10 @@ public class GetLocation extends FragmentActivity implements OnMapReadyCallback 
         //client = LocationServices.getFusedLocationProviderClient(this);
     }
 
+    public GetLocation(){
+
+    }
+
     public GetLocation(Context context, Bundle savedInstanceState) {
         this.context = context;
         googleApiClient = new GoogleApiClient.Builder(context).addApi(LocationServices.API).build();
