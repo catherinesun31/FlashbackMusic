@@ -86,6 +86,7 @@ public class SongPlayingActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_song_playing);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         mContext = this;
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -104,6 +105,24 @@ public class SongPlayingActivity extends AppCompatActivity implements
         //final Song song = i.getParcelableExtra("name_of_extra");
         songList = i.getParcelableArrayListExtra("name_of_extra");
         final Song song = songList.get(songIndex);
+
+        Switch flashback = (Switch) findViewById(R.id.flashSwitch);
+        flashback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /*
+                1. skip current song
+                2. get current location/day/time
+                3. go through all songs in the list
+                4. get the song score
+                5. if the song score is the same, add the favorite first
+                6. if both favorites, add latest played
+                7.
+                 */
+                //FlashBackMode mode = new FlashBackMode(songList);
+                //mode.createQueue();
+            }
+        });
 
         //final Song song = (Song) i.getParcelableExtra("name_of_extra");
 
