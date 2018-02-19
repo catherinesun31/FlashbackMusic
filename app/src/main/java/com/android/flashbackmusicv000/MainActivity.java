@@ -1,12 +1,24 @@
+/**
+ * Main activity, backend activity file for activity_main.xml.This file represents the controller for the inputs
+ * of the user. When they select either the song or album button, it will bring up the next activity
+ * consisting of albums or songs. This activity allows the user options for what they want their app
+ * to do.
+ */
 package com.android.flashbackmusicv000;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -14,29 +26,81 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.Switch;
+import android.widget.Toast;
+
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements
+        LocationListener, OnMapReadyCallback {
 
 SharedPreferences currentSongState;
+//SharedPreferences widgetState;
 String[] favorites;
 String[] disliked;
 String[] neutral;
 int favoritesNow;
 int dislikedNow;
 int neutralNow;
-ArrayList<Song> songs1;
-ArrayList<Album> albums;
+private boolean isFlashBackOn;
+private Switch flashSwitch;
+private SharedPreferences flashBackState;
 
+ArrayList<Song> songs1;
+
+//albums need to be passed...
+ArrayList<Album> albums;
+Context mContext;
+
+    private FusedLocationProviderClient mFusedLocationClient;
+    private Location locationManager;
+    LocationRequest mLocationRequest;
+    Location mCurrentLocation;
+    private LocationCallback mLocationCallback;
+    private boolean mRequestingLocationUpdates;
+    final String REQUESTING_LOCATION_UPDATES_KEY = "Requesting Location Updates";
+
+    private GoogleMap mMap;
+    private GoogleApiClient mGoogleApiClient;
+
+    private AddressResultReceiver mResultReceiver;
+    protected String mAddressOutput;
+    protected String mAreaOutput;
+    protected String mCityOutput;
+    protected String mStateOutput;
+
+    /**
+     * onCreate Method represents the beginning state of the main activity whenever it is started.
+     * @param savedInstanceState is the previous state of this activity represented from the Bundle
+     * object.
+     * The current song list is loaded from the shared preference across the entire app, restoring the
+     * songslist from when it was last played.                          .
+     * If none of the the string sets obtained from the shared preferences have empty data,
+     * then we know that there was an album. Then the songslist gets updated.
+     * Anonymous listeners are then set for each of the buttons on activity_main.xml.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("In: ", "MainActivity.onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -85,17 +149,139 @@ ArrayList<Album> albums;
             }
         });
 
+        flashSwitch = (Switch) findViewById(R.id.flashSwitch);
+
+        flashSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+
+                if(isChecked) {
+
+                    //run event;
+                    isFlashBackOn = true;
+                    Toast.makeText(getApplicationContext(), "flashback mode is on", Toast.LENGTH_SHORT).show();
+
+                } else {
+
+
+                    //close event
+                    isFlashBackOn = false;
+                    Toast.makeText(getApplicationContext(), "flashback mode is off", Toast.LENGTH_SHORT).show();
+                    //
+                }
+            }
+        });
+
         /*
          * I'm thinking that here, we should make a list of all of the Song objects from songs that
          * the user has in their R.raw file, and store it in the phone's shared preferences.
          */
 
+        //Create the IntentService to automatically update the user's location every minute or so
+        mResultReceiver = new AddressResultReceiver(new Handler());
+        mLocationCallback = new LocationCallback();
+        mContext = this;
+
+    }
+    @Override
+    protected void onStart() {
+        Log.i("In: ", "MainActivity.onStart");
+        super.onStart();
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        if (ActivityCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    100);
+        }
+        if (ActivityCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            try {
+                mLocationRequest = new LocationRequest();
+                mLocationRequest.setInterval(10000);
+                mLocationRequest.setFastestInterval(5000);
+                mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                mFusedLocationClient.requestLocationUpdates(mLocationRequest,
+                        mLocationCallback,null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
+    @Override
+    protected void onStop() {
+        Log.i("In: ", "MainActivity.onStop");
+        super.onStop();
+        try {
+
+        }
+        catch (RuntimeException e) {
+            e.printStackTrace();
+        }
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        Log.i("In: ", "MainActivity.onSaveInstanceState");
+
+        outState.putBoolean(REQUESTING_LOCATION_UPDATES_KEY,
+                mRequestingLocationUpdates);
+        // ...
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        Log.i("In: ", "MainActivity.onMapReady");
+
+        Log.d("MAP LOCATION", "OnMapReady");
+        mMap = googleMap;
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.i("In: ", "MainActivity.onLocationChanged");
+
+        try {
+            LocationServices.FusedLocationApi.removeLocationUpdates(
+                    mGoogleApiClient, this);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * To make the code less fragile we would rather get the list of strings and put them inside the
+     * song object, so we can pass an array of the current songs.
+     * @param favorites the set of unique titles that have been favourited.
+     * @param disliked the set of unique titles that have been disliked.
+     * @param neutral the set of unique titles that have been classified as neutral.
+     *
+     * Thefields are obtained from the directory R.raw's contents
+     * An array for storing the songs to return is created.
+     *                for as long as the length of the fields array,
+     *                MediaMetaDataRetriever obtains the metadata(data that describes other data)source from the URI.
+     *                The URI was an absolute path from the string 'path', pointing to the raw directory containing
+     *                the media files. the MMDR then. A song object is created and has the Strings, extracted
+     *                from the MMDR passed into it. This is added to the songs array.
+     *                Once the loop is finised, the current list of songs is returned.
+     *
+     * @return the list of songs
+     */
     public Song[] getCurrentSongs(Set<String> favorites, Set<String> disliked, Set<String> neutral) {
+
         Field[] fields = R.raw.class.getFields();
         Song[] songs = new Song[fields.length];
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+
+
+
         for (int i = 0; i < fields.length; ++i) {
             String path = "android.resource://" + getPackageName() + "/raw/" + fields[i].getName();
             final Uri uri = Uri.parse(path);
@@ -114,7 +300,18 @@ ArrayList<Album> albums;
             int minutes = (int)Math.ceil((mil / (1000*60)) % 60);
             duration = minutes + ":" + seconds;
 
-            if( checkAlbum(albumName)){
+            //if the album does not exist within the set of albums, add a new album to it with the
+            //set of songs. else simply add to a currently existing album.
+
+
+            if(!checkAlbum(albumName)){
+
+                albums.add(new Album(albumName, new Song(title, songId)));
+
+            } else {
+
+                Album albumToAddSong = retrieveAlbum(albumName);
+                albumToAddSong.addSong(new Song(title, songId));
 
             }
 
@@ -155,16 +352,24 @@ ArrayList<Album> albums;
      * launchSongs:
      * @params: none
      * @return: void
-     *
+     * The intents are created and the list of strings, with favourite titles, disliked titles, neutral titles
+     * and songs are put inside.
      * This starts the SongsListActivity, and migrates to the list of all of the current songs
      */
     // JANICE EDIT 02/13: PASSING IN THE ARRAY OF SONGS SO WE CAN PASS THROUGH TO SONGSLIST AND SONGSPLAYING
     public void launchSongs() {
+
+        //strings to be sent in an activity towards the SongListActivity
         Intent intent = new Intent(this, SongListActivity.class);
+
+
         intent.putExtra("Favorites", favorites);
         intent.putExtra("Disliked", disliked);
         intent.putExtra("Neutral", neutral);
         intent.putExtra("Song list", songs1);
+        intent.putExtra("isOn", isFlashBackOn);
+        //temporary, whilst passing strings.
+        intent.putExtra("albumOrigin", false);
         startActivity(intent);
     }
 
@@ -172,25 +377,16 @@ ArrayList<Album> albums;
      * launchAlbums:
      */
     public void launchAlbums() {
-        Intent albums  = new Intent(this, AlbumQueue.class);
-        startActivity(albums);
+        //where it comes from -> where it is going.
+        Intent albumsIntent  = new Intent(this, AlbumQueue.class);
+        Bundle args = new Bundle();
+        args.putSerializable("ARRAYLIST",albums);
+        albumsIntent.putExtra("BUNDLE",args);
+        albumsIntent.putExtra("isOn", isFlashBackOn);
+        startActivity(albumsIntent);
 
     }
 
-    //
-    public boolean checkAlbum(String albumName){
-        for(Album album:albums){
-
-            if(album.getName().equals(albumName)){
-
-                return true;
-
-            }
-
-        }
-
-        return false;
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -199,6 +395,39 @@ ArrayList<Album> albums;
         return true;
     }
 
+    private boolean checkAlbum(String albumName){
+        if (albums == null) {
+            albums = new ArrayList<Album>();
+            return false;
+        }
+        for(Album album: albums){
+            if(album.getName().equals(albumName)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    private Album retrieveAlbum(String albumName){
+        int index = 0;
+        Album currentAlbum = null;
+        ListIterator<Album> it = albums.listIterator();
+        while(it.hasNext()){
+
+            currentAlbum = it.next();
+            if(currentAlbum.getName().equals(albumName)){
+                return currentAlbum;
+            }
+        }
+        return currentAlbum;
+    }
+
+    /**
+     *
+     * @param item
+     * @return boolean
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -212,5 +441,70 @@ ArrayList<Album> albums;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    /**
+     * Updates the address in the UI.
+     */
+    protected void displayAddressOutput(String mAddressOutput, String mAreaOutput, String mCityOutput, String mStateOutput) {
+        Log.i("In: ", "SongPlayingActivity.displayAddressOutput");
+
+        //  mLocationAddressTextView.setText(mAddressOutput);
+        try {
+            if (mAddressOutput != null)
+                // mLocationText.setText(mAreaOutput+ "");
+
+                Log.d("Area", mAddressOutput);
+            //mLocationText.setText(mAreaOutput);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected void startIntentService(Location location) {
+        Log.i("In: ", "SongPlayingActivity.startIntentService");
+
+        Intent intent = new Intent(this, FetchAddressIntentService.class);
+        intent.putExtra(FetchAddressIntentService.Constants.RECEIVER, mResultReceiver);
+        intent.putExtra(FetchAddressIntentService.Constants.LOCATION_DATA_EXTRA, locationManager);
+        startService(intent);
+    }
+
+    private String getLocation() {
+        Log.i("In: ", "SongPlayingActivity.getLocation");
+
+        String address = "";
+
+        //Ask for location permissions
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        if (ActivityCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    100);
+        }
+
+        //Get the user's location
+        mFusedLocationClient.getLastLocation().addOnSuccessListener(
+                this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        //logic to handle location
+                        if (location != null) {
+                            locationManager = location;
+
+                            Log.d("Current Location", "Longitude: " + locationManager.getLongitude() + "\n"
+                                    + "Latitude: " + locationManager.getLatitude());
+
+                            //Get the location as an address
+
+                            //Log.d("Address: ", mAddressOutput);
+                        }
+                    }
+                });
+        return address;
+
     }
 }
