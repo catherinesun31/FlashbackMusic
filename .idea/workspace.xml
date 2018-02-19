@@ -10,18 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1c7ae422-2a75-4758-8bdf-7b1f54c91d93" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/LocationBinder.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/LocationService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build.gradle" afterPath="$PROJECT_DIR$/app/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/Album.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/Album.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/AlbumQueue.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/AlbumQueue.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/AlbumSongList.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/AlbumSongList.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/MainActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/MainActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/QueueList.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/QueueList.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/SongListActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/SongListActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/SongPlayingActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/SongPlayingActivity.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -90,11 +79,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SongPlayingActivity.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="SongPlayingActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/SongPlayingActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="152">
-              <caret line="238" column="9" lean-forward="true" selection-start-line="238" selection-start-column="9" selection-end-line="238" selection-end-column="9" />
+            <state relative-caret-position="332">
+              <caret line="250" column="0" lean-forward="true" selection-start-line="250" selection-start-column="0" selection-end-line="250" selection-end-column="0" />
               <folding>
                 <element signature="e#3016#3284#0" expanded="true" />
                 <element signature="e#3283#3284#0" expanded="true" />
@@ -113,6 +102,36 @@
                 <element signature="e#13501#13502#0" expanded="true" />
                 <element signature="e#13539#13540#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="workspace.xml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1522">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SongListActivity.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/SongListActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="264">
+              <caret line="84" column="25" lean-forward="false" selection-start-line="84" selection-start-column="0" selection-end-line="85" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="vcs.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/.idea/vcs.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -1921,6 +1940,7 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/AddressResultReceiver.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/SongPlayingActivity.java" />
+        <option value="$PROJECT_DIR$/.idea/workspace.xml" />
       </list>
     </option>
   </component>
@@ -2067,7 +2087,7 @@
     <property name="android.sdk.path" value="$USER_HOME$/Library/Android/sdk" />
     <property name="settings.editor.selected.configurable" value="android.sdk-updates" />
     <property name="Git.Branch.Popup.ShowAllRemotes" value="true" />
-    <property name="SearchEverywhereHistoryKey" value="manifest&#9;FILE&#9;file:///Users/cailintreseder/AndroidStudioProjects/FlashbackMusic/app/src/main/AndroidManifest.xml&#10;androidm&#9;FILE&#9;file:///Users/cailintreseder/AndroidStudioProjects/FlashbackMusic/app/src/main/AndroidManifest.xml&#10;intent&#9;PSI&#9;JAVA://android.content.Intent&#10;android&#9;FILE&#9;file:///Users/cailintreseder/AndroidStudioProjects/FlashbackMusic/app/src/main/AndroidManifest.xml&#10;manif&#9;FILE&#9;file:///Users/cailintreseder/AndroidStudioProjects/FlashbackMusic/app/src/main/AndroidManifest.xml&#10;androidman&#9;FILE&#9;file:///Users/cailintreseder/AndroidStudioProjects/FlashbackMusic/app/src/main/AndroidManifest.xml&#10;workspace&#9;FILE&#9;file:///Users/cailintreseder/AndroidStudioProjects/FlashbackMusic/.idea/workspace.xml&#10;.idea/workspace&#9;FILE&#9;file:///Users/cailintreseder/AndroidStudioProjects/FlashbackMusic/.idea/workspace.xml" />
+    <property name="SearchEverywhereHistoryKey" value=".idea/vcs&#9;FILE&#9;file:///Users/cailintreseder/AndroidStudioProjects/FlashbackMusic/.idea/vcs.xml&#10;.idea/work&#9;FILE&#9;file:///Users/cailintreseder/AndroidStudioProjects/FlashbackMusic/.idea/workspace.xml&#10;manifest&#9;FILE&#9;file:///Users/cailintreseder/AndroidStudioProjects/FlashbackMusic/app/src/main/AndroidManifest.xml&#10;androidm&#9;FILE&#9;file:///Users/cailintreseder/AndroidStudioProjects/FlashbackMusic/app/src/main/AndroidManifest.xml&#10;intent&#9;PSI&#9;JAVA://android.content.Intent&#10;android&#9;FILE&#9;file:///Users/cailintreseder/AndroidStudioProjects/FlashbackMusic/app/src/main/AndroidManifest.xml&#10;manif&#9;FILE&#9;file:///Users/cailintreseder/AndroidStudioProjects/FlashbackMusic/app/src/main/AndroidManifest.xml&#10;androidman&#9;FILE&#9;file:///Users/cailintreseder/AndroidStudioProjects/FlashbackMusic/app/src/main/AndroidManifest.xml&#10;workspace&#9;FILE&#9;file:///Users/cailintreseder/AndroidStudioProjects/FlashbackMusic/.idea/workspace.xml&#10;.idea/workspace&#9;FILE&#9;file:///Users/cailintreseder/AndroidStudioProjects/FlashbackMusic/.idea/workspace.xml" />
     <property name="device.picker.selection" value="Pixel_2_API_26" />
   </component>
   <component name="RecentsManager">
@@ -2161,7 +2181,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1519000133837" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1519000458604" />
       </method>
     </configuration>
     <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Instrumented Tests">
@@ -2209,7 +2229,7 @@
       </Profilers>
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1519000133837" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1519000458604" />
       </method>
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -2392,7 +2412,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1519000133837" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1519000458604" />
       </method>
     </configuration>
     <list size="1">
@@ -2437,7 +2457,7 @@
     <frame x="52" y="23" width="1628" height="1027" extended-state="0" />
     <layout>
       <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22446406" sideWeight="0.25" order="0" side_tool="true" content_ui="tabs" />
+      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22446406" sideWeight="0.2524272" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="16" side_tool="true" content_ui="tabs" />
       <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3037433" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
@@ -2454,10 +2474,10 @@
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25763127" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32959184" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32891247" sideWeight="0.5" order="16" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2171123" sideWeight="0.5" order="16" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.33903742" sideWeight="0.5" order="16" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22446406" sideWeight="0.75" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22446406" sideWeight="0.74757284" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32959184" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32934132" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
@@ -2522,17 +2542,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_album_queue.xml">
       <provider editor-type-id="android-designer2">
         <state />
@@ -2623,14 +2632,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="38" column="13" lean-forward="false" selection-start-line="38" selection-start-column="13" selection-end-line="38" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -2851,14 +2852,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/SongListActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="977">
-          <caret line="109" column="27" lean-forward="false" selection-start-line="109" selection-start-column="19" selection-end-line="109" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$USER_HOME$/Library/Android/sdk/platforms/android-26/android.jar!/android/app/Activity.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="493">
@@ -2961,8 +2954,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/SongPlayingActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="152">
-          <caret line="238" column="9" lean-forward="true" selection-start-line="238" selection-start-column="9" selection-end-line="238" selection-end-column="9" />
+        <state relative-caret-position="332">
+          <caret line="250" column="0" lean-forward="true" selection-start-line="250" selection-start-column="0" selection-end-line="250" selection-end-column="0" />
           <folding>
             <element signature="e#3016#3284#0" expanded="true" />
             <element signature="e#3283#3284#0" expanded="true" />
@@ -2981,6 +2974,30 @@
             <element signature="e#13501#13502#0" expanded="true" />
             <element signature="e#13539#13540#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/vcs.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/SongListActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="264">
+          <caret line="84" column="25" lean-forward="false" selection-start-line="84" selection-start-column="0" selection-end-line="85" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1522">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
