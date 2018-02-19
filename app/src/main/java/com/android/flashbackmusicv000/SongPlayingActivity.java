@@ -41,12 +41,20 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
+import android.widget.CompoundButton;
+import android.widget.Switch;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class SongPlayingActivity extends AppCompatActivity implements
         OnMapReadyCallback {
 
     private MediaPlayer mediaPlayer;
     Context mContext;
+
+    private Intent intent;
+    private boolean isFlashBackOn;
+    private Switch switchy;
 
     private FusedLocationProviderClient mFusedLocationClient;
     private Location locationManager;
@@ -84,6 +92,13 @@ public class SongPlayingActivity extends AppCompatActivity implements
         });
 
         Intent i = getIntent();
+        setWidgets();
+        //bug could be here.... something to do with the intents....
+
+
+
+        //song being passed a parcelable, through the intent... but no parcelable was sent...???
+
         final Song song = (Song) i.getParcelableExtra("name_of_extra");
 
         TextView songTitle = (TextView) findViewById(R.id.songtitle);
@@ -167,14 +182,6 @@ public class SongPlayingActivity extends AppCompatActivity implements
         super.onSaveInstanceState(outState);
     }
 
-    @Override
-    public void onDestroy(){
-        Log.i("In: ", "SongPlayingActivity.onDestroy");
-
-        super.onDestroy();
-        mediaPlayer.release();
-    }
-
     private void changeMap(Location location) {
         Log.i("In: ", "SongPlayingActivity.changeMap");
 
@@ -231,21 +238,21 @@ public class SongPlayingActivity extends AppCompatActivity implements
         //Get the user's location
         mFusedLocationClient.getLastLocation().addOnSuccessListener(
                 this, new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                //logic to handle location
-                if (location != null) {
-                    locationManager = location;
+                    @Override
+                    public void onSuccess(Location location) {
+                        //logic to handle location
+                        if (location != null) {
+                            locationManager = location;
 
-                    Log.d("Current Location", "Longitude: " + locationManager.getLongitude() + "\n"
-                            + "Latitude: " + locationManager.getLatitude());
+                            Log.d("Current Location", "Longitude: " + locationManager.getLongitude() + "\n"
+                                    + "Latitude: " + locationManager.getLatitude());
 
-                    //Get the location as an address
+                            //Get the location as an address
 
-                    //Log.d("Address: ", mAddressOutput);
-                }
-            }
-        });
+                            //Log.d("Address: ", mAddressOutput);
+                        }
+                    }
+                });
 
         mFusedLocationClient.getLastLocation().addOnSuccessListener(
                 this, new OnSuccessListener<Location>() {
@@ -263,8 +270,20 @@ public class SongPlayingActivity extends AppCompatActivity implements
                         }
                     }
                 });
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mFusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    //logic to handle location
+                    if (location != null) {
+                        locationManager = location;
+                        Log.d("Current Location", "Longitude: " + locationManager.getLongitude() + "\n"
+                                + "Latitude: " + locationManager.getLatitude());
+                    }
+                }
+            });
+        }
         return address;
-
     }
 
     protected void startIntentService(Location location) {
@@ -297,6 +316,84 @@ public class SongPlayingActivity extends AppCompatActivity implements
         }
         catch(Exception e){
             System.out.println(e.toString());
+        }
+    }
+    private void setWidgets(){
+
+        intent = getIntent();
+        switchy = (Switch) findViewById(R.id.flashSwitch);
+        isFlashBackOn = intent.getBooleanExtra("isOn",isFlashBackOn);
+
+        switchy.setChecked(isFlashBackOn);
+
+        switchy.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+
+                if(isChecked) {
+                    //run event;
+                    isFlashBackOn = true;
+                    Toast.makeText(getApplicationContext(), "flashback mode is on", Toast.LENGTH_SHORT).show();
+
+                } else {
+
+
+                    //close event
+                    isFlashBackOn = false;
+                    Toast.makeText(getApplicationContext(), "flashback mode is off", Toast.LENGTH_SHORT).show();
+                    //
+                }
+            }
+        });
+    }
+
+    /*
+    public static String printIntent(Intent intent){
+
+
+        if (intent == null) {
+
+            return null;
+
+        }
+
+        return intent.toString() + " " + bundleToString(intent.getExtras());
+
+
+    }
+    */
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        mediaPlayer.release();
+    }
+
+    protected void startIntentService() {
+        Intent intent = new Intent(this, FetchAddressIntentService.class);
+        intent.putExtra(FetchAddressIntentService.Constants.RECEIVER, mResultReceiver);
+        intent.putExtra(FetchAddressIntentService.Constants.LOCATION_DATA_EXTRA, locationManager);
+        startService(intent);
+    }
+
+    class AddressResultReceiver extends ResultReceiver {
+        String mAddressOutput;
+        public AddressResultReceiver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+
+            // Display the address string
+            // or an error message sent from the intent service.
+            mAddressOutput = resultData.getString(FetchAddressIntentService.Constants.RESULT_DATA_KEY);
+
+            // Show a toast message if an address was found.
+            if (resultCode == FetchAddressIntentService.Constants.SUCCESS_RESULT) {
+
+            }
+
         }
     }
 }

@@ -26,6 +26,9 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.Switch;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -51,13 +54,20 @@ public class MainActivity extends AppCompatActivity implements
         LocationListener, OnMapReadyCallback {
 
 SharedPreferences currentSongState;
+//SharedPreferences widgetState;
 String[] favorites;
 String[] disliked;
 String[] neutral;
 int favoritesNow;
 int dislikedNow;
 int neutralNow;
+private boolean isFlashBackOn;
+private Switch flashSwitch;
+private SharedPreferences flashBackState;
+
 ArrayList<Song> songs1;
+
+//albums need to be passed...
 ArrayList<Album> albums;
 Context mContext;
 
@@ -136,6 +146,29 @@ Context mContext;
             @Override
             public void onClick(View view) {
                launchAlbums();
+            }
+        });
+
+        flashSwitch = (Switch) findViewById(R.id.flashSwitch);
+
+        flashSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+
+                if(isChecked) {
+
+                    //run event;
+                    isFlashBackOn = true;
+                    Toast.makeText(getApplicationContext(), "flashback mode is on", Toast.LENGTH_SHORT).show();
+
+                } else {
+
+
+                    //close event
+                    isFlashBackOn = false;
+                    Toast.makeText(getApplicationContext(), "flashback mode is off", Toast.LENGTH_SHORT).show();
+                    //
+                }
             }
         });
 
@@ -246,6 +279,9 @@ Context mContext;
         Field[] fields = R.raw.class.getFields();
         Song[] songs = new Song[fields.length];
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+
+
+
         for (int i = 0; i < fields.length; ++i) {
             String path = "android.resource://" + getPackageName() + "/raw/" + fields[i].getName();
             final Uri uri = Uri.parse(path);
@@ -322,11 +358,18 @@ Context mContext;
      */
     // JANICE EDIT 02/13: PASSING IN THE ARRAY OF SONGS SO WE CAN PASS THROUGH TO SONGSLIST AND SONGSPLAYING
     public void launchSongs() {
+
+        //strings to be sent in an activity towards the SongListActivity
         Intent intent = new Intent(this, SongListActivity.class);
+
+
         intent.putExtra("Favorites", favorites);
         intent.putExtra("Disliked", disliked);
         intent.putExtra("Neutral", neutral);
         intent.putExtra("Song list", songs1);
+        intent.putExtra("isOn", isFlashBackOn);
+        //temporary, whilst passing strings.
+        intent.putExtra("albumOrigin", false);
         startActivity(intent);
     }
 
@@ -334,8 +377,13 @@ Context mContext;
      * launchAlbums:
      */
     public void launchAlbums() {
-        Intent albums  = new Intent(this, AlbumQueue.class);
-        startActivity(albums);
+        //where it comes from -> where it is going.
+        Intent albumsIntent  = new Intent(this, AlbumQueue.class);
+        Bundle args = new Bundle();
+        args.putSerializable("ARRAYLIST",albums);
+        albumsIntent.putExtra("BUNDLE",args);
+        albumsIntent.putExtra("isOn", isFlashBackOn);
+        startActivity(albumsIntent);
 
     }
 
@@ -359,6 +407,7 @@ Context mContext;
         }
         return false;
     }
+
 
     private Album retrieveAlbum(String albumName){
         int index = 0;
