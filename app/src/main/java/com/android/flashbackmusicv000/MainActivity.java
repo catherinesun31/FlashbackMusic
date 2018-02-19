@@ -74,6 +74,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     //ArrayList<Album> albums;
     Context mContext;
 
+//albums need to be passed...
+
 
     private FusedLocationProviderClient mFusedLocationClient;
     private Location locationManager;
@@ -160,10 +162,12 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         setSwitch();
 
 
+
         //close event
         isFlashBackOn = false;
         Toast.makeText(getApplicationContext(), "flashback mode is off", Toast.LENGTH_SHORT).show();
         //
+
 
 
         /*
@@ -175,8 +179,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         mResultReceiver = new AddressResultReceiver(new Handler());
         mLocationCallback = new LocationCallback();
         mContext = this;
-
     }
+
 
     @Override
     protected void onStart() {
