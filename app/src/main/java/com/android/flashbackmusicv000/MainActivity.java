@@ -140,7 +140,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         }
 
         //Set onClickListener for songs button
-        // JANICE EDIT: 02/13, PASSING IN SONGS[] SO THAT WE CAN ACCESS IT IN THE NEXT ACTIVITY
         Button songsList = (Button) findViewById(R.id.songs);
         songsList.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,9 +148,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             }
         });
 
-
         Button albumList = (Button) findViewById(R.id.albums);
-
         albumList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -161,14 +158,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
         setSwitch();
 
-
-
         //close event
         isFlashBackOn = false;
         Toast.makeText(getApplicationContext(), "flashback mode is off", Toast.LENGTH_SHORT).show();
         //
-
-
 
         /*
          * I'm thinking that here, we should make a list of all of the Song objects from songs that
@@ -390,6 +383,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
         //All songs.....
         toSongListIntent.putExtra("songs",allSongs);
+        toSongListIntent.putExtra("isFromAlbum", false);
         //temporary
 
         //try to put the strings from this activity inside the object and pass that object.
