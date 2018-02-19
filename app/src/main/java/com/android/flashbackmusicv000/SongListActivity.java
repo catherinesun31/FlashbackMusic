@@ -45,6 +45,7 @@ public class SongListActivity extends AppCompatActivity{
 
     private MediaPlayer mediaPlayer;
     private boolean isFlashBackOn;
+    private boolean isFromAlbum = false;
     public int index;
 
     SharedPreferences currentSongState;
@@ -53,6 +54,7 @@ public class SongListActivity extends AppCompatActivity{
     public ArrayList<String> neutral;
     public ArrayList<String> songs;
     ArrayList<Song> actualSongs;
+    ArrayList<Song> songsToPlay = new ArrayList<Song>();    // Janice add in
     private Switch switchy;
     private Intent in;
 
@@ -70,17 +72,18 @@ public class SongListActivity extends AppCompatActivity{
 
         /*a modification James Rich*/
         // just mocking up to get it working
+        if(in.getBooleanExtra("albumOrigin",true)) {
+            isFromAlbum = true;
+            Album albumSelected = in.getExtras().getParcelable("songs");
+            actualSongs = albumSelected.getSongs();
 
 
-        Album albumSelected = in.getExtras().getParcelable("songs");
-        actualSongs = albumSelected.getSongs();
-
-        currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
-        //SharedPreferences.Editor editor = currentSongState.edit();
-        setWidgets();
+            currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
+            //SharedPreferences.Editor editor = currentSongState.edit();
+            setWidgets();
 
 
-        //getExtras.... passing strings????
+            //getExtras.... passing strings????
         /*
         Bundle b = in.getExtras();
         if (b != null) {
@@ -103,116 +106,123 @@ public class SongListActivity extends AppCompatActivity{
             else { actualSongs = new ArrayList<>(); }
         }
 
-        // TODO, Janice: we might not need to pass in favorites/disliked/neutral list since we now pass in the entire Songs themselves
         */
-        songs = new ArrayList<String>();
-        if (favorites != null) {
-            songs.addAll(favorites);
-        }
-        if (disliked != null) {
-            songs.addAll(disliked);
-
-        }
-        if (neutral != null) {
-            songs.addAll(neutral);
-        }
-        Collections.sort(songs);
-
-        ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
-
-        Field[] fields = R.raw.class.getFields();
-        final float scale = this.getResources().getDisplayMetrics().density;
-        int songId = actualSongs.get(0).getSongId();//neutral.get(0).hashCode();
-        int pixels = (int) (50 * scale + 0.5f);
-        int textSize = (int) (15 * scale + 0.5f);
-        int buttonId = songId + 1;
-
-        //counter loop creates a new button. Attaches a 'new song' to the click listener.
-
-        for (index = 0; index < actualSongs.size(); index++) {
-            String fileName = actualSongs.get(index).getTitle();
-
-            Button button = new Button(this);
-            android.support.constraint.ConstraintLayout.LayoutParams params = new
-                    android.support.constraint.ConstraintLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, pixels);
-            button.setId(fileName.hashCode());
-            button.setText(fileName);
-            button.setBackgroundColor(Color.rgb(230, 230, 230));
-            button.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
-            button.setTextColor(Color.rgb(89, 89, 89));
-            button.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
-            button.setSingleLine(true);
-            button.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-            button.setMarqueeRepeatLimit(1000);
-
-            // Janice edit: passing songs through to songslist activity
-            //newSong from actualSongs.get(index)
-            final Song newSong = actualSongs.get(index);
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    launchActivity(newSong);
-                }
-            });
-
-            constraintLayout.addView(button, params);
-
-            final Button add = new Button(this);
-            android.support.constraint.ConstraintLayout.LayoutParams smallParams = new
-                    android.support.constraint.ConstraintLayout.LayoutParams(
-                    pixels, pixels);
-            add.setId((int) button.getId() + 1);
-
-            if (actualSongs.contains(fileName)) add.setText("+");
-            else if (actualSongs.contains(fileName)) add.setText("x");
-            else add.setText("✓");
-
-            add.setBackgroundColor(Color.rgb(230, 230, 230));
-            add.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
-            constraintLayout.addView(add, smallParams);
-
-            add.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    buttonChange(add, newSong);
-                }
-            });
-
-            ConstraintSet constraintSet = new ConstraintSet();
-            constraintSet.clone(constraintLayout);
-            constraintSet.connect(
-                    button.getId(), ConstraintSet.LEFT,
-                    ConstraintSet.PARENT_ID, ConstraintSet.LEFT, 0);
-            constraintSet.connect(
-                    add.getId(), ConstraintSet.RIGHT,
-                    ConstraintSet.PARENT_ID, ConstraintSet.RIGHT, 0);
-            constraintSet.connect(
-                    button.getId(), ConstraintSet.END,
-                    add.getId(), ConstraintSet.START, pixels);
-
-
-            if (index == 0) {
-                constraintSet.connect(
-                        button.getId(), ConstraintSet.TOP,
-                        ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
-                constraintSet.connect(
-                        add.getId(), ConstraintSet.TOP,
-                        ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
-            } else {
-                constraintSet.connect(
-                        button.getId(), ConstraintSet.TOP,
-                        songId, ConstraintSet.BOTTOM, 0);
-                constraintSet.connect(
-                        add.getId(), ConstraintSet.TOP,
-                        buttonId, ConstraintSet.BOTTOM, 0);
+            songs = new ArrayList<String>();
+            if (favorites != null) {
+                songs.addAll(favorites);
             }
-            constraintSet.constrainDefaultHeight(button.getId(), pixels);
-            constraintSet.constrainDefaultHeight(add.getId(), pixels);
-            constraintSet.applyTo(constraintLayout);
+            if (disliked != null) {
+                songs.addAll(disliked);
 
-            songId = button.getId();
-            buttonId = songId + 1;
+            }
+            if (neutral != null) {
+                songs.addAll(neutral);
+            }
+            Collections.sort(songs);
+
+            ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
+
+            Field[] fields = R.raw.class.getFields();
+            final float scale = this.getResources().getDisplayMetrics().density;
+            int songId = actualSongs.get(0).getSongId();//neutral.get(0).hashCode();
+            int pixels = (int) (50 * scale + 0.5f);
+            int textSize = (int) (15 * scale + 0.5f);
+            int buttonId = songId + 1;
+
+            //counter loop creates a new button. Attaches a 'new song' to the click listener.
+
+            for (index = 0; index < actualSongs.size(); index++) {
+                String fileName = actualSongs.get(index).getTitle();
+
+                Button button = new Button(this);
+                android.support.constraint.ConstraintLayout.LayoutParams params = new
+                        android.support.constraint.ConstraintLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT, pixels);
+                button.setId(fileName.hashCode());
+                button.setText(fileName);
+                button.setBackgroundColor(Color.rgb(230, 230, 230));
+                button.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
+                button.setTextColor(Color.rgb(89, 89, 89));
+                button.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
+                button.setSingleLine(true);
+                button.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+                button.setMarqueeRepeatLimit(1000);
+
+                final Song newSong = actualSongs.get(index);
+
+                // Janice: Checking whether to play whole album or just the single song
+                if (isFromAlbum) {
+                    songsToPlay = actualSongs;
+                } else {
+                    songsToPlay.add(newSong);
+                }
+
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //launchActivity(newSong);
+                        launchActivity(songsToPlay);
+                    }
+                });
+
+                constraintLayout.addView(button, params);
+
+                final Button add = new Button(this);
+                android.support.constraint.ConstraintLayout.LayoutParams smallParams = new
+                        android.support.constraint.ConstraintLayout.LayoutParams(
+                        pixels, pixels);
+                add.setId((int) button.getId() + 1);
+
+                if (actualSongs.contains(fileName)) add.setText("+");
+                else if (actualSongs.contains(fileName)) add.setText("x");
+                else add.setText("✓");
+
+                add.setBackgroundColor(Color.rgb(230, 230, 230));
+                add.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
+                constraintLayout.addView(add, smallParams);
+
+                add.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        buttonChange(add, newSong);
+                    }
+                });
+
+                ConstraintSet constraintSet = new ConstraintSet();
+                constraintSet.clone(constraintLayout);
+                constraintSet.connect(
+                        button.getId(), ConstraintSet.LEFT,
+                        ConstraintSet.PARENT_ID, ConstraintSet.LEFT, 0);
+                constraintSet.connect(
+                        add.getId(), ConstraintSet.RIGHT,
+                        ConstraintSet.PARENT_ID, ConstraintSet.RIGHT, 0);
+                constraintSet.connect(
+                        button.getId(), ConstraintSet.END,
+                        add.getId(), ConstraintSet.START, pixels);
+
+
+                if (index == 0) {
+                    constraintSet.connect(
+                            button.getId(), ConstraintSet.TOP,
+                            ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
+                    constraintSet.connect(
+                            add.getId(), ConstraintSet.TOP,
+                            ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
+                } else {
+                    constraintSet.connect(
+                            button.getId(), ConstraintSet.TOP,
+                            songId, ConstraintSet.BOTTOM, 0);
+                    constraintSet.connect(
+                            add.getId(), ConstraintSet.TOP,
+                            buttonId, ConstraintSet.BOTTOM, 0);
+                }
+                constraintSet.constrainDefaultHeight(button.getId(), pixels);
+                constraintSet.constrainDefaultHeight(add.getId(), pixels);
+                constraintSet.applyTo(constraintLayout);
+
+                songId = button.getId();
+                buttonId = songId + 1;
+            }
         }
     }
 
@@ -252,11 +262,12 @@ public class SongListActivity extends AppCompatActivity{
         intent.putExtra("Neutral", neutral.toArray());
     }
 
-    public void launchActivity(Song song) {
+    public void launchActivity(ArrayList<Song> songList /*Song song*/) {
         //new intent ... should have the
         Intent intent = new Intent(this, SongPlayingActivity.class);
 
-        intent.putExtra("name_of_extra", song);
+        intent.putExtra("name_of_extra", songList);
+        //intent.putExtra("name_of_extra", song);
         intent.putExtra("isOn", isFlashBackOn);
         startActivity(intent);
     }
