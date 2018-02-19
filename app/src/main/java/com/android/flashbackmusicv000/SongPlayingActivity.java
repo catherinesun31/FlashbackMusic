@@ -36,6 +36,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -187,6 +188,7 @@ public class SongPlayingActivity extends AppCompatActivity implements
         song.setTime(getTime());
         song.setDate(getDate());
         song.setDay(getDay());
+        song.setFullDate(getFullDate());
 
         mLocationCallback = new LocationCallback();
         song.setLocation(getLocation());
@@ -270,11 +272,17 @@ public class SongPlayingActivity extends AppCompatActivity implements
 
     }
 
+    private Date getFullDate() {
+        Calendar calendar = Calendar.getInstance();
+        Date currentTime = calendar.getTime();
+        return currentTime;
+    }
 
     //TODO (if enough time): change this to a Time class, so that it's SRP (but also who cares)
     private String getTime() {
         Calendar calendar = Calendar.getInstance();
         Date currentTime = calendar.getTime();
+        Time time = new Time(currentTime.getTime());
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.US);
         dateFormat.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
         return dateFormat.format(currentTime);

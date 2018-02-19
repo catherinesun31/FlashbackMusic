@@ -143,15 +143,32 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         neutral = new ArraySet<String>();
         disliked = new ArraySet<String>();
 
-        Song[] songs = getCurrentSongs(fave, dis, neut);
-        songs1 = new ArrayList<Song>(Arrays.asList(songs));
+        Song[] songs = {};
 
-        if (fave.isEmpty() && dis.isEmpty() && neut.isEmpty()) {
+        boolean f = false;
+        if (fave != null) {
+            f = true;
+        }
+        boolean d = false;
+        if (dis != null) {
+            d = true;
+        }
+        boolean n = false;
+        if (neut != null) {
+            n = true;
+        }
+
+        if (f || d || n) {
+            songs = getCurrentSongs(fave, dis, neut);
+        }
+        if (!f && !d && !n) {
             neutral = new ArraySet<>();
             for (int i = 0; i < songs.length; ++i) {
                 neutral.add(songs[i].getTitle());
             }
         }
+        songs1 = new ArrayList<Song>(Arrays.asList(songs));
+
 
         //Add list of favorited/disliked/neutral songs to shared preferences
         editor.putStringSet("favorites", favorites);
@@ -324,32 +341,38 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
              */
 
             boolean flag = false;
-            if (!favorites.isEmpty()) {
-                if (favorites.contains(title) && !flag) {
-                    currentSong.favorite();
-                    //adding to the string arrayList.
-                    this.favorites.add(currentSong.getTitle());
-                    //this.favorites[favoritesNow] = currentSong.getTitle();
-                    ++favoritesNow;
-                    flag = true;
-                }
+            if (favorites != null) {
+                if (!favorites.isEmpty()) {
+                    if (favorites.contains(title) && !flag) {
+                        currentSong.favorite();
+                        //adding to the string arrayList.
+                        this.favorites.add(currentSong.getTitle());
+                        //this.favorites[favoritesNow] = currentSong.getTitle();
+                        ++favoritesNow;
+                        flag = true;
+                    }
 
-            }
-            if (!disliked.isEmpty()) {
-                if (disliked.contains(title) && !flag) {
-                    currentSong.dislike();
-                    this.disliked.add(currentSong.getTitle());
-                    //this.disliked[dislikedNow] = currentSong.getTitle();
-                    ++dislikedNow;
                 }
-
             }
-            if (!neutral.isEmpty()) {
-                if (neutral.contains(title) && !flag) {
-                    currentSong.neutral();
-                    this.neutral.add(currentSong.getTitle());
-                    //this.neutral[neutralNow] = currentSong.getTitle();
-                    ++neutralNow;
+            if (disliked != null) {
+                if (!disliked.isEmpty()) {
+                    if (disliked.contains(title) && !flag) {
+                        currentSong.dislike();
+                        this.disliked.add(currentSong.getTitle());
+                        //this.disliked[dislikedNow] = currentSong.getTitle();
+                        ++dislikedNow;
+                    }
+
+                }
+            }
+            if (neutral != null) {
+                if (!neutral.isEmpty()) {
+                    if (neutral.contains(title) && !flag) {
+                        currentSong.neutral();
+                        this.neutral.add(currentSong.getTitle());
+                        //this.neutral[neutralNow] = currentSong.getTitle();
+                        ++neutralNow;
+                    }
                 }
             }
 
