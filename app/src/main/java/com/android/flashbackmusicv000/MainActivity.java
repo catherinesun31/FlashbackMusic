@@ -6,14 +6,20 @@
  */
 package com.android.flashbackmusicv000;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -25,6 +31,16 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.tasks.OnSuccessListener;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,7 +51,8 @@ import java.util.ListIterator;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements
+        LocationListener, OnMapReadyCallback {
 
 SharedPreferences currentSongState;
 //SharedPreferences widgetState;
@@ -54,7 +71,27 @@ ArrayList<Song> songs1;
 private Album allSongs;
 
 //albums need to be passed...
+ArrayList<Album> albums;
+Context mContext;
+
+    private FusedLocationProviderClient mFusedLocationClient;
+    private Location locationManager;
+    LocationRequest mLocationRequest;
+    Location mCurrentLocation;
+    private LocationCallback mLocationCallback;
+    private boolean mRequestingLocationUpdates;
+    final String REQUESTING_LOCATION_UPDATES_KEY = "Requesting Location Updates";
+
+    private GoogleMap mMap;
+    private GoogleApiClient mGoogleApiClient;
+
+    private AddressResultReceiver mResultReceiver;
+    protected String mAddressOutput;
+    protected String mAreaOutput;
+    protected String mCityOutput;
+    protected String mStateOutput;
 private ArrayList<Album> albums;
+
 
     /**
      * onCreate Method represents the beginning state of the main activity whenever it is started.
@@ -68,6 +105,7 @@ private ArrayList<Album> albums;
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("In: ", "MainActivity.onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -120,6 +158,96 @@ private ArrayList<Album> albums;
         setSwitch();
 
 
+                    //close event
+                    isFlashBackOn = false;
+                    Toast.makeText(getApplicationContext(), "flashback mode is off", Toast.LENGTH_SHORT).show();
+                    //
+                }
+            }
+        });
+
+        /*
+         * I'm thinking that here, we should make a list of all of the Song objects from songs that
+         * the user has in their R.raw file, and store it in the phone's shared preferences.
+         */
+
+        //Create the IntentService to automatically update the user's location every minute or so
+        mResultReceiver = new AddressResultReceiver(new Handler());
+        mLocationCallback = new LocationCallback();
+        mContext = this;
+
+    }
+    @Override
+    protected void onStart() {
+        Log.i("In: ", "MainActivity.onStart");
+        super.onStart();
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        if (ActivityCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    100);
+        }
+        if (ActivityCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            try {
+                mLocationRequest = new LocationRequest();
+                mLocationRequest.setInterval(10000);
+                mLocationRequest.setFastestInterval(5000);
+                mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                mFusedLocationClient.requestLocationUpdates(mLocationRequest,
+                        mLocationCallback,null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        Log.i("In: ", "MainActivity.onStop");
+        super.onStop();
+        try {
+
+        }
+        catch (RuntimeException e) {
+            e.printStackTrace();
+        }
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        Log.i("In: ", "MainActivity.onSaveInstanceState");
+
+        outState.putBoolean(REQUESTING_LOCATION_UPDATES_KEY,
+                mRequestingLocationUpdates);
+        // ...
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        Log.i("In: ", "MainActivity.onMapReady");
+
+        Log.d("MAP LOCATION", "OnMapReady");
+        mMap = googleMap;
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.i("In: ", "MainActivity.onLocationChanged");
+
+        try {
+            LocationServices.FusedLocationApi.removeLocationUpdates(
+                    mGoogleApiClient, this);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -300,42 +428,27 @@ private ArrayList<Album> albums;
             albums = new ArrayList<Album>();
             return false;
         }
-
         for(Album album: albums){
-
             if(album.getName().equals(albumName)){
-
                 return true;
-
             }
-
         }
-
         return false;
     }
 
 
     private Album retrieveAlbum(String albumName){
-
         int index = 0;
-
         Album currentAlbum = null;
-
         ListIterator<Album> it = albums.listIterator();
-
         while(it.hasNext()){
 
             currentAlbum = it.next();
             if(currentAlbum.getName().equals(albumName)){
-
                 return currentAlbum;
-
             }
-
         }
-
         return currentAlbum;
-
     }
 
     /**
@@ -359,6 +472,69 @@ private ArrayList<Album> albums;
     }
 
 
+    /**
+     * Updates the address in the UI.
+     */
+    protected void displayAddressOutput(String mAddressOutput, String mAreaOutput, String mCityOutput, String mStateOutput) {
+        Log.i("In: ", "SongPlayingActivity.displayAddressOutput");
+
+        //  mLocationAddressTextView.setText(mAddressOutput);
+        try {
+            if (mAddressOutput != null)
+                // mLocationText.setText(mAreaOutput+ "");
+
+                Log.d("Area", mAddressOutput);
+            //mLocationText.setText(mAreaOutput);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected void startIntentService(Location location) {
+        Log.i("In: ", "SongPlayingActivity.startIntentService");
+
+        Intent intent = new Intent(this, FetchAddressIntentService.class);
+        intent.putExtra(FetchAddressIntentService.Constants.RECEIVER, mResultReceiver);
+        intent.putExtra(FetchAddressIntentService.Constants.LOCATION_DATA_EXTRA, locationManager);
+        startService(intent);
+    }
+
+    private String getLocation() {
+        Log.i("In: ", "SongPlayingActivity.getLocation");
+
+        String address = "";
+
+        //Ask for location permissions
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        if (ActivityCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    100);
+        }
+
+        //Get the user's location
+        mFusedLocationClient.getLastLocation().addOnSuccessListener(
+                this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        //logic to handle location
+                        if (location != null) {
+                            locationManager = location;
+
+                            Log.d("Current Location", "Longitude: " + locationManager.getLongitude() + "\n"
+                                    + "Latitude: " + locationManager.getLatitude());
+
+                            //Get the location as an address
+
+                            //Log.d("Address: ", mAddressOutput);
+                        }
+                    }
+                });
+        return address;
+
+    }
 
     private void setSwitch(){
 
@@ -406,6 +582,5 @@ private ArrayList<Album> albums;
 
 
     }
-
 
 }
