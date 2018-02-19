@@ -17,7 +17,7 @@ public class FlashBackMode {
     LinkedList<Song> flashQueue;
     LinkedList<Song> unsorted;
 
-    public void FlashBackMode(LinkedList<Song> songList) {
+    public FlashBackMode(LinkedList<Song> songList) {
         unsorted = songList;
         createQueue();
     }
@@ -96,7 +96,7 @@ public class FlashBackMode {
         else {
             lastTime = "Night";
         }
-        if (lastTime.equals(song.getLastTime())) ++total;
+        if (lastTime.equals(song.getLastTimeOfDay())) ++total;
 
         //if the location is within 1000 feet
 
