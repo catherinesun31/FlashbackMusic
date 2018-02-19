@@ -1,12 +1,9 @@
 import android.app.Instrumentation;
 import android.support.test.rule.ActivityTestRule;
-import android.view.View;
 import android.widget.Button;
 
-import com.android.flashbackmusicv000.MainActivity;
 import com.android.flashbackmusicv000.R;
 import com.android.flashbackmusicv000.SongListActivity;
-import com.android.flashbackmusicv000.SongPlayingActivity;
 
 import org.junit.Before;
 import org.junit.Test;

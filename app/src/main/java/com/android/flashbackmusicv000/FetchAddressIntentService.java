@@ -29,11 +29,18 @@ public class FetchAddressIntentService extends IntentService {
     public FetchAddressIntentService() {
         super(TAG);
         Log.i("In: ", "FetchAddressIntentService");
-
     }
 
+    /*public FetchAddressIntentService(){
+        super ("FetchAddressIntentService");
+    }*/
+
+    /*public FetchAddressIntentService(String name) {
+        super(name);
+    }*/
+
     @Override
-    public void onHandleIntent(Intent intent) {
+    public void onHandleIntent(Intent intent){
         Log.i("In: ", "FetchAddressIntentService.onHandleIntent");
 
         String errorMessage = "";
@@ -56,25 +63,24 @@ public class FetchAddressIntentService extends IntentService {
             Geocoder geocoder = new Geocoder(this, Locale.US);
 
             List<Address> addresses = null;
-
-            try {
-                addresses = geocoder.getFromLocation(
-                        location.getLatitude(),
-                        location.getLongitude(),
-                        // In this sample, get just a single address.
-                        1);
-            } catch (IOException ioException) {
-                // Catch network or other I/O problems.
-                errorMessage = "Service not available";
-                Log.e(TAG, errorMessage, ioException);
-            } catch (IllegalArgumentException illegalArgumentException) {
-                // Catch invalid latitude or longitude values.
-                errorMessage = "Invalid lat/long";
-                Log.e(TAG, errorMessage + ". " +
-                        "Latitude = " + location.getLatitude() +
-                        ", Longitude = " +
-                        location.getLongitude(), illegalArgumentException);
-            }
+             try {
+                 addresses = geocoder.getFromLocation(
+                         location.getLatitude(),
+                         location.getLongitude(),
+                         // In this sample, get just a single address.
+                         1);
+             } catch (IOException ioException) {
+                 // Catch network or other I/O problems.
+                 errorMessage = "Service not available";
+                 Log.e(TAG, errorMessage, ioException);
+             } catch (IllegalArgumentException illegalArgumentException) {
+                 // Catch invalid latitude or longitude values.
+                 errorMessage = "Invalid lat/long";
+                 Log.e(TAG, errorMessage + ". " +
+                         "Latitude = " + location.getLatitude() +
+                         ", Longitude = " +
+                         location.getLongitude(), illegalArgumentException);
+             }
 
             // Handle case where no address was found.
             if (addresses == null || addresses.size() == 0) {
