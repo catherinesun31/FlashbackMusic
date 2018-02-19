@@ -12,6 +12,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.media.MediaMetadataRetriever;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     int favoritesNow;
     int dislikedNow;
     int neutralNow;
+    public static MediaPlayer mediaPlayer;
     private boolean isFlashBackOn;
     private Switch flashSwitch;
     public static SharedPreferences flashBackState;
