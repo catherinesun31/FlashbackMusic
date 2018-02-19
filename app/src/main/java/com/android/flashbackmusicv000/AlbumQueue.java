@@ -74,7 +74,9 @@ public class AlbumQueue extends AppCompatActivity {
         album1.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                launchActivity(albums.get(0));
+                if(albums.size() > 0) {
+                    launchActivity(albums.get(0));
+                }
             }
         });
         album2.setOnClickListener(new View.OnClickListener(){
