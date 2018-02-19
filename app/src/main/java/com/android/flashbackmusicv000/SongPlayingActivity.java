@@ -40,7 +40,9 @@ import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -71,7 +73,7 @@ public class SongPlayingActivity extends AppCompatActivity implements
     private AddressResultReceiver mResultReceiver;
 
     private int songIndex = 0;
-
+    private SharedPreferences currentSongState;
 
 
     protected String mAddressOutput;
@@ -87,6 +89,9 @@ public class SongPlayingActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_song_playing);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
+        isFlashBackOn = currentSongState.getBoolean("flashback", false);
 
         mContext = this;
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -113,15 +118,11 @@ public class SongPlayingActivity extends AppCompatActivity implements
             public void onClick(View view) {
                 /*
                 1. skip current song
-                2. get current location/day/time
-                3. go through all songs in the list
-                4. get the song score
-                5. if the song score is the same, add the favorite first
-                6. if both favorites, add latest played
-                7.
-                 */
-                //FlashBackMode mode = new FlashBackMode(songList);
-                //mode.createQueue();
+                */
+                LinkedList<Song> songs = new LinkedList<Song>();
+                songs.addAll(songList);
+                FlashBackMode mode = new FlashBackMode(songs);
+                mode.createQueue();
             }
         });
 
