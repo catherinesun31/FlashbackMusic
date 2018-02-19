@@ -75,11 +75,12 @@ public class SongListActivity extends AppCompatActivity{
 
         /*a modification James Rich*/
         // just mocking up to get it working
-        if(in.getBooleanExtra("albumOrigin",true)) {
-            isFromAlbum = true;
-            Album albumSelected = in.getExtras().getParcelable("songs");
-            actualSongs = albumSelected.getSongs();
+        isFromAlbum = in.getExtras().getBoolean("albumOrigin");
+        if (!isFromAlbum)
+            System.out.println("What");
 
+        Album albumSelected = in.getExtras().getParcelable("songs");
+        actualSongs = albumSelected.getSongs();
 
             currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
 
@@ -96,9 +97,11 @@ public class SongListActivity extends AppCompatActivity{
             disliked.addAll(dis);
 
             setWidgets();
+        //SharedPreferences.Editor editor = currentSongState.edit();
+        setWidgets();
 
 
-            //getExtras.... passing strings????
+        //getExtras.... passing strings????
         /*
         Bundle b = in.getExtras();
         if (b != null) {
@@ -165,17 +168,23 @@ public class SongListActivity extends AppCompatActivity{
 
                 final Song newSong = actualSongs.get(index);
 
+                System.out.println("Looped...");
                 // Janice: Checking whether to play whole album or just the single song
                 if (isFromAlbum) {
                     songsToPlay = actualSongs;
-                } else {
-                    songsToPlay.add(newSong);
+                    System.out.println("It is from the album");
                 }
+
+                final int songIndex = index;
 
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         //launchActivity(newSong);
+                        if(!isFromAlbum) {
+                            songsToPlay = new ArrayList<Song>();
+                            songsToPlay.add(actualSongs.get(songIndex));
+                        }
                         launchActivity(songsToPlay);
                     }
                 });
@@ -238,7 +247,6 @@ public class SongListActivity extends AppCompatActivity{
                 songId = button.getId();
                 buttonId = songId + 1;
             }
-        }
     }
 
     public boolean contains(String[] songs, String string) {

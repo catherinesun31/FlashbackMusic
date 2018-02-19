@@ -50,15 +50,13 @@ import android.widget.Toast;
 
 public class SongPlayingActivity extends AppCompatActivity implements
         OnMapReadyCallback {
-
-    private MediaPlayer mediaPlayer;
     private ArrayList<Song> songList;
     Context mContext;
 
     private Intent intent;
     private boolean isFlashBackOn;
     private Switch switchy;
-
+    public static MediaPlayer mediaPlayer;
     private FusedLocationProviderClient mFusedLocationClient;
     private Location locationManager;
     LocationRequest mLocationRequest;
@@ -82,13 +80,13 @@ public class SongPlayingActivity extends AppCompatActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        onDestory(mediaPlayer);
         Log.i("In: ", "SongPlayingActivity.onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_song_playing);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mContext = this;
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,7 +95,6 @@ public class SongPlayingActivity extends AppCompatActivity implements
                         .setAction("Action", null).show();
             }
         });
-
         Intent i = getIntent();
         setWidgets();
         //bug could be here.... something to do with the intents....
@@ -163,7 +160,6 @@ public class SongPlayingActivity extends AppCompatActivity implements
             tempPlayer.setNextMediaPlayer(nextPlayer);
             tempPlayer = nextPlayer;
         }
-
         mediaPlayer.start();
         //songIndex++;
 
@@ -208,8 +204,6 @@ public class SongPlayingActivity extends AppCompatActivity implements
         mResultReceiver = new AddressResultReceiver(new Handler());
         songLocation.setText(mAddressOutput);
     }
-
-
 
     @Override
     protected void onStop() {
@@ -349,6 +343,7 @@ public class SongPlayingActivity extends AppCompatActivity implements
         return address;
     }
 
+
     protected void startIntentService(Location location) {
         Log.i("In: ", "SongPlayingActivity.startIntentService");
 
@@ -356,6 +351,13 @@ public class SongPlayingActivity extends AppCompatActivity implements
         intent.putExtra(FetchAddressIntentService.Constants.RECEIVER, mResultReceiver);
         intent.putExtra(FetchAddressIntentService.Constants.LOCATION_DATA_EXTRA, locationManager);
         startService(intent);
+    }
+
+    protected void onDestory(MediaPlayer mediaPlayer) {
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer = null;
+        }
     }
 
     public void loadMedia(MediaPlayer mediaPlayer, int index){
