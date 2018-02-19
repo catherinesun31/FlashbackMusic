@@ -62,6 +62,13 @@ public class AlbumQueue extends AppCompatActivity {
         Button album5 = (Button) findViewById(R.id.album5);
 
         //get songs to load... and
+        Switch flashback = (Switch) findViewById(R.id.flashSwitch);
+        flashback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
 
         album1.setOnClickListener(new View.OnClickListener(){
@@ -119,6 +126,7 @@ public class AlbumQueue extends AppCompatActivity {
         //songs are parcelable
         toSongListIntent.putExtra("songs",songs);
         //temporary
+        toSongListIntent.putExtra("albumOrigin", true);
 
         toSongListIntent.putExtra("isOn",isFlashBackOn);
 

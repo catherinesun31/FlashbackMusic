@@ -29,10 +29,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SongPlayingActivity"
-            android:label="@string/title_activity_song_playing"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".AlbumQueue"
             android:label="@string/title_activity_album_queue"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -43,6 +39,10 @@
         <activity
             android:name=".AlbumSongList"
             android:label="@string/title_activity_album_song_list"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SongPlayingActivity"
+            android:label="SongPlayingActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <service

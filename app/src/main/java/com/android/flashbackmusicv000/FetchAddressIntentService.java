@@ -119,6 +119,10 @@ public class FetchAddressIntentService extends IntentService {
             bundle.putString(Constants.LOCATION_DATA_CITY, address.getLocality());
             bundle.putString(Constants.LOCATION_DATA_STREET, address.getAddressLine(0));
             mReceiver.send(resultCode, bundle);
+            Intent i = new Intent(FetchAddressIntentService.this, SongPlayingActivity.class);
+            i.putExtra("RECEIVED", mReceiver);
+            Log.i("Sent ", "" + message);
+
         }
         catch (Exception e) {
             e.printStackTrace();

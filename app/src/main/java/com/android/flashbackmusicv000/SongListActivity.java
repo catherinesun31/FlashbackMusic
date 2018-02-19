@@ -1,5 +1,6 @@
 package com.android.flashbackmusicv000;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
@@ -16,6 +17,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.ArraySet;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -40,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
 
 public class SongListActivity extends AppCompatActivity{
 
@@ -49,9 +52,9 @@ public class SongListActivity extends AppCompatActivity{
     public int index;
 
     SharedPreferences currentSongState;
-    public ArrayList<String> favorites;
-    public ArrayList<String> disliked;
-    public ArrayList<String> neutral;
+    public ArraySet<String> favorites;
+    public ArraySet<String> disliked;
+    public ArraySet<String> neutral;
     public ArrayList<String> songs;
     ArrayList<Song> actualSongs;
     ArrayList<Song> songsToPlay = new ArrayList<Song>();    // Janice add in
@@ -67,23 +70,45 @@ public class SongListActivity extends AppCompatActivity{
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Switch flashback = (Switch) findViewById(R.id.flashSwitch);
+        flashback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
         //
         in = getIntent();
 
         /*a modification James Rich*/
         // just mocking up to get it working
-        if(in.getBooleanExtra("albumOrigin",true)) {
-            isFromAlbum = true;
-            Album albumSelected = in.getExtras().getParcelable("songs");
-            actualSongs = albumSelected.getSongs();
+        isFromAlbum = in.getExtras().getBoolean("albumOrigin");
+        if (!isFromAlbum)
+            System.out.println("What");
 
+        Album albumSelected = in.getExtras().getParcelable("songs");
+        actualSongs = albumSelected.getSongs();
 
             currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
-            //SharedPreferences.Editor editor = currentSongState.edit();
+
+            Set<String> fave = currentSongState.getStringSet("favorites", null);
+            Set<String> dis = currentSongState.getStringSet("disliked", null);
+            Set<String> neut = currentSongState.getStringSet("neutral", null);
+
+            favorites = new ArraySet<String>();
+            disliked = new ArraySet<String>();
+            neutral = new ArraySet<String>();
+
+            favorites.addAll(fave);
+            neutral.addAll(neut);
+            disliked.addAll(dis);
+
             setWidgets();
+        //SharedPreferences.Editor editor = currentSongState.edit();
+        setWidgets();
 
 
-            //getExtras.... passing strings????
+        //getExtras.... passing strings????
         /*
         Bundle b = in.getExtras();
         if (b != null) {
@@ -118,13 +143,13 @@ public class SongListActivity extends AppCompatActivity{
             if (neutral != null) {
                 songs.addAll(neutral);
             }
+            //do this to show songs in alphabetical order
             Collections.sort(songs);
 
             ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
 
-            Field[] fields = R.raw.class.getFields();
             final float scale = this.getResources().getDisplayMetrics().density;
-            int songId = actualSongs.get(0).getSongId();//neutral.get(0).hashCode();
+            int songId = songs.get(0).hashCode();
             int pixels = (int) (50 * scale + 0.5f);
             int textSize = (int) (15 * scale + 0.5f);
             int buttonId = songId + 1;
@@ -138,7 +163,7 @@ public class SongListActivity extends AppCompatActivity{
                 android.support.constraint.ConstraintLayout.LayoutParams params = new
                         android.support.constraint.ConstraintLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT, pixels);
-                button.setId(fileName.hashCode());
+                button.setId(songs.get(index).hashCode());
                 button.setText(fileName);
                 button.setBackgroundColor(Color.rgb(230, 230, 230));
                 button.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
@@ -150,17 +175,23 @@ public class SongListActivity extends AppCompatActivity{
 
                 final Song newSong = actualSongs.get(index);
 
+                System.out.println("Looped...");
                 // Janice: Checking whether to play whole album or just the single song
                 if (isFromAlbum) {
                     songsToPlay = actualSongs;
-                } else {
-                    songsToPlay.add(newSong);
+                    System.out.println("It is from the album");
                 }
+
+                final int songIndex = index;
 
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         //launchActivity(newSong);
+                        if(!isFromAlbum) {
+                            songsToPlay = new ArrayList<Song>();
+                            songsToPlay.add(actualSongs.get(songIndex));
+                        }
                         launchActivity(songsToPlay);
                     }
                 });
@@ -173,8 +204,8 @@ public class SongListActivity extends AppCompatActivity{
                         pixels, pixels);
                 add.setId((int) button.getId() + 1);
 
-                if (actualSongs.contains(fileName)) add.setText("+");
-                else if (actualSongs.contains(fileName)) add.setText("x");
+                if (neutral.contains(fileName)) add.setText("+");
+                else if (disliked.contains(fileName)) add.setText("x");
                 else add.setText("✓");
 
                 add.setBackgroundColor(Color.rgb(230, 230, 230));
@@ -223,7 +254,6 @@ public class SongListActivity extends AppCompatActivity{
                 songId = button.getId();
                 buttonId = songId + 1;
             }
-        }
     }
 
     public boolean contains(String[] songs, String string) {
@@ -235,31 +265,39 @@ public class SongListActivity extends AppCompatActivity{
 
     protected void buttonChange(Button button, Song song) {
         Intent intent = new Intent(this, SongListActivity.class);
+        @SuppressLint("ResourceType") String songButtonName = ((Button)findViewById(button.getId() - 1)).getText().toString();
         String name = button.getText().toString();
+        currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = currentSongState.edit();
         switch (name) {
             case "+":
                 button.setText("✓");
-                neutral.remove(name);
-                favorites.add(name);
+                neutral.remove(songButtonName);
+                favorites.add(songButtonName);
                 song.favorite();
-                return;
+                break;
             case "ｘ":
                 button.setText("+");
-                disliked.remove(name);
-                neutral.add(name);
+                disliked.remove(songButtonName);
+                neutral.add(songButtonName);
                 song.neutral();
-                return;
+                break;
             case "✓":
                 button.setText("ｘ");
-                favorites.remove(name);
-                disliked.add(name);
+                favorites.remove(songButtonName);
+                disliked.add(songButtonName);
                 song.dislike();
-                return;
+                break;
         }
 
         intent.putExtra("Favorites", favorites.toArray());
         intent.putExtra("Disliked", disliked.toArray());
         intent.putExtra("Neutral", neutral.toArray());
+
+        editor.putStringSet("favorites", favorites);
+        editor.putStringSet("disliked", disliked);
+        editor.putStringSet("neutral", neutral);
+        editor.commit();
     }
 
     public void launchActivity(ArrayList<Song> songList /*Song song*/) {

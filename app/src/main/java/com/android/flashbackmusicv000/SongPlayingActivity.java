@@ -54,14 +54,14 @@ import android.os.IBinder;
 
 public class SongPlayingActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private MediaPlayer mediaPlayer;
+
     private ArrayList<Song> songList;
     Context mContext;
 
     private Intent intent;
     private boolean isFlashBackOn;
     private Switch switchy;
-
+    public static MediaPlayer mediaPlayer;
     private FusedLocationProviderClient mFusedLocationClient;
     private Location locationManager;
     LocationRequest mLocationRequest;
@@ -77,10 +77,13 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
     private MusicBackgroundService mServ;
     private Intent toMusicServiceIntent;
     private int songIndex = 0;
+
+
     protected String mAddressOutput;
     protected String mAreaOutput;
     protected String mCityOutput;
     protected String mStateOutput;
+
 
 
 
@@ -111,12 +114,26 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
     //end Karla add in
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        onDestory(mediaPlayer);
         Log.i("In: ", "SongPlayingActivity.onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_song_playing);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        mContext = this;
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
         Intent i = getIntent();
         setWidgets();
         //bug could be here.... something to do with the intents....
@@ -128,24 +145,36 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
         songList = i.getParcelableArrayListExtra("name_of_extra");
         final Song song = songList.get(songIndex);
 
+        Switch flashback = (Switch) findViewById(R.id.flashSwitch);
+        flashback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /*
+                1. skip current song
+                2. get current location/day/time
+                3. go through all songs in the list
+                4. get the song score
+                5. if the song score is the same, add the favorite first
+                6. if both favorites, add latest played
+                7.
+                 */
+                //FlashBackMode mode = new FlashBackMode(songList);
+                //mode.createQueue();
+            }
+        });
+
         //final Song song = (Song) i.getParcelableExtra("name_of_extra");
-
-        //temporary, will restore
-        //startMusicService(song);
-        sendIntentToMusicService();
-
 
         TextView songTitle = (TextView) findViewById(R.id.songtitle);
         songTitle.setText(song.getTitle());
 
         final int nameInt = song.getSongId();
-        //loadMedia(nameInt);
-        //THE MEDIAPLAYER BUTTON
+
         mediaPlayer = MediaPlayer.create(this, songList.get(songIndex).getSongId());
         MediaPlayer tempPlayer = mediaPlayer;
         //getLocation(savedInstanceState);  TODO Janice: took this out, kept making errors in merge conflict
 
-        for(songIndex++ ; songIndex < songList.size(); songIndex++){
+        for(++songIndex ; songIndex < songList.size(); songIndex++){
             final Song song1 = songList.get(songIndex);
             MediaPlayer nextPlayer = MediaPlayer.create(this, songList.get(songIndex).getSongId());
             nextPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -191,7 +220,6 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
             tempPlayer = nextPlayer;
         }
 
-
         mediaPlayer.start();
         //songIndex++;
 
@@ -210,6 +238,7 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
 
         TextView songLocation = (TextView) findViewById(R.id.song_location);
         String location = song.getLocation();
+        Log.d("Location", getLocation());
         songLocation.setText(location);
 
         final Button statusButton = (Button) findViewById(R.id.status);
@@ -233,8 +262,9 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
                 }
         });
         mResultReceiver = new AddressResultReceiver(new Handler());
-
+        songLocation.setText(mAddressOutput);
     }
+
 
 
     private void sendIntentToMusicService(){
@@ -244,6 +274,7 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
         startService(intent);
 
     }
+
 
 
     @Override
@@ -384,6 +415,7 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
         return address;
     }
 
+
     protected void startIntentService(Location location) {
         Log.i("In: ", "SongPlayingActivity.startIntentService");
 
@@ -391,6 +423,13 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
         intent.putExtra(FetchAddressIntentService.Constants.RECEIVER, mResultReceiver);
         intent.putExtra(FetchAddressIntentService.Constants.LOCATION_DATA_EXTRA, locationManager);
         startService(intent);
+    }
+
+    protected void onDestory(MediaPlayer mediaPlayer) {
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer = null;
+        }
     }
 
     public void loadMedia(MediaPlayer mediaPlayer, int index){
@@ -416,9 +455,6 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
         }
     }
 
-    /**
-     * sets the flashback switch
-     */
     private void setWidgets(){
 
         intent = getIntent();
@@ -448,19 +484,6 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
         });
     }
 
-    /**
-     * method starting a background service to keep music playing on a seperqte thread
-     * @param song
-     */
-    private void startMusicService(Song song){
-
-        toMusicServiceIntent = new Intent();
-        toMusicServiceIntent.setClass(this, MusicBackgroundService.class);
-        toMusicServiceIntent.putExtra("song", song);
-        startService(toMusicServiceIntent);
-
-    }
-
     /*
     public static String printIntent(Intent intent){
         if (intent == null) {
@@ -470,9 +493,6 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
     }
     */
 
-    /**
-     * Tells activity to save the flash back switch state and finish of when popping from the activity stack.
-     */
     @Override
     public void onBackPressed(){
 
@@ -494,32 +514,34 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
         startService(intent);
     }
 
-
-    /*protected void startMusicBackgroundService(){
-        Intent music = new Intent();
-        music.setClass(this, MusicBackgroundSerivce.class);
-        startService(music);
-    }*/
-
-
     class AddressResultReceiver extends ResultReceiver {
-        String mAddressOutput;
-        public AddressResultReceiver(Handler handler) {
+        AddressResultReceiver(Handler handler) {
             super(handler);
         }
 
+        /**
+         *  Receives data sent from FetchAddressIntentService and updates the UI in MainActivity.
+         */
         @Override
         protected void onReceiveResult(int resultCode, Bundle resultData) {
 
-            // Display the address string
-            // or an error message sent from the intent service.
+            // Display the address string or an error message sent from the intent service.
             mAddressOutput = resultData.getString(FetchAddressIntentService.Constants.RESULT_DATA_KEY);
+            displayAddressOutput();
 
             // Show a toast message if an address was found.
             if (resultCode == FetchAddressIntentService.Constants.SUCCESS_RESULT) {
-
+                //showToast(getString(R.string.address_found));
             }
 
+            // Reset. Enable the Fetch Address button and stop showing the progress bar.
         }
     }
+
+    public void displayAddressOutput() {
+        Log.d("address", mAddressOutput);
+        TextView location = findViewById(R.id.song_location);
+        location.setText(mAddressOutput);
+    }
+
 }

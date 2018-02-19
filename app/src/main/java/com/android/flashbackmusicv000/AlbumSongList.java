@@ -71,6 +71,14 @@ public class AlbumSongList extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Switch flashback = (Switch) findViewById(R.id.flashSwitch);
+        flashback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
         int totalSongs = getNumberOfSongs();
         MEDIA_RES_IDS = new int[totalSongs];
         setWidgets();

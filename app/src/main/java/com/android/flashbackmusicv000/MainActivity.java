@@ -12,6 +12,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.media.MediaMetadataRetriever;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,6 +23,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.ArraySet;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
@@ -55,12 +57,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
     SharedPreferences currentSongState;
     //SharedPreferences widgetState;
-    String[] favorites;
-    String[] disliked;
-    String[] neutral;
+    Set<String> favorites;
+    Set<String> disliked;
+    Set<String> neutral;
     int favoritesNow;
     int dislikedNow;
     int neutralNow;
+    public static MediaPlayer mediaPlayer;
     private boolean isFlashBackOn;
     private Switch flashSwitch;
     public static SharedPreferences flashBackState;
@@ -87,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
 
-    private AddressResultReceiver mResultReceiver;
+    private SongPlayingActivity.AddressResultReceiver mResultReceiver;
     protected String mAddressOutput;
     protected String mAreaOutput;
     protected String mCityOutput;
@@ -114,6 +117,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Switch flashback = (Switch) findViewById(R.id.flashSwitch);
+        flashback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
         //create a shared preference for flashback service state.
 
         favoritesNow = 0;
@@ -127,19 +138,29 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         Set<String> dis = currentSongState.getStringSet("disliked", null);
         Set<String> neut = currentSongState.getStringSet("neutral", null);
 
+        favorites = new ArraySet<String>();
+        neutral = new ArraySet<String>();
+        disliked = new ArraySet<String>();
+
         Song[] songs = getCurrentSongs(fave, dis, neut);
         songs1 = new ArrayList<Song>(Arrays.asList(songs));
-        if (fave != null && disliked != null && neutral != null) {
-            songs = getCurrentSongs(fave, dis, neut);
-        } else {
-            neutral = new String[songs.length];
-            for (int i = 0; i < songs.length; ++i) {
-                neutral[i] = songs[i].getTitle();
+
+        if (fave != null && dis != null && neut != null) {
+            if (fave.isEmpty() && dis.isEmpty() && neut.isEmpty()) {
+                neutral = new ArraySet<>();
+                for (int i = 0; i < songs.length; ++i) {
+                    neutral.add(songs[i].getTitle());
+                }
             }
         }
 
+        //Add list of favorited/disliked/neutral songs to shared preferences
+        editor.putStringSet("favorites", favorites);
+        editor.putStringSet("disliked", disliked);
+        editor.putStringSet("neutral", neutral);
+        editor.commit();
+
         //Set onClickListener for songs button
-        // JANICE EDIT: 02/13, PASSING IN SONGS[] SO THAT WE CAN ACCESS IT IN THE NEXT ACTIVITY
         Button songsList = (Button) findViewById(R.id.songs);
         songsList.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,9 +169,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             }
         });
 
-
         Button albumList = (Button) findViewById(R.id.albums);
-
         albumList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -160,14 +179,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
         setSwitch();
 
-
-
-
         //close event
         isFlashBackOn = false;
         Toast.makeText(getApplicationContext(), "flashback mode is off", Toast.LENGTH_SHORT).show();
         //
-
 
         /*
          * I'm thinking that here, we should make a list of all of the Song objects from songs that
@@ -175,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
          */
 
         //Create the IntentService to automatically update the user's location every minute or so
-        mResultReceiver = new AddressResultReceiver(new Handler());
+        //mResultReceiver = new SongPlayingActivity.AddressResultReceiver(new Handler());
         mLocationCallback = new LocationCallback();
         mContext = this;
     }
@@ -281,7 +296,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
         for (int i = 0; i < fields.length; ++i) {
 
-
             String path = "android.resource://" + getPackageName() + "/raw/" + fields[i].getName();
             final Uri uri = Uri.parse(path);
 
@@ -294,12 +308,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             String artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
             String albumName = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
             String duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+
             long mil = Long.parseLong(duration);
             int seconds = (int)Math.ceil((mil / 1000) % 60);
             int minutes = (int)Math.ceil((mil / (1000*60)) % 60);
             duration = minutes + ":" + seconds;
-
-
 
             Log.d("Information: ", "Title: " + title + "\n" +
             "Artist: " + artist + "\n" +
@@ -312,31 +325,41 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             * will instead add the strings to the songs... and pass them as albums.
              */
 
+            boolean flag = false;
             if (favorites != null) {
+                if (!favorites.isEmpty()) {
+                    if (favorites.contains(title) && !flag) {
+                        currentSong.favorite();
+                        //adding to the string arrayList.
+                        this.favorites.add(currentSong.getTitle());
+                        //this.favorites[favoritesNow] = currentSong.getTitle();
+                        ++favoritesNow;
+                        flag = true;
+                    }
 
-                //
-                if (favorites.contains(title)) {
-                    currentSong.favorite();
-                    //adding to the string arrayList.
-                    this.favorites[favoritesNow] = currentSong.getTitle();
-                    ++favoritesNow;
-                }
-
-            } else if (disliked != null) {
-                if (disliked.contains(title)) {
-                    currentSong.dislike();
-                    this.disliked[dislikedNow] = currentSong.getTitle();
-                    ++dislikedNow;
-                }
-
-            } else if (neutral != null) {
-                if (neutral.contains(title)) {
-                    currentSong.neutral();
-                    this.neutral[neutralNow] = currentSong.getTitle();
-                    ++neutralNow;
                 }
             }
+            if (disliked != null) {
+                if (!disliked.isEmpty()) {
+                    if (disliked.contains(title) && !flag) {
+                        currentSong.dislike();
+                        this.disliked.add(currentSong.getTitle());
+                        //this.disliked[dislikedNow] = currentSong.getTitle();
+                        ++dislikedNow;
+                    }
 
+                }
+            }
+            if (neutral != null) {
+                if (!neutral.isEmpty()) {
+                    if (neutral.contains(title) && !flag) {
+                        currentSong.neutral();
+                        this.neutral.add(currentSong.getTitle());
+                        //this.neutral[neutralNow] = currentSong.getTitle();
+                        ++neutralNow;
+                    }
+                }
+            }
             //if the album does not exist within the set of albums, add a new album to it with the
             //set of songs. else simply add to a currently existing album.
 
@@ -344,25 +367,18 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
                 albums.add(new Album(albumName, currentSong));
 
-            } else {
-
+            }
+            else {
                 Album albumToAddSong = retrieveAlbum(albumName);
                 albumToAddSong.addSong(new Song(title, songId));
-
             }
-
-            if(i == 0){
-
+            if(i == 0) {
                 this.allSongs = new Album("All Songs From Main Activity",currentSong);
-
-            } else {
-
-                this.allSongs.addSong(currentSong);
-
             }
-
+            else {
+                this.allSongs.addSong(currentSong);
+            }
             songs[i] = currentSong;
-
         }
 
         return songs;
@@ -390,6 +406,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
         //All songs.....
         toSongListIntent.putExtra("songs",allSongs);
+        toSongListIntent.putExtra("isFromAlbum", false);
         //temporary
 
         //try to put the strings from this activity inside the object and pass that object.
