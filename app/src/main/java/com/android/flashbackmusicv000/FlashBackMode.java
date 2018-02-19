@@ -19,12 +19,13 @@ public class FlashBackMode {
 
     public FlashBackMode(LinkedList<Song> songList) {
         unsorted = songList;
-        createQueue();
+        flashQueue = new LinkedList<Song>();
+        //createQueue();
     }
     public void turnFlashBackModeOn() {
 
     }
-    public void createQueue() {
+    public LinkedList<Song> createQueue() {
         flashQueue.add(unsorted.get(0));
         for (int i = 1; i < unsorted.size(); ++i) {
             for (int j = 0; j < flashQueue.size(); ++j) {
@@ -72,6 +73,7 @@ public class FlashBackMode {
             if (getScore(song) == 0) flashQueue.remove(song);
             if (song.isDislike()) flashQueue.remove(song);
         }
+        return flashQueue;
     }
 
     public int getScore(Song song) {

@@ -91,17 +91,7 @@ public class SongPlayingActivity extends AppCompatActivity implements
         setSupportActionBar(toolbar);
 
         currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
-        isFlashBackOn = currentSongState.getBoolean("flashback", false);
-
-        mContext = this;
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        isFlashBackOn = currentSongState.getBoolean("isOn", false);
         Intent i = getIntent();
         setWidgets();
         //bug could be here.... something to do with the intents....
@@ -112,17 +102,24 @@ public class SongPlayingActivity extends AppCompatActivity implements
         songList = i.getParcelableArrayListExtra("name_of_extra");
         final Song song = songList.get(songIndex);
 
+        /*
         Switch flashback = (Switch) findViewById(R.id.flashSwitch);
         flashback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*
-                1. skip current song
-                */
+
                 LinkedList<Song> songs = new LinkedList<Song>();
                 songs.addAll(songList);
                 FlashBackMode mode = new FlashBackMode(songs);
                 mode.createQueue();
+            }
+        });
+        */
+        Button queue = findViewById(R.id.queue);
+        queue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
             }
         });
 
