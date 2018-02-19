@@ -74,7 +74,7 @@ public class SongListActivity extends AppCompatActivity{
         flashback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                //launchActivity();
             }
         });
         //

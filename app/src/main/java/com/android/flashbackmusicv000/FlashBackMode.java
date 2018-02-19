@@ -66,6 +66,12 @@ public class FlashBackMode {
                 }
             }
         }
+        //Make sure that no song that wasn't played at a previous time/day/place, or is disliked,
+        //will be played in flashback mode
+        for (Song song: flashQueue) {
+            if (getScore(song) == 0) flashQueue.remove(song);
+            if (song.isDislike()) flashQueue.remove(song);
+        }
     }
 
     public int getScore(Song song) {
