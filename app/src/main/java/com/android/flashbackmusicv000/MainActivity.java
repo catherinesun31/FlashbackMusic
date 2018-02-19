@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
 
-    private AddressResultReceiver mResultReceiver;
+    private SongPlayingActivity.AddressResultReceiver mResultReceiver;
     protected String mAddressOutput;
     protected String mAreaOutput;
     protected String mCityOutput;
@@ -129,10 +129,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         Set<String> dis = currentSongState.getStringSet("disliked", null);
         Set<String> neut = currentSongState.getStringSet("neutral", null);
 
+        favorites = new ArraySet<String>();
+        neutral = new ArraySet<String>();
+        disliked = new ArraySet<String>();
+
         Song[] songs = getCurrentSongs(fave, dis, neut);
         songs1 = new ArrayList<Song>(Arrays.asList(songs));
 
-        if (fave == null && disliked == null && neutral == null) {
+        if (fave.isEmpty() && dis.isEmpty() && neut.isEmpty()) {
             neutral = new ArraySet<>();
             for (int i = 0; i < songs.length; ++i) {
                 neutral.add(songs[i].getTitle());
@@ -143,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         editor.putStringSet("favorites", favorites);
         editor.putStringSet("disliked", disliked);
         editor.putStringSet("neutral", neutral);
-        editor.apply();
+        editor.commit();
 
         //Set onClickListener for songs button
         // JANICE EDIT: 02/13, PASSING IN SONGS[] SO THAT WE CAN ACCESS IT IN THE NEXT ACTIVITY
@@ -182,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
          */
 
         //Create the IntentService to automatically update the user's location every minute or so
-        mResultReceiver = new AddressResultReceiver(new Handler());
+        //mResultReceiver = new SongPlayingActivity.AddressResultReceiver(new Handler());
         mLocationCallback = new LocationCallback();
         mContext = this;
     }
@@ -316,18 +320,20 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             * will instead add the strings to the songs... and pass them as albums.
              */
 
-            if (favorites != null) {
-                if (favorites.contains(title)) {
+            boolean flag = false;
+            if (!favorites.isEmpty()) {
+                if (favorites.contains(title) && !flag) {
                     currentSong.favorite();
                     //adding to the string arrayList.
                     this.favorites.add(currentSong.getTitle());
                     //this.favorites[favoritesNow] = currentSong.getTitle();
                     ++favoritesNow;
+                    flag = true;
                 }
 
             }
-            else if (disliked != null) {
-                if (disliked.contains(title)) {
+            if (!disliked.isEmpty()) {
+                if (disliked.contains(title) && !flag) {
                     currentSong.dislike();
                     this.disliked.add(currentSong.getTitle());
                     //this.disliked[dislikedNow] = currentSong.getTitle();
@@ -335,8 +341,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                 }
 
             }
-            else if (neutral != null) {
-                if (neutral.contains(title)) {
+            if (!neutral.isEmpty()) {
+                if (neutral.contains(title) && !flag) {
                     currentSong.neutral();
                     this.neutral.add(currentSong.getTitle());
                     //this.neutral[neutralNow] = currentSong.getTitle();

@@ -10,20 +10,20 @@ import android.util.Log;
  * Created by cailintreseder on 2/18/18.
  */
 
-public class AddressResultReceiver extends ResultReceiver {
+public class IAddressResultReceiver {
 
     String mAddressOutput;
     String mAreaOutput;
     String mCityOutput;
     String mStateOutput;
 
-    public AddressResultReceiver(Handler handler) {
-        super(handler);
+    public IAddressResultReceiver(Handler handler) {
+        //super(handler);
         Log.i("In: ", "AddressResultReceiver");
 
     }
 
-    @Override
+
     protected void onReceiveResult(int resultCode, Bundle resultData) {
         Log.i("In: ", "AddressResultReceiver.onReceiveResult");
 
@@ -36,7 +36,6 @@ public class AddressResultReceiver extends ResultReceiver {
         mCityOutput = resultData.getString(FetchAddressIntentService.Constants.LOCATION_DATA_CITY);
 
         mStateOutput = resultData.getString(FetchAddressIntentService.Constants.LOCATION_DATA_STREET);
-        MainActivity mainActivity = new MainActivity();
-        mainActivity.displayAddressOutput(mAddressOutput, mAreaOutput, mCityOutput, mStateOutput);
+
     }
 }
