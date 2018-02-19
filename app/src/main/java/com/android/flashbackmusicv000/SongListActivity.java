@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
 
 public class SongListActivity extends AppCompatActivity{
 
@@ -79,7 +80,12 @@ public class SongListActivity extends AppCompatActivity{
 
 
             currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
-            //SharedPreferences.Editor editor = currentSongState.edit();
+            SharedPreferences.Editor editor = currentSongState.edit();
+
+            favorites = (ArrayList<String>)currentSongState.getStringSet("favorites", null);
+            disliked = (ArrayList<String>)currentSongState.getStringSet("disliked", null);
+            neutral = (ArrayList<String>)currentSongState.getStringSet("neutral", null);
+
             setWidgets();
 
 
@@ -118,11 +124,11 @@ public class SongListActivity extends AppCompatActivity{
             if (neutral != null) {
                 songs.addAll(neutral);
             }
+            //do this to show songs in alphabetical order
             Collections.sort(songs);
 
             ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
 
-            Field[] fields = R.raw.class.getFields();
             final float scale = this.getResources().getDisplayMetrics().density;
             int songId = actualSongs.get(0).getSongId();//neutral.get(0).hashCode();
             int pixels = (int) (50 * scale + 0.5f);

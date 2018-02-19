@@ -22,6 +22,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.ArraySet;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
@@ -55,9 +56,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
     SharedPreferences currentSongState;
     //SharedPreferences widgetState;
-    String[] favorites;
-    String[] disliked;
-    String[] neutral;
+    Set<String> favorites;
+    Set<String> disliked;
+    Set<String> neutral;
     int favoritesNow;
     int dislikedNow;
     int neutralNow;
@@ -130,14 +131,19 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
         Song[] songs = getCurrentSongs(fave, dis, neut);
         songs1 = new ArrayList<Song>(Arrays.asList(songs));
-        if (fave != null && disliked != null && neutral != null) {
-            songs = getCurrentSongs(fave, dis, neut);
-        } else {
-            neutral = new String[songs.length];
+
+        if (fave == null && disliked == null && neutral == null) {
+            neutral = new ArraySet<>();
             for (int i = 0; i < songs.length; ++i) {
-                neutral[i] = songs[i].getTitle();
+                neutral.add(songs[i].getTitle());
             }
         }
+
+        //Add list of favorited/disliked/neutral songs to shared preferences
+        editor.putStringSet("favorites", favorites);
+        editor.putStringSet("disliked", disliked);
+        editor.putStringSet("neutral", neutral);
+        editor.apply();
 
         //Set onClickListener for songs button
         // JANICE EDIT: 02/13, PASSING IN SONGS[] SO THAT WE CAN ACCESS IT IN THE NEXT ACTIVITY
@@ -281,7 +287,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
         for (int i = 0; i < fields.length; ++i) {
 
-
             String path = "android.resource://" + getPackageName() + "/raw/" + fields[i].getName();
             final Uri uri = Uri.parse(path);
 
@@ -294,12 +299,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             String artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
             String albumName = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
             String duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+
             long mil = Long.parseLong(duration);
             int seconds = (int)Math.ceil((mil / 1000) % 60);
             int minutes = (int)Math.ceil((mil / (1000*60)) % 60);
             duration = minutes + ":" + seconds;
-
-
 
             Log.d("Information: ", "Title: " + title + "\n" +
             "Artist: " + artist + "\n" +
@@ -313,26 +317,29 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
              */
 
             if (favorites != null) {
-
-                //
                 if (favorites.contains(title)) {
                     currentSong.favorite();
                     //adding to the string arrayList.
-                    this.favorites[favoritesNow] = currentSong.getTitle();
+                    this.favorites.add(currentSong.getTitle());
+                    //this.favorites[favoritesNow] = currentSong.getTitle();
                     ++favoritesNow;
                 }
 
-            } else if (disliked != null) {
+            }
+            else if (disliked != null) {
                 if (disliked.contains(title)) {
                     currentSong.dislike();
-                    this.disliked[dislikedNow] = currentSong.getTitle();
+                    this.disliked.add(currentSong.getTitle());
+                    //this.disliked[dislikedNow] = currentSong.getTitle();
                     ++dislikedNow;
                 }
 
-            } else if (neutral != null) {
+            }
+            else if (neutral != null) {
                 if (neutral.contains(title)) {
                     currentSong.neutral();
-                    this.neutral[neutralNow] = currentSong.getTitle();
+                    this.neutral.add(currentSong.getTitle());
+                    //this.neutral[neutralNow] = currentSong.getTitle();
                     ++neutralNow;
                 }
             }
@@ -344,25 +351,18 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
                 albums.add(new Album(albumName, currentSong));
 
-            } else {
-
+            }
+            else {
                 Album albumToAddSong = retrieveAlbum(albumName);
                 albumToAddSong.addSong(new Song(title, songId));
-
             }
-
-            if(i == 0){
-
+            if(i == 0) {
                 this.allSongs = new Album("All Songs From Main Activity",currentSong);
-
-            } else {
-
-                this.allSongs.addSong(currentSong);
-
             }
-
+            else {
+                this.allSongs.addSong(currentSong);
+            }
             songs[i] = currentSong;
-
         }
 
         return songs;
