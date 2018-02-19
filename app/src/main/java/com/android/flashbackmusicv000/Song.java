@@ -21,6 +21,7 @@ public class Song implements Parcelable{
 
     private String title;
     private String lastLocation;
+    private String lastTimeOfDay;
     private String lastTime;
     private String lastDate;
     private String lastDay;
@@ -40,15 +41,16 @@ public class Song implements Parcelable{
     }
 
     public void setTime(String newTime) {
+        lastTime = newTime;
         String hour = newTime.substring(0, 2);
         if (Integer.parseInt(hour) >= 5 && Integer.parseInt(hour) < 11) {
-            lastTime = "Morning";
+            lastTimeOfDay = "Morning";
         }
         else if (Integer.parseInt(hour) >= 11 && Integer.parseInt(hour) < 17) {
-            lastTime = "Afternoon";
+            lastTimeOfDay = "Afternoon";
         }
         else {
-            lastTime = "Night";
+            lastTimeOfDay = "Night";
         }
     }
 
@@ -84,9 +86,11 @@ public class Song implements Parcelable{
         return lastLocation;
     }
 
-    public String getLastTime() {
-        return lastTime;
+    public String getLastTimeOfDay() {
+        return lastTimeOfDay;
     }
+
+    public String getLastTime() { return lastTime; }
 
     public String getLastDate() {
         return lastDate;

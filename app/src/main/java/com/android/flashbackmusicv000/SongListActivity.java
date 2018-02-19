@@ -94,6 +94,7 @@ public class SongListActivity extends AppCompatActivity{
             Set<String> fave = currentSongState.getStringSet("favorites", null);
             Set<String> dis = currentSongState.getStringSet("disliked", null);
             Set<String> neut = currentSongState.getStringSet("neutral", null);
+            isFlashBackOn = currentSongState.getBoolean("flashback", false);
 
             favorites = new ArraySet<String>();
             disliked = new ArraySet<String>();

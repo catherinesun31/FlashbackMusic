@@ -48,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
@@ -119,10 +120,12 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         setSupportActionBar(toolbar);
 
         Switch flashback = (Switch) findViewById(R.id.flashSwitch);
-        flashback.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
+        flashback.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    //FlashBackMode fbm = new FlashBackMode()
+                    //launchNowPlaying();
+                }
             }
         });
 
@@ -138,6 +141,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         Set<String> fave = currentSongState.getStringSet("favorites", null);
         Set<String> dis = currentSongState.getStringSet("disliked", null);
         Set<String> neut = currentSongState.getStringSet("neutral", null);
+        isFlashBackOn = currentSongState.getBoolean("flashback", false);
+
+
+        if (isFlashBackOn) {
+            flashback.toggle();
+        }
+
 
         favorites = new ArraySet<String>();
         neutral = new ArraySet<String>();
@@ -161,10 +171,16 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         if (f || d || n) {
             songs = getCurrentSongs(fave, dis, neut);
         }
-        if (!f && !d && !n) {
+        if ((!f && !d && !n) || (favorites.size() + neutral.size() + disliked.size() == 0)) {
             neutral = new ArraySet<>();
             for (int i = 0; i < songs.length; ++i) {
                 neutral.add(songs[i].getTitle());
+                if(i == 0) {
+                    this.allSongs = new Album("All Songs From Main Activity",songs[i]);
+                }
+                else {
+                    this.allSongs.addSong(songs[i]);
+                }
             }
         }
         songs1 = new ArrayList<Song>(Arrays.asList(songs));
@@ -283,6 +299,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void launchNowPlaying(LinkedList<Song> songs) {
+
     }
 
     /**
