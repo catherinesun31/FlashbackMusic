@@ -37,6 +37,9 @@ public class FlashBackMode {
         Calendar calendar = Calendar.getInstance();
         Date currentTime = calendar.getTime();
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.US);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM d, yyyy", Locale.US);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE", Locale.US);
+
         dateFormat.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
         //return dateFormat.format(currentTime);
 
