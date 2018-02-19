@@ -3,6 +3,8 @@ package com.android.flashbackmusicv000;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Date;
+
 /**
  * Created by Sun on 2/9/2018.
  */
@@ -22,6 +24,7 @@ public class Song implements Parcelable{
     private String lastTime;
     private String lastDate;
     private String lastDay;
+    private Date date;
     private boolean favorite = false;
     private boolean dislike = false;
 
@@ -37,8 +40,19 @@ public class Song implements Parcelable{
     }
 
     public void setTime(String newTime) {
-        lastTime = newTime;
+        String hour = newTime.substring(0, 2);
+        if (Integer.parseInt(hour) >= 5 && Integer.parseInt(hour) < 11) {
+            lastTime = "Morning";
+        }
+        else if (Integer.parseInt(hour) >= 11 && Integer.parseInt(hour) < 17) {
+            lastTime = "Afternoon";
+        }
+        else {
+            lastTime = "Night";
+        }
     }
+
+    public void setFullDate(Date date) { this.date = date; }
 
     public void setDate(String newDate) {
         lastDate = newDate;
@@ -85,6 +99,8 @@ public class Song implements Parcelable{
     public boolean isFavorite() { return favorite; }
 
     public boolean isDislike() { return dislike; }
+
+    public Date getFullDate() { return date; }
 
     // Parcel uses this
     @Override
