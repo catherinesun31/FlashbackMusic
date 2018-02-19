@@ -64,7 +64,8 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
 
 
     private boolean mIsBound = false;
-    private MusicBackgroundSerivce mServ;
+    private MusicBackgroundService mServ;
+    private Intent toMusicServiceIntent;
 
 
     @Override
@@ -73,11 +74,11 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
     }
 
 
-
+    //Karla add in
     private ServiceConnection SCon = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            mServ = ((MusicBackgroundSerivce.ServiceBinder)iBinder).getService();
+            //mServ = ((MusicBackgroundService.ServiceBinder)iBinder).getService();
             //MusicService.ServiceBinder binder = (MusicService.ServiceBinder) service;
         }
 
@@ -87,7 +88,7 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
         }
     };
     void doBindService(){
-        bindService(new Intent(this, MusicBackgroundSerivce.class), SCon, Context.BIND_AUTO_CREATE);
+        bindService(new Intent(this, MusicBackgroundService.class), SCon, Context.BIND_AUTO_CREATE);
         mIsBound = true;
     }
     void doUnbindService(){
@@ -97,7 +98,7 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
             mIsBound = false;
         }
     }
-    //end Karla and Chelsea add in
+    //end Karla add in
 
 
     @Override
@@ -105,36 +106,27 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_song_playing);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         Intent i = getIntent();
         setWidgets();
         //bug could be here.... something to do with the intents....
 
 
-        Intent music = new Intent();
-        music.setClass(this, MusicBackgroundSerivce.class);
-        startService(music);
-
         //song being passed a parcelable, through the intent... but no parcelable was sent...???
 
         final Song song = (Song) i.getParcelableExtra("name_of_extra");
+
+        //temporary, will restore
+        //startMusicService(song);
+        sendIntentToMusicService();
+
 
         TextView songTitle = (TextView) findViewById(R.id.songtitle);
         songTitle.setText(song.getTitle());
 
         final int nameInt = song.getSongId();
         loadMedia(nameInt);
+        //THE MEDIAPLAYER BUTTON
         mediaPlayer.start();
         getLocation(savedInstanceState);
         song.setTime(getTime());
@@ -169,6 +161,14 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
                 }
             }
         });
+    }
+
+    private void sendIntentToMusicService(){
+
+        Intent toMusicService = new Intent(this,MusicBackgroundService.class);
+        intent.putExtra("message", "toMusicService");
+        startService(intent);
+
     }
 
     private String getTime() {
@@ -273,6 +273,9 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
         }
     }
 
+    /**
+     * sets the flashback switch
+     */
     private void setWidgets(){
 
         intent = getIntent();
@@ -302,6 +305,19 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
         });
     }
 
+    /**
+     * method starting a background service to keep music playing on a seperqte thread
+     * @param song
+     */
+    private void startMusicService(Song song){
+
+        toMusicServiceIntent = new Intent();
+        toMusicServiceIntent.setClass(this, MusicBackgroundService.class);
+        toMusicServiceIntent.putExtra("song", song);
+        startService(toMusicServiceIntent);
+
+    }
+
     /*
     public static String printIntent(Intent intent){
         if (intent == null) {
@@ -311,6 +327,9 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
     }
     */
 
+    /**
+     * Tells activity to save the flash back switch state and finish of when popping from the activity stack.
+     */
     @Override
     public void onBackPressed(){
 

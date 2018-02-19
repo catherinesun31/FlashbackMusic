@@ -4,67 +4,84 @@
 
 package com.android.flashbackmusicv000;
 
+import android.app.IntentService;
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
+import android.os.Handler;
 import android.os.IBinder;
 
 
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnErrorListener;
 import android.os.Binder;
+import android.support.annotation.Nullable;
 import android.widget.Toast;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 
 
-public class MusicBackgroundSerivce extends Service  implements MediaPlayer.OnErrorListener {
+public class MusicBackgroundService extends IntentService implements MediaPlayer.OnErrorListener {
 
-    private final IBinder mBinder = new ServiceBinder();
+    //private final IBinder mBinder = new ServiceBinder();
     MediaPlayer mPlayer;
     private int length = 0;
 
     //private Song song;
     private static int songId;
+    private Intent i;
+    private Handler mediaHandler;
+
+    private static final String EXTRA_MESSAGE = "message";
 
 
 
 
 
+    public MusicBackgroundService() {
 
+        super("MusicBackgroundService");
 
-    SharedPreferences currentSongState;
+    }
 
-
-
-
-
-
-
-    // TODO Fix setSongId and in onCreate
-    //public int setSongId(Song song){
-    //    songId = song.getSongId();
-    //return songId;
-    //}
-
-
-
-
-
-    public MusicBackgroundSerivce() { }
-
-    public class ServiceBinder extends Binder {
-        public MusicBackgroundSerivce getService()
+    /*public class ServiceBinder extends Binder {
+        public MusicBackgroundService getService()
         {
-            return MusicBackgroundSerivce.this;
+            return MusicBackgroundService.this;
         }
     }
 
     @Override
     public IBinder onBind(Intent arg0){return mBinder;}
+    */
 
+    @Override
+    protected void onHandleIntent(Intent intent) {
+        synchronized (this){
+            try{
+                wait(10000);
+            } catch (InterruptedException e){
+                e.printStackTrace();
+            }
+        }
+        //temporary
+        String text = intent.getStringExtra(EXTRA_MESSAGE);
+        showText(text);
+    }
+
+    private void showText(final String text){
+        mediaHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+   /*
     @Override
     public void onCreate (){
         super.onCreate();
@@ -73,13 +90,13 @@ public class MusicBackgroundSerivce extends Service  implements MediaPlayer.OnEr
 
 
         //Intent i = new Intent(this, Song.class);
-        //Intent i = getIntent();
+        //i = getIntent();
         //Song song = (Song) i.getParcelableExtra("name_of_extra");
         //songId = song.getSongId();
         //System.out.println("This is the songId " + songId);
 
 
-        Field[] fields = R.raw.class.getFields();
+        /*Field[] fields = R.raw.class.getFields();
         //Song[] songs = new Song[fields.length];
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         for (int i = 0; i < fields.length; ++i) {
@@ -112,8 +129,9 @@ public class MusicBackgroundSerivce extends Service  implements MediaPlayer.OnEr
 
 
         //TODO can't have this be hardcoded
-        //mPlayer = MediaPlayer.create(this, songId);
-        //mPlayer.setOnErrorListener(this);
+        System.out.println("This is the songId: " + songId);
+        mPlayer = MediaPlayer.create(this, songId);
+        mPlayer.setOnErrorListener(this);
 
         if(mPlayer!= null)
         {
@@ -135,15 +153,18 @@ public class MusicBackgroundSerivce extends Service  implements MediaPlayer.OnEr
         //if(){
 
         //}
-    }
+    }*/
 
     @Override
     public int onStartCommand (Intent intent, int flags, int startId)
     {
+        stopMusic();
         mPlayer.start();
+        mediaHandler = new Handler();
         return START_STICKY;
     }
 
+    /*
     public void pauseMusic()
     {
         if(mPlayer.isPlaying())
@@ -154,16 +175,7 @@ public class MusicBackgroundSerivce extends Service  implements MediaPlayer.OnEr
         }
     }
 
-    public void resumeMusic()
-    {
-        if(mPlayer.isPlaying()==false)
-        {
-            mPlayer.seekTo(length);
-            Toast.makeText(this, "Music is started", Toast.LENGTH_LONG).show();
-            mPlayer.start();
-        }
-    }
-
+ */
     public void stopMusic()
     {
         mPlayer.stop();
