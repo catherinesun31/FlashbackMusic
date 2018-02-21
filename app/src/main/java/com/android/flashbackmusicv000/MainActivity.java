@@ -119,16 +119,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Switch flashback = (Switch) findViewById(R.id.flashSwitch);
-        flashback.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    //FlashBackMode fbm = new FlashBackMode()
-                    //launchNowPlaying();
-                }
-            }
-        });
-
         //create a shared preference for flashback service state.
 
         favoritesNow = 0;
@@ -142,11 +132,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         Set<String> dis = currentSongState.getStringSet("disliked", null);
         Set<String> neut = currentSongState.getStringSet("neutral", null);
         isFlashBackOn = currentSongState.getBoolean("flashback", false);
-
-
-        if (isFlashBackOn) {
-            flashback.toggle();
-        }
 
 
         favorites = new ArraySet<String>();
@@ -184,6 +169,20 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             }
         }
         songs1 = new ArrayList<Song>(Arrays.asList(songs));
+
+        Switch flashback = (Switch) findViewById(R.id.flashSwitch);
+        flashback.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    LinkedList<Song> songs = new LinkedList<Song>();
+                    songs.addAll(allSongs.getSongs());
+                    FlashBackMode fbm = new FlashBackMode(songs);
+                    ArrayList<Song> newSongs = new ArrayList<Song>();
+                    //newSongs.addAll(fbm.createQueue());
+                    launchNowPlaying(allSongs.getSongs());
+                }
+            }
+        });
 
 
         //Add list of favorited/disliked/neutral songs to shared preferences
@@ -299,10 +298,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public void launchNowPlaying(LinkedList<Song> songs) {
-
     }
 
     /**
@@ -473,6 +468,15 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
     }
 
+    public void launchNowPlaying(ArrayList<Song> songs) {
+        Intent intent = new Intent(this, SongPlayingActivity.class);
+
+        intent.putExtra("name_of_extra", songs);
+        //intent.putExtra("name_of_extra", song);
+        intent.putExtra("isOn", isFlashBackOn);
+        startActivity(intent);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -599,6 +603,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         flashSwitch = (Switch) findViewById(R.id.flashSwitch);
         flashBackState = getApplicationContext().getSharedPreferences("isOn", MODE_PRIVATE);
 
+        /*
         flashSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -617,7 +622,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                     //
                 }
             }
-        });
+        });*/
 
         /*
          * I'm thinking that here, we should make a list of all of the Song objects from songs that
