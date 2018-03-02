@@ -1,4 +1,8 @@
+package tests;
+
 import android.app.Instrumentation;
+import android.content.Intent;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.widget.Button;
 
@@ -7,6 +11,7 @@ import com.android.flashbackmusicv000.SongListActivity;
 import com.android.flashbackmusicv000.SongPlayingActivity;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
@@ -14,27 +19,37 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 
 /**
- * Created by Chelsea on 2/18/18.
- * Test SongListActivity
+ * Created by janic on 2/20/18.
  */
 
-public class JUnitSongListActivityTest {
-    public ActivityTestRule<SongListActivity> rule = new ActivityTestRule<SongListActivity>(com.android.flashbackmusicv000.SongListActivity.class);
-
+public class MainActivityTest {
+    @Rule
+    public ActivityTestRule<SongListActivity> rule = new ActivityTestRule<SongListActivity>(com.android.flashbackmusicv000.SongListActivity.class){
+        @Override
+        protected Intent getActivityIntent() {
+            InstrumentationRegistry.getTargetContext();
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.putExtra("albumOrigin", false);  // Tests if we chose from "Songs"
+            //intent.putExtra("songs", );   Prob need to make a new class that actually holds all the songs
+            return intent;
+        }
+    };
 
 
     @Before
     public void setup(){
+        System.out.println("Setup...");
 
     }
 
 
     /*
-    Check buttons correctly add songs to favorites/disliked/netural
+    Check buttons correctly add songs to favorites/disliked/neutral
      */
     @Test
     public void testButtonChange(){
         SongListActivity activity = rule.getActivity();
+        System.out.println("Got the activity...");
 
         String song_name = activity.songs.get(0);
 
@@ -99,8 +114,4 @@ public class JUnitSongListActivityTest {
         sq.finish();
 
     }
-
-
-
-
 }
