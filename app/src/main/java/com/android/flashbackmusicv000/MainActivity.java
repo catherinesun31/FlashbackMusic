@@ -54,6 +54,8 @@ import java.util.ListIterator;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import static android.app.PendingIntent.getActivity;
+
 public class MainActivity extends AppCompatActivity implements LocationListener, OnMapReadyCallback {
 
     SharedPreferences currentSongState;
@@ -98,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     protected String mCityOutput;
     protected String mStateOutput;
     private ArrayList<Album> albums;
+    private MusicStorage ms;
 
 
     /**
@@ -138,6 +141,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         neutral = new ArraySet<String>();
         disliked = new ArraySet<String>();
 
+
         Song[] songs = {};
 
         boolean f = false;
@@ -153,22 +157,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             n = true;
         }
 
-        if (f || d || n) {
-            songs = getCurrentSongs(fave, dis, neut);
-        }
-        if ((!f && !d && !n) || (favorites.size() + neutral.size() + disliked.size() == 0)) {
-            neutral = new ArraySet<>();
-            for (int i = 0; i < songs.length; ++i) {
-                neutral.add(songs[i].getTitle());
-                if(i == 0) {
-                    this.allSongs = new Album("All Songs From Main Activity",songs[i]);
-                }
-                else {
-                    this.allSongs.addSong(songs[i]);
-                }
-            }
-        }
-        songs1 = new ArrayList<Song>(Arrays.asList(songs));
+        ms = new MusicStorage();
+
+        //ms. getCurrentSongs();
+        ms.createStorage(f,d,n,favorites, disliked, neutral);
+
+
+        songs1 = ms.getSongStorage().songsList;
 
         Switch flashback = (Switch) findViewById(R.id.flashSwitch);
         flashback.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -318,102 +313,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
      *
      * @return the list of songs
      */
-    public Song[] getCurrentSongs(Set<String> favorites, Set<String> disliked, Set<String> neutral) {
 
-        Field[] fields = R.raw.class.getFields();
-        Song[] songs = new Song[fields.length];
-        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-
-        for (int i = 0; i < fields.length; ++i) {
-
-            String path = "android.resource://" + getPackageName() + "/raw/" + fields[i].getName();
-            final Uri uri = Uri.parse(path);
-
-            mmr.setDataSource(getApplication(), uri);
-
-            // Janice add in: wanted to pass in the file location as Song variable
-            int songId = this.getResources().getIdentifier(fields[i].getName(), "raw", this.getPackageName());
-
-            String title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
-            String artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
-            String albumName = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
-            String duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-
-            long mil = Long.parseLong(duration);
-            int seconds = (int)Math.ceil((mil / 1000) % 60);
-            int minutes = (int)Math.ceil((mil / (1000*60)) % 60);
-            duration = minutes + ":" + seconds;
-
-            Log.d("Information: ", "Title: " + title + "\n" +
-            "Artist: " + artist + "\n" +
-            "com.android.flashbackmusicv000.Album: " + albumName + "\n" +
-            "Duration: " + duration);
-
-            Song currentSong = new Song(title, songId);
-
-            /* The following conditional statements add to the ArrayLists of strings.
-            * will instead add the strings to the songs... and pass them as albums.
-             */
-
-            boolean flag = false;
-            if (favorites != null) {
-                if (!favorites.isEmpty()) {
-                    if (favorites.contains(title) && !flag) {
-                        currentSong.favorite();
-                        //adding to the string arrayList.
-                        this.favorites.add(currentSong.getTitle());
-                        //this.favorites[favoritesNow] = currentSong.getTitle();
-                        ++favoritesNow;
-                        flag = true;
-                    }
-
-                }
-            }
-            if (disliked != null) {
-                if (!disliked.isEmpty()) {
-                    if (disliked.contains(title) && !flag) {
-                        currentSong.dislike();
-                        this.disliked.add(currentSong.getTitle());
-                        //this.disliked[dislikedNow] = currentSong.getTitle();
-                        ++dislikedNow;
-                    }
-
-                }
-            }
-            if (neutral != null) {
-                if (!neutral.isEmpty()) {
-                    if (neutral.contains(title) && !flag) {
-                        currentSong.neutral();
-                        this.neutral.add(currentSong.getTitle());
-                        //this.neutral[neutralNow] = currentSong.getTitle();
-                        ++neutralNow;
-                    }
-                }
-            }
-
-            //if the album does not exist within the set of albums, add a new album to it with the
-            //set of songs. else simply add to a currently existing album.
-
-            if(!checkAlbum(albumName)){
-
-                albums.add(new Album(albumName, currentSong));
-
-            }
-            else {
-                Album albumToAddSong = retrieveAlbum(albumName);
-                albumToAddSong.addSong(new Song(title, songId));
-            }
-            if(i == 0) {
-                this.allSongs = new Album("All Songs From Main Activity",currentSong);
-            }
-            else {
-                this.allSongs.addSong(currentSong);
-            }
-            songs[i] = currentSong;
-        }
-
-        return songs;
-    }
 
     /*
      * launchSongs:
@@ -431,22 +331,12 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
         Intent toSongListIntent = new Intent(this, SongListActivity.class);
 
-        //songs are parcelable
-
-        //only want to send all of the songs displayed here.....
 
         //All songs.....
         toSongListIntent.putExtra("songs",allSongs);
         toSongListIntent.putExtra("isFromAlbum", false);
         //temporary
 
-        //try to put the strings from this activity inside the object and pass that object.
-        /*
-        intent.putExtra("Favorites", favorites);
-        intent.putExtra("Disliked", disliked);
-        intent.putExtra("Neutral", neutral);
-        intent.putExtra("Song list", songs1);
-        */
 
         toSongListIntent.putExtra("isOn", isFlashBackOn);
         //temporary, whilst passing strings.
@@ -485,33 +375,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         return true;
     }
 
-    private boolean checkAlbum(String albumName){
-        if (albums == null) {
-            albums = new ArrayList<Album>();
-            return false;
-        }
-        for(Album album: albums){
-            if(album.getName().equals(albumName)){
-                return true;
-            }
-        }
-        return false;
-    }
 
 
-    private Album retrieveAlbum(String albumName){
-        int index = 0;
-        Album currentAlbum = null;
-        ListIterator<Album> it = albums.listIterator();
-        while(it.hasNext()){
 
-            currentAlbum = it.next();
-            if(currentAlbum.getName().equals(albumName)){
-                return currentAlbum;
-            }
-        }
-        return currentAlbum;
-    }
 
     /**
      *
@@ -630,8 +496,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
          */
 
     }
-
-
 
 
     @Override
