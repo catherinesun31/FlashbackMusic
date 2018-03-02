@@ -1,9 +1,7 @@
-import android.app.Activity;
+package tests;
+
 import android.app.Instrumentation;
-import android.content.Intent;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
-import android.view.View;
 import android.widget.Button;
 
 import com.android.flashbackmusicv000.AlbumQueue;
@@ -16,7 +14,6 @@ import org.junit.Test;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
 
 /**
  * Created by Chelsea on 2/18/18.
