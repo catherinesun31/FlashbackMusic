@@ -3,46 +3,27 @@ package com.android.flashbackmusicv000;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.AssetFileDescriptor;
 import android.graphics.Color;
-import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.ArraySet;
-import android.util.Log;
 import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.FrameLayout;
-import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import com.android.flashbackmusicv000.Song;
-
-import java.io.File;
-import java.io.InputStream;
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.Set;
 
 public class SongListActivity extends AppCompatActivity{
@@ -78,8 +59,6 @@ public class SongListActivity extends AppCompatActivity{
         /*a modification James Rich*/
         // just mocking up to get it working
         isFromAlbum = in.getExtras().getBoolean("albumOrigin");
-        if (!isFromAlbum)
-            System.out.println("What");
 
         Album albumSelected = in.getExtras().getParcelable("songs");
         actualSongs = albumSelected.getSongs();
