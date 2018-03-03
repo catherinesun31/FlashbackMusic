@@ -48,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
@@ -117,14 +118,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Switch flashback = (Switch) findViewById(R.id.flashSwitch);
-        flashback.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
         //create a shared preference for flashback service state.
 
         favoritesNow = 0;
@@ -137,6 +130,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         Set<String> fave = currentSongState.getStringSet("favorites", null);
         Set<String> dis = currentSongState.getStringSet("disliked", null);
         Set<String> neut = currentSongState.getStringSet("neutral", null);
+        isFlashBackOn = currentSongState.getBoolean("flashback", false);
+
 
         favorites = new ArraySet<String>();
         neutral = new ArraySet<String>();
@@ -160,14 +155,34 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         if (f || d || n) {
             songs = getCurrentSongs(fave, dis, neut);
         }
-        if (!f && !d && !n) {
+        if ((!f && !d && !n) || (favorites.size() + neutral.size() + disliked.size() == 0)) {
             neutral = new ArraySet<>();
             for (int i = 0; i < songs.length; ++i) {
                 neutral.add(songs[i].getTitle());
+                if(i == 0) {
+                    this.allSongs = new Album("All Songs From Main Activity",songs[i]);
+                }
+                else {
+                    this.allSongs.addSong(songs[i]);
+                }
 
             }
         }
         songs1 = new ArrayList<Song>(Arrays.asList(songs));
+
+        Switch flashback = (Switch) findViewById(R.id.flashSwitch);
+        flashback.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    LinkedList<Song> songs = new LinkedList<Song>();
+                    songs.addAll(allSongs.getSongs());
+                    FlashBackMode fbm = new FlashBackMode(songs);
+                    ArrayList<Song> newSongs = new ArrayList<Song>();
+                    //newSongs.addAll(fbm.createQueue());
+                    launchNowPlaying(allSongs.getSongs());
+                }
+            }
+        });
 
 
         //Add list of favorited/disliked/neutral songs to shared preferences
@@ -453,6 +468,15 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
     }
 
+    public void launchNowPlaying(ArrayList<Song> songs) {
+        Intent intent = new Intent(this, SongPlayingActivity.class);
+
+        intent.putExtra("name_of_extra", songs);
+        //intent.putExtra("name_of_extra", song);
+        intent.putExtra("isOn", isFlashBackOn);
+        startActivity(intent);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -579,6 +603,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         flashSwitch = (Switch) findViewById(R.id.flashSwitch);
         flashBackState = getApplicationContext().getSharedPreferences("isOn", MODE_PRIVATE);
 
+        /*
         flashSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -597,7 +622,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                     //
                 }
             }
-        });
+        });*/
 
         /*
          * I'm thinking that here, we should make a list of all of the Song objects from songs that

@@ -22,17 +22,8 @@ public class FlashBackMode {
     LinkedList<Song> flashQueue;
     LinkedList<Song> unsorted;
 
+    public LinkedList<Song> createQueue() {
 
-    public void FlashBackMode(LinkedList<Song> songList) {
-        unsorted = songList;
-        createQueue();
-    }
-
-    public void turnFlashBackModeOn() {
-
-    }
-
-    public void createQueue() {
         flashQueue.add(unsorted.get(0));
         for (int i = 1; i < unsorted.size(); ++i) {
             for (int j = 0; j < flashQueue.size(); ++j) {
@@ -80,6 +71,7 @@ public class FlashBackMode {
             if (getScore(song) == 0) flashQueue.remove(song);
             if (song.isDislike()) flashQueue.remove(song);
         }
+        return flashQueue;
     }
 
     public int getScore(Song song) {
@@ -104,7 +96,7 @@ public class FlashBackMode {
         else {
             lastTime = "Night";
         }
-        if (lastTime.equals(song.getLastTime())) ++total;
+        if (lastTime.equals(song.getLastTimeOfDay())) ++total;
 
         //if the location is within 1000 feet
 

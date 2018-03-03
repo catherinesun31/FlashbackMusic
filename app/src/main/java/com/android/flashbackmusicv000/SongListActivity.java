@@ -42,9 +42,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.Set;
 
-public class SongListActivity extends AppCompatActivity{
+public class SongListActivity extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer;
     private boolean isFlashBackOn;
@@ -70,13 +71,7 @@ public class SongListActivity extends AppCompatActivity{
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Switch flashback = (Switch) findViewById(R.id.flashSwitch);
-        flashback.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //launchActivity();
-            }
-        });
+
         //
         in = getIntent();
 
@@ -89,75 +84,39 @@ public class SongListActivity extends AppCompatActivity{
         Album albumSelected = in.getExtras().getParcelable("songs");
         actualSongs = albumSelected.getSongs();
 
-            currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
+        currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
 
-            Set<String> fave = currentSongState.getStringSet("favorites", null);
-            Set<String> dis = currentSongState.getStringSet("disliked", null);
-            Set<String> neut = currentSongState.getStringSet("neutral", null);
+        Set<String> fave = currentSongState.getStringSet("favorites", null);
+        Set<String> dis = currentSongState.getStringSet("disliked", null);
+        Set<String> neut = currentSongState.getStringSet("neutral", null);
+        isFlashBackOn = currentSongState.getBoolean("flashback", false);
 
-            favorites = new ArraySet<String>();
-            disliked = new ArraySet<String>();
-            neutral = new ArraySet<String>();
+        favorites = new ArraySet<String>();
+        disliked = new ArraySet<String>();
+        neutral = new ArraySet<String>();
 
-            favorites.addAll(fave);
-            neutral.addAll(neut);
-            disliked.addAll(dis);
+        favorites.addAll(fave);
+        neutral.addAll(neut);
+        disliked.addAll(dis);
+
 
         setWidgets();
-        //SharedPreferences.Editor editor = currentSongState.edit();
 
+    }
 
-
-        //getExtras.... passing strings????
-        /*
-        Bundle b = in.getExtras();
-        if (b != null) {
-            String[] f = (String[])b.get("Favorites");
-            String[] d = (String[])b.get("Disliked");
-            String[] n = (String[])b.get("Neutral");
-            ArrayList<Song> tempSongs = getIntent().getParcelableArrayListExtra("Song list");
-            System.out.println(tempSongs.size());
-
-            if (f != null) { favorites = new ArrayList<>(Arrays.asList(f)); }
-            else { favorites = new ArrayList<>(); }
-
-            if (d != null) disliked = new ArrayList<>(Arrays.asList(d));
-            else { disliked = new ArrayList<>(); }
-
-            if (n != null) neutral = new ArrayList<>(Arrays.asList(n));
-            else { neutral = new ArrayList<>(); }
-
-            if (tempSongs != null) actualSongs = tempSongs;
-            else { actualSongs = new ArrayList<>(); }
-        }
-
-        */
-            songs = new ArrayList<String>();
-            if (favorites != null) {
-                songs.addAll(favorites);
-            }
-            if (disliked != null) {
-                songs.addAll(disliked);
-
-            }
-            if (neutral != null) {
-                songs.addAll(neutral);
-            }
-            //do this to show songs in alphabetical order
-            Collections.sort(songs);
 
             ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
 
             final float scale = this.getResources().getDisplayMetrics().density;
             int songId = songs.get(0).hashCode();
             int pixels = (int) (50 * scale + 0.5f);
-            int textSize = (int) (15 * scale + 0.5f);
+            int textSize = (int) (10 * scale + 0.5f);
             int buttonId = songId + 1;
 
             //counter loop creates a new button. Attaches a 'new song' to the click listener.
 
             for (index = 0; index < actualSongs.size(); index++) {
-                String fileName = actualSongs.get(index).getTitle();
+                final String fileName = actualSongs.get(index).getTitle();
 
                 Button button = new Button(this);
                 android.support.constraint.ConstraintLayout.LayoutParams params = new
@@ -187,12 +146,14 @@ public class SongListActivity extends AppCompatActivity{
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        //launchActivity(newSong);
-                        if(!isFromAlbum) {
-                            songsToPlay = new ArrayList<Song>();
-                            songsToPlay.add(actualSongs.get(songIndex));
+                        if (!disliked.contains(fileName)) {
+                            //launchActivity(newSong);
+                            if (!isFromAlbum) {
+                                songsToPlay = new ArrayList<Song>();
+                                songsToPlay.add(actualSongs.get(songIndex));
+                            }
+                            launchActivity(songsToPlay);
                         }
-                        launchActivity(songsToPlay);
                     }
                 });
 
