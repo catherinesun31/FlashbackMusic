@@ -55,13 +55,16 @@ public class SongListActivity extends AppCompatActivity{
 
         //
         in = getIntent();
+        Album albumSelected = null;
+        if (in.getExtras() != null) {
+            isFromAlbum = in.getExtras().getBoolean("albumOrigin");
+            albumSelected = in.getExtras().getParcelable("songs");
+            actualSongs = albumSelected.getSongs();
+        }
+        else {
+            isFromAlbum = false;
+        }
 
-        /*a modification James Rich*/
-        // just mocking up to get it working
-        isFromAlbum = in.getExtras().getBoolean("albumOrigin");
-
-        Album albumSelected = in.getExtras().getParcelable("songs");
-        actualSongs = albumSelected.getSongs();
 
             currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
 
