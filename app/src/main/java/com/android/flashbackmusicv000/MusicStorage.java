@@ -38,11 +38,12 @@ public class MusicStorage {
         return as;
     }
 
+    /*
     public Song[] getCurrentSongs(MainActivity a, Set<String> favorites, Set<String> disliked, Set<String> neutral) {
 
             /* The following conditional statements add to the ArrayLists of strings.
             * will instead add the strings to the songs... and pass them as albums.
-             */
+
 
             //TODO what is this supposed to be doing lol
 
@@ -101,28 +102,30 @@ public class MusicStorage {
                 this.allSongs.addSong(currentSong);
             }
             songs[i] = currentSong;
-        }
+
 
         return songs;
     }
+    */
 
 
-public void createStorage(boolean f, boolean d, boolean n, Set<String> favorites, Set<String> disliked,
-                          Set<String> neutral){
+    public void createStorage(boolean f, boolean d, boolean n, Set<String> favorites, Set<String> disliked,
+                              Set<String> neutral){
 
-    if (f || d || n) {
-        //do something
-    }
-    if ((!f && !d && !n) || (favorites.size() + neutral.size() + disliked.size() == 0)) {
-        neutral = new ArraySet<>();
+        if (f || d || n) {
+            //do something
+        }
+        if ((!f && !d && !n) || (favorites.size() + neutral.size() + disliked.size() == 0)) {
+            neutral = new ArraySet<>();
 
-        for (int i = 0; i < ss.songsList.size(); ++i) {
-            neutral.add(ss.songsList.get(i).getTitle());
-            if(i == 0) {
-                as.allSongs = new Album("All Songs From Main Activity",ss.songsList.get(i));
-            }
-            else {
-                as.allSongs.addSong(ss.songsList.get(i));
+            for (int i = 0; i < ss.songsList.size(); ++i) {
+                neutral.add(ss.songsList.get(i).getTitle());
+                if(i == 0) {
+                    as.allSongs = new Album("All Songs From Main Activity",ss.songsList.get(i));
+                }
+                else {
+                    as.allSongs.addSong(ss.songsList.get(i));
+                }
             }
         }
     }

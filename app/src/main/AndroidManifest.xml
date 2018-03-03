@@ -29,6 +29,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".SignInActivity"
+            android:label="Sign In"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".AlbumQueue"
             android:label="@string/title_activity_album_queue"
             android:theme="@style/AppTheme.NoActionBar" />
