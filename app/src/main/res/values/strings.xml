@@ -17,5 +17,7 @@
 
     <string name="sign_in_request">Please enter a valid email address
         and password to sign in to Flashback Music</string>
+    <string name="email_address">Email:</string>
+    <string name="password">Password:</string>
 
 </resources>

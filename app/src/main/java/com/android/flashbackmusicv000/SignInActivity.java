@@ -4,8 +4,17 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -23,7 +32,9 @@ public class SignInActivity extends AppCompatActivity {
     DatabaseReference dataRef;
     private FirebaseAuth auth;
     private static final String TAG = "GoogleActivity";
-
+    private String username;
+    private String password;
+    private GoogleSignInClient googleSignInClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +44,23 @@ public class SignInActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         dataRef = database.getReference();
         auth = FirebaseAuth.getInstance();
+
+        GoogleSignInOptions gso = new GoogleSignInOptions
+                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+
+        Log.d("in", "onCreate");
+        com.google.android.gms.common.SignInButton signInButton =
+                findViewById(R.id.sign_in_button);
+        signInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("in", "onClick");
+                signIn();
+            }
+        });
     }
 
     @Override
@@ -41,6 +69,31 @@ public class SignInActivity extends AppCompatActivity {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = auth.getCurrentUser();
         //updateUI(currentUser);
+    }
+
+    public void signIn() {
+        Log.d("In: ", "signIn");
+        boolean isValid = checkIfValid();
+    }
+
+    public boolean checkIfValid() {
+        EditText email = findViewById(R.id.email_address);
+        EditText password = findViewById(R.id.password);
+
+        String emailAddress = email.getText().toString();
+        String pass = password.getText().toString();
+
+        //Check that the user has put in a value for email and password
+        if (emailAddress.equals("") || pass.equals("")) {
+            Toast.makeText(this, "Please enter a valid email address and password.",
+                    Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        //Check that the email and password are valid through Firebase
+
+
+        return true;
     }
 
     public void createAccount(String email, String password) {
