@@ -11,30 +11,22 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.ResultReceiver;
-import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.ArraySet;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
-import android.view.View.OnKeyListener;
+
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -47,18 +39,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
+import android.util.ArraySet;
 
-import static android.app.PendingIntent.getActivity;
 
 public class MainActivity extends AppCompatActivity implements LocationListener, OnMapReadyCallback {
 
@@ -181,10 +166,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         ms = new MusicStorage();
 
         //ms. getCurrentSongs();
-        ms.createStorage(MainActivity.this, f,d,n,favorites, disliked, neutral);
+        neutral = ms.createStorage(MainActivity.this, f,d,n,favorites, disliked, neutral);
 
 
         songs1 = ms.getSongStorage().songsList;
+        allSongs = ms.getAlbumStorage().allSongs;
 
         Switch flashback = (Switch) findViewById(R.id.flashSwitch);
         flashback.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
