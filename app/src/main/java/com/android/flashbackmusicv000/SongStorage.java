@@ -1,11 +1,7 @@
 package com.android.flashbackmusicv000;
 
-import android.app.Activity;
-import android.media.MediaMetadataRetriever;
-import android.net.Uri;
 import android.util.Log;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -44,6 +40,7 @@ public class SongStorage {
                                   Set<String> favorites,
                                   Set<String> disliked,
                                   Set<String> neutral){
+        Log.d("Attempt", "Attempting to get favdisneut");
         boolean flag = false;
         if (favorites != null) {
             if (!favorites.isEmpty()) {
@@ -53,6 +50,7 @@ public class SongStorage {
                     favorites.add(currentSong.getTitle());
                     //this.favorites[favoritesNow] = currentSong.getTitle();
                    // ++favoritesNow;
+                    Log.d("Added a favorite", "Added a favorite");
                     flag = true;
                 }
 
@@ -65,6 +63,8 @@ public class SongStorage {
                     disliked.add(currentSong.getTitle());
                     //this.disliked[dislikedNow] = currentSong.getTitle();
                    // ++dislikedNow;
+                    Log.d("Added a disliked", "Added a disliked");
+
                 }
 
             }
@@ -74,6 +74,8 @@ public class SongStorage {
                 if (neutral.contains(currentSong.getTitle()) && !flag) {
                     currentSong.neutral();
                     neutral.add(currentSong.getTitle());
+                    Log.d("Added a neutral", "Added a neutral");
+
                     //this.neutral[neutralNow] = currentSong.getTitle();
                     //++neutralNow;
                 }

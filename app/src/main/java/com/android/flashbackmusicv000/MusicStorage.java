@@ -5,11 +5,8 @@ import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.util.ArraySet;
 import android.util.Log;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Set;
 
 /**
@@ -32,7 +29,7 @@ public class MusicStorage {
     }
 
 
-    public void createStorage(Activity a, boolean f, boolean d, boolean n, Set<String> favorites, Set<String> disliked,
+    public ArraySet<String> createStorage(Activity a, boolean f, boolean d, boolean n, Set<String> favorites, Set<String> disliked,
                               Set<String> neutral) {
 
 
@@ -82,8 +79,13 @@ public class MusicStorage {
 
             if ((!f && !d && !n) || (favorites.size() + neutral.size() + disliked.size() == 0)) {
                 neutral = new ArraySet<>();
+                Log.d("Is it empty", "It is empty");
+                Log.d("Neutral size", "It is empty");
+
 
                 for (int i = 0; i < ss.songsList.size(); ++i) {
+                    Log.d("Running songsList", "Running for loop " + i);
+
                     neutral.add(ss.songsList.get(i).getTitle());
                     if (i == 0) {
                         as.allSongs = new Album("All Songs From Main Activity", ss.songsList.get(i));
@@ -93,5 +95,6 @@ public class MusicStorage {
                 }
             }
         }
+        return (ArraySet<String>) neutral;
     }
 }
