@@ -26,33 +26,13 @@ public class SongStorage {
     }
 
 
-    public void initializeSongs(Activity a, Set<String> fave, Set<String> dis, Set<String> neut){
+    public void initializeSongs(Song currentSong, Set<String> fave, Set<String> dis, Set<String> neut){
 
-        //TODO assuming we download the files into the raw file list.
-        Field[] fields = R.raw.class.getFields();
-        Song[] songs = new Song[fields.length];
-        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-
-        for (int i = 0; i < fields.length; ++i) {
-
-            String path = "android.resource://" + a.getPackageName() + "/raw/" + fields[i].getName();
-            final Uri uri = Uri.parse(path);
-
-            mmr.setDataSource(a.getApplication(), uri);
-
-            // Janice add in: wanted to pass in the file location as Song variable
-            int songId = a.getResources().getIdentifier(fields[i].getName(), "raw", a.getPackageName());
-
-            String title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
-
-
-            Song currentSong = new Song(title, songId);
 
             getSongFavDisNeut(currentSong, fave, dis, neut);
 
             //ADD TO SONGS LIST
             songsList.add(currentSong);
-        }
 
 
     }
