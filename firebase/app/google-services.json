@@ -1,35 +1,35 @@
 {
   "project_info": {
-    "project_number": "867192131930",
-    "firebase_url": "https://fir-667bb.firebaseio.com",
-    "project_id": "fir-667bb",
-    "storage_bucket": "fir-667bb.appspot.com"
+    "project_number": "653538051030",
+    "firebase_url": "https://flashbackmusic-ee12d.firebaseio.com",
+    "project_id": "flashbackmusic-ee12d",
+    "storage_bucket": "flashbackmusic-ee12d.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:867192131930:android:dcaac05ae5334205",
+        "mobilesdk_app_id": "1:653538051030:android:e6ddc481ec41ddd2",
         "android_client_info": {
-          "package_name": "com.example.fluffy.firebase"
+          "package_name": "com.android.flashbackmusicv000"
         }
       },
       "oauth_client": [
         {
-          "client_id": "867192131930-9jf8eer3j4i12kkt8rk7raivb44d1g3g.apps.googleusercontent.com",
+          "client_id": "653538051030-qloo43rlud1e2uitsm54vli6lr4p3779.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.fluffy.firebase",
-            "certificate_hash": "bf61bac089241bc4c03ee9f8a3125251e1f8c104"
+            "package_name": "com.android.flashbackmusicv000",
+            "certificate_hash": "18ef7c73364001ec9e4340a22576b45633746263"
           }
         },
         {
-          "client_id": "867192131930-bijq22v82k1qrg3g6a5m71seu4s98rbm.apps.googleusercontent.com",
+          "client_id": "653538051030-rdcnjqdmpci8tsam4g39tst8hdfdpkhp.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDDnUy0cKiihdZMTrDIqXVzxhRJMqfhP9Q"
+          "current_key": "AIzaSyDjozHUpOCpkqCkjtRK-h8KV0XXCpKYjts"
         }
       ],
       "services": {
@@ -40,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "867192131930-bijq22v82k1qrg3g6a5m71seu4s98rbm.apps.googleusercontent.com",
+              "client_id": "653538051030-rdcnjqdmpci8tsam4g39tst8hdfdpkhp.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
