@@ -26,10 +26,6 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-/**
- * Created by cailintreseder on 3/3/18.
- */
-
 public class SignInActivity extends AppCompatActivity {
     private static final String TAG = "GoogleActivity";
     private static final int RC_SIGN_IN = 9001;
@@ -58,12 +54,14 @@ public class SignInActivity extends AppCompatActivity {
         googleSignInClient = GoogleSignIn.getClient(this, gso);
         mAuth = FirebaseAuth.getInstance();
 
+        mAuth.signOut();
+        googleSignInClient.signOut();
+
         com.google.android.gms.common.SignInButton signInButton =
                 findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("in", "onClick");
                 signIn(false);
             }
         });
@@ -190,6 +188,9 @@ public class SignInActivity extends AppCompatActivity {
 
     private void updateUI(FirebaseUser user) {
         if (user != null) {
+            //Check that the current user's information has been added to the
+            //database already
+
             //Go to main activity
         }
         else {
