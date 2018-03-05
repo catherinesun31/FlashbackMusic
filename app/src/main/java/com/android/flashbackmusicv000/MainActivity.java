@@ -316,24 +316,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         }
     }
 
-    /**
-     * To make the code less fragile we would rather get the list of strings and put them inside the
-     * song object, so we can pass an array of the current songs.
-     * @param favorites the set of unique titles that have been favourited.
-     * @param disliked the set of unique titles that have been disliked.
-     * @param neutral the set of unique titles that have been classified as neutral.
-     *
-     * Thefields are obtained from the directory R.raw's contents
-     * An array for storing the songs to return is created.
-     *                for as long as the length of the fields array,
-     *                MediaMetaDataRetriever obtains the metadata(data that describes other data)source from the URI.
-     *                The URI was an absolute path from the string 'path', pointing to the raw directory containing
-     *                the media files. the MMDR then. A song object is created and has the Strings, extracted
-     *                from the MMDR passed into it. This is added to the songs array.
-     *                Once the loop is finised, the current list of songs is returned.
-     *
-     * @return the list of songs
-     */
+
 
 
     /*
