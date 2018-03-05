@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         ms = new MusicStorage();
 
         //ms. getCurrentSongs();
-        ms.createStorage(f,d,n,favorites, disliked, neutral);
+        ms.createStorage(MainActivity.this, f,d,n,favorites, disliked, neutral);
 
 
         songs1 = ms.getSongStorage().songsList;
