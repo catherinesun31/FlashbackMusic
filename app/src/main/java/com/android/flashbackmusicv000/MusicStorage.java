@@ -64,6 +64,8 @@ public void createStorage(boolean f, boolean d, boolean n, Set<String> favorites
                 } else {
                     as.allSongs.addSong(ss.songsList.get(i));
                 }
+            }
+            
         }
     }
 }
