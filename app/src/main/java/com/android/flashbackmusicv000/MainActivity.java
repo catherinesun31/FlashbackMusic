@@ -25,14 +25,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.ArraySet;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
-
+import android.view.View.OnKeyListener;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -42,6 +44,8 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -102,6 +106,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     private ArrayList<Album> albums;
     private MusicStorage ms;
 
+    FirebaseDatabase database;
+    DatabaseReference dataRef;
+
 
     /**
      * onCreate Method represents the beginning state of the main activity whenever it is started.
@@ -141,6 +148,20 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         neutral = new ArraySet<String>();
         disliked = new ArraySet<String>();
 
+        final EditText url = (EditText) findViewById(R.id.urlinput);
+        url.setOnKeyListener(new OnKeyListener() {
+            public boolean onKey(View view, int keyCode, KeyEvent keyevent) {
+
+                if ((keyevent.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    String getUrl = url.getText().toString();
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference dataRef = database.getReference();
+                    dataRef.child("URL Download").setValue(getUrl);
+                    return true;
+                }
+                return false;
+            }
+        });
 
         Song[] songs = {};
 
@@ -295,24 +316,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         }
     }
 
-    /**
-     * To make the code less fragile we would rather get the list of strings and put them inside the
-     * song object, so we can pass an array of the current songs.
-     * @param favorites the set of unique titles that have been favourited.
-     * @param disliked the set of unique titles that have been disliked.
-     * @param neutral the set of unique titles that have been classified as neutral.
-     *
-     * Thefields are obtained from the directory R.raw's contents
-     * An array for storing the songs to return is created.
-     *                for as long as the length of the fields array,
-     *                MediaMetaDataRetriever obtains the metadata(data that describes other data)source from the URI.
-     *                The URI was an absolute path from the string 'path', pointing to the raw directory containing
-     *                the media files. the MMDR then. A song object is created and has the Strings, extracted
-     *                from the MMDR passed into it. This is added to the songs array.
-     *                Once the loop is finised, the current list of songs is returned.
-     *
-     * @return the list of songs
-     */
+
 
 
     /*
