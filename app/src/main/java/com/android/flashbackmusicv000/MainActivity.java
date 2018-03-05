@@ -16,11 +16,13 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.ArraySet;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnKeyListener;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -42,7 +44,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Set;
-import android.util.ArraySet;
 
 
 public class MainActivity extends AppCompatActivity implements LocationListener, OnMapReadyCallback {

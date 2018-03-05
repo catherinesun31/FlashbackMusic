@@ -29,8 +29,8 @@ public class MusicStorage {
     }
 
 
-    public /*ArraySet<String>*/void createStorage(Activity a, boolean f, boolean d, boolean n, Set<String> favorites, Set<String> disliked,
-                              ArraySet<String> neutral) {
+    public ArraySet<String> createStorage(Activity a, boolean f, boolean d, boolean n, Set<String> favorites, Set<String> disliked,
+                              Set<String> neutral) {
 
 
         if (f || d || n) {
@@ -95,6 +95,6 @@ public class MusicStorage {
                 }
             }
         }
-        //return neutral;
+        return (ArraySet<String>) neutral;
     }
 }
