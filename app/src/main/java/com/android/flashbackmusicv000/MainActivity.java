@@ -22,7 +22,6 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnKeyListener;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -134,20 +133,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         neutral = new ArraySet<String>();
         disliked = new ArraySet<String>();
 
-        final EditText url = (EditText) findViewById(R.id.urlinput);
-        url.setOnKeyListener(new OnKeyListener() {
-            public boolean onKey(View view, int keyCode, KeyEvent keyevent) {
 
-                if ((keyevent.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    String getUrl = url.getText().toString();
-                    FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference dataRef = database.getReference();
-                    dataRef.child("URL Download").setValue(getUrl);
-                    return true;
-                }
-                return false;
-            }
-        });
 
         Song[] songs = {};
 
@@ -172,6 +158,22 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
         songs1 = ms.getSongStorage().songsList;
         allSongs = ms.getAlbumStorage().allSongs;
+
+        final EditText url = (EditText) findViewById(R.id.urlinput);
+        url.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View view, int keyCode, KeyEvent keyevent) {
+
+                if ((keyevent.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    String getUrl = url.getText().toString();
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference dataRef = database.getReference();
+                    dataRef.child("URLDownload").setValue(getUrl);
+                    ms.addStorage();
+                    return true;
+                }
+                return false;
+            }
+        });
 
         Switch flashback = (Switch) findViewById(R.id.flashSwitch);
         flashback.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
