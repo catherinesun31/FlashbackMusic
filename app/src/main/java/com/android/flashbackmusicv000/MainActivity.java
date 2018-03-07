@@ -12,24 +12,29 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.media.MediaMetadataRetriever;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.ArraySet;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
-
+import android.view.View.OnKeyListener;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -39,37 +44,48 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-public class MainActivity extends AppCompatActivity implements
-        LocationListener, OnMapReadyCallback {
+import static android.app.PendingIntent.getActivity;
 
-SharedPreferences currentSongState;
-//SharedPreferences widgetState;
-String[] favorites;
-String[] disliked;
-String[] neutral;
-int favoritesNow;
-int dislikedNow;
-int neutralNow;
-private boolean isFlashBackOn;
-private Switch flashSwitch;
-private SharedPreferences flashBackState;
+public class MainActivity extends AppCompatActivity implements LocationListener, OnMapReadyCallback {
 
-ArrayList<Song> songs1;
+    SharedPreferences currentSongState;
+    //SharedPreferences widgetState;
+    Set<String> favorites;
+    Set<String> disliked;
+    Set<String> neutral;
+    int favoritesNow;
+    int dislikedNow;
+    int neutralNow;
+    public static MediaPlayer mediaPlayer;
+    private boolean isFlashBackOn;
+    private Switch flashSwitch;
+    public static SharedPreferences flashBackState;
+
+
+    ArrayList<Song> songs1;
+
+    private Album allSongs;
+
+    //albums need to be passed...
+    //ArrayList<Album> albums;
+    Context mContext;
 
 //albums need to be passed...
-ArrayList<Album> albums;
-Context mContext;
+
 
     private FusedLocationProviderClient mFusedLocationClient;
     private Location locationManager;
@@ -82,21 +98,28 @@ Context mContext;
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
 
-    private AddressResultReceiver mResultReceiver;
+    private SongPlayingActivity.AddressResultReceiver mResultReceiver;
     protected String mAddressOutput;
     protected String mAreaOutput;
     protected String mCityOutput;
     protected String mStateOutput;
+    private ArrayList<Album> albums;
+    private MusicStorage ms;
+
+    FirebaseDatabase database;
+    DatabaseReference dataRef;
+
 
     /**
      * onCreate Method represents the beginning state of the main activity whenever it is started.
+     *
      * @param savedInstanceState is the previous state of this activity represented from the Bundle
-     * object.
-     * The current song list is loaded from the shared preference across the entire app, restoring the
-     * songslist from when it was last played.                          .
-     * If none of the the string sets obtained from the shared preferences have empty data,
-     * then we know that there was an album. Then the songslist gets updated.
-     * Anonymous listeners are then set for each of the buttons on activity_main.xml.
+     *                           object.
+     *                           The current song list is loaded from the shared preference across the entire app, restoring the
+     *                           songslist from when it was last played.                          .
+     *                           If none of the the string sets obtained from the shared preferences have empty data,
+     *                           then we know that there was an album. Then the songslist gets updated.
+     *                           Anonymous listeners are then set for each of the buttons on activity_main.xml.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +128,8 @@ Context mContext;
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //create a shared preference for flashback service state.
 
         favoritesNow = 0;
         dislikedNow = 0;
@@ -116,61 +141,95 @@ Context mContext;
         Set<String> fave = currentSongState.getStringSet("favorites", null);
         Set<String> dis = currentSongState.getStringSet("disliked", null);
         Set<String> neut = currentSongState.getStringSet("neutral", null);
-
-        Song[] songs = getCurrentSongs(fave, dis, neut);
-        songs1 = new ArrayList<Song>(Arrays.asList(songs));
-        if (fave != null && disliked != null && neutral != null) {
-            songs = getCurrentSongs(fave, dis, neut);
-        }
-        else {
-            neutral = new String[songs.length];
-            for (int i = 0; i < songs.length; ++i) {
-                neutral[i] = songs[i].getTitle();
-            }
-        }
-
-        //Set onClickListener for songs button
-        // JANICE EDIT: 02/13, PASSING IN SONGS[] SO THAT WE CAN ACCESS IT IN THE NEXT ACTIVITY
-        Button songsList = (Button) findViewById(R.id.songs);
-        songsList.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                launchSongs();
-            }
-        });
+        isFlashBackOn = currentSongState.getBoolean("flashback", false);
 
 
-       Button albumList = (Button) findViewById(R.id.albums);
+        favorites = new ArraySet<String>();
+        neutral = new ArraySet<String>();
+        disliked = new ArraySet<String>();
 
-        albumList.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               launchAlbums();
+        final EditText url = (EditText) findViewById(R.id.urlinput);
+        url.setOnKeyListener(new OnKeyListener() {
+            public boolean onKey(View view, int keyCode, KeyEvent keyevent) {
+
+                if ((keyevent.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    String getUrl = url.getText().toString();
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference dataRef = database.getReference();
+                    dataRef.child("URL Download").setValue(getUrl);
+                    return true;
+                }
+                return false;
             }
         });
 
-        flashSwitch = (Switch) findViewById(R.id.flashSwitch);
+        Song[] songs = {};
 
-        flashSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+        boolean f = false;
+        if (fave != null) {
+            f = true;
+        }
+        boolean d = false;
+        if (dis != null) {
+            d = true;
+        }
+        boolean n = false;
+        if (neut != null) {
+            n = true;
+        }
 
-                if(isChecked) {
+        ms = new MusicStorage();
 
-                    //run event;
-                    isFlashBackOn = true;
-                    Toast.makeText(getApplicationContext(), "flashback mode is on", Toast.LENGTH_SHORT).show();
-
-                } else {
+        //ms. getCurrentSongs();
+        ms.createStorage(f,d,n,favorites, disliked, neutral);
 
 
-                    //close event
-                    isFlashBackOn = false;
-                    Toast.makeText(getApplicationContext(), "flashback mode is off", Toast.LENGTH_SHORT).show();
-                    //
+        songs1 = ms.getSongStorage().songsList;
+
+        Switch flashback = (Switch) findViewById(R.id.flashSwitch);
+        flashback.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    LinkedList<Song> songs = new LinkedList<Song>();
+                    songs.addAll(allSongs.getSongs());
+                    FlashBackMode fbm = new FlashBackMode(songs);
+                    ArrayList<Song> newSongs = new ArrayList<Song>();
+                    //newSongs.addAll(fbm.createQueue());
+                    launchNowPlaying(allSongs.getSongs());
                 }
             }
         });
+
+
+        //Add list of favorited/disliked/neutral songs to shared preferences
+        editor.putStringSet("favorites", favorites);
+        editor.putStringSet("disliked", disliked);
+        editor.putStringSet("neutral", neutral);
+        editor.commit();
+
+        //Set onClickListener for songs button
+        Button songsList = (Button) findViewById(R.id.songs);
+        songsList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                launchSongs(allSongs);
+            }
+        });
+
+        Button albumList = (Button) findViewById(R.id.albums);
+        albumList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                launchAlbums();
+            }
+        });
+
+        setSwitch();
+
+        //close event
+        isFlashBackOn = false;
+        Toast.makeText(getApplicationContext(), "flashback mode is off", Toast.LENGTH_SHORT).show();
+        //
 
         /*
          * I'm thinking that here, we should make a list of all of the Song objects from songs that
@@ -178,11 +237,12 @@ Context mContext;
          */
 
         //Create the IntentService to automatically update the user's location every minute or so
-        mResultReceiver = new AddressResultReceiver(new Handler());
+        //mResultReceiver = new SongPlayingActivity.AddressResultReceiver(new Handler());
         mLocationCallback = new LocationCallback();
         mContext = this;
-
     }
+
+
     @Override
     protected void onStart() {
         Log.i("In: ", "MainActivity.onStart");
@@ -256,97 +316,8 @@ Context mContext;
         }
     }
 
-    /**
-     * To make the code less fragile we would rather get the list of strings and put them inside the
-     * song object, so we can pass an array of the current songs.
-     * @param favorites the set of unique titles that have been favourited.
-     * @param disliked the set of unique titles that have been disliked.
-     * @param neutral the set of unique titles that have been classified as neutral.
-     *
-     * Thefields are obtained from the directory R.raw's contents
-     * An array for storing the songs to return is created.
-     *                for as long as the length of the fields array,
-     *                MediaMetaDataRetriever obtains the metadata(data that describes other data)source from the URI.
-     *                The URI was an absolute path from the string 'path', pointing to the raw directory containing
-     *                the media files. the MMDR then. A song object is created and has the Strings, extracted
-     *                from the MMDR passed into it. This is added to the songs array.
-     *                Once the loop is finised, the current list of songs is returned.
-     *
-     * @return the list of songs
-     */
-    public Song[] getCurrentSongs(Set<String> favorites, Set<String> disliked, Set<String> neutral) {
-
-        Field[] fields = R.raw.class.getFields();
-        Song[] songs = new Song[fields.length];
-        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
 
 
-
-        for (int i = 0; i < fields.length; ++i) {
-            String path = "android.resource://" + getPackageName() + "/raw/" + fields[i].getName();
-            final Uri uri = Uri.parse(path);
-
-            mmr.setDataSource(getApplication(), uri);
-
-            // Janice add in: wanted to pass in the file location as Song variable
-            int songId = this.getResources().getIdentifier(fields[i].getName(), "raw", this.getPackageName());
-
-            String title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
-            String artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
-            String albumName = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
-            String duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-            long mil = Long.parseLong(duration);
-            int seconds = (int)Math.ceil((mil / 1000) % 60);
-            int minutes = (int)Math.ceil((mil / (1000*60)) % 60);
-            duration = minutes + ":" + seconds;
-
-            //if the album does not exist within the set of albums, add a new album to it with the
-            //set of songs. else simply add to a currently existing album.
-
-
-            if(!checkAlbum(albumName)){
-
-                albums.add(new Album(albumName, new Song(title, songId)));
-
-            } else {
-
-                Album albumToAddSong = retrieveAlbum(albumName);
-                albumToAddSong.addSong(new Song(title, songId));
-
-            }
-
-            Log.d("Information: ", "Title: " + title + "\n" +
-            "Artist: " + artist + "\n" +
-            "com.android.flashbackmusicv000.Album: " + albumName + "\n" +
-            "Duration: " + duration);
-            Song song = new Song(title, songId);
-
-            if (favorites != null) {
-                if (favorites.contains(title)) {
-                    song.favorite();
-                    this.favorites[favoritesNow] = song.getTitle();
-                    ++favoritesNow;
-                }
-            }
-            if (disliked != null) {
-                if (disliked.contains(title)) {
-                    song.dislike();
-                    this.disliked[dislikedNow] = song.getTitle();
-                    ++dislikedNow;
-                }
-            }
-            if (neutral != null) {
-                if (neutral.contains(title)) {
-                    song.neutral();
-                    this.neutral[neutralNow] = song.getTitle();
-                    ++neutralNow;
-                }
-            }
-            songs[i] = song;
-        }
-
-        return songs;
-    }
 
     /*
      * launchSongs:
@@ -357,27 +328,31 @@ Context mContext;
      * This starts the SongsListActivity, and migrates to the list of all of the current songs
      */
     // JANICE EDIT 02/13: PASSING IN THE ARRAY OF SONGS SO WE CAN PASS THROUGH TO SONGSLIST AND SONGSPLAYING
-    public void launchSongs() {
+
+    public void launchSongs(Album allSongs) {
 
         //strings to be sent in an activity towards the SongListActivity
-        Intent intent = new Intent(this, SongListActivity.class);
+
+        Intent toSongListIntent = new Intent(this, SongListActivity.class);
 
 
-        intent.putExtra("Favorites", favorites);
-        intent.putExtra("Disliked", disliked);
-        intent.putExtra("Neutral", neutral);
-        intent.putExtra("Song list", songs1);
-        intent.putExtra("isOn", isFlashBackOn);
+        //All songs.....
+        toSongListIntent.putExtra("songs",allSongs);
+        toSongListIntent.putExtra("isFromAlbum", false);
+        //temporary
+
+
+        toSongListIntent.putExtra("isOn", isFlashBackOn);
         //temporary, whilst passing strings.
-        intent.putExtra("albumOrigin", false);
-        startActivity(intent);
+        // need to change this...
+        startActivity(toSongListIntent);
     }
 
     /*
      * launchAlbums:
      */
     public void launchAlbums() {
-        //where it comes from -> where it is going.
+
         Intent albumsIntent  = new Intent(this, AlbumQueue.class);
         Bundle args = new Bundle();
         args.putSerializable("ARRAYLIST",albums);
@@ -385,6 +360,15 @@ Context mContext;
         albumsIntent.putExtra("isOn", isFlashBackOn);
         startActivity(albumsIntent);
 
+    }
+
+    public void launchNowPlaying(ArrayList<Song> songs) {
+        Intent intent = new Intent(this, SongPlayingActivity.class);
+
+        intent.putExtra("name_of_extra", songs);
+        //intent.putExtra("name_of_extra", song);
+        intent.putExtra("isOn", isFlashBackOn);
+        startActivity(intent);
     }
 
 
@@ -395,33 +379,9 @@ Context mContext;
         return true;
     }
 
-    private boolean checkAlbum(String albumName){
-        if (albums == null) {
-            albums = new ArrayList<Album>();
-            return false;
-        }
-        for(Album album: albums){
-            if(album.getName().equals(albumName)){
-                return true;
-            }
-        }
-        return false;
-    }
 
 
-    private Album retrieveAlbum(String albumName){
-        int index = 0;
-        Album currentAlbum = null;
-        ListIterator<Album> it = albums.listIterator();
-        while(it.hasNext()){
 
-            currentAlbum = it.next();
-            if(currentAlbum.getName().equals(albumName)){
-                return currentAlbum;
-            }
-        }
-        return currentAlbum;
-    }
 
     /**
      *
@@ -507,4 +467,51 @@ Context mContext;
         return address;
 
     }
+
+    private void setSwitch(){
+
+        flashSwitch = (Switch) findViewById(R.id.flashSwitch);
+        flashBackState = getApplicationContext().getSharedPreferences("isOn", MODE_PRIVATE);
+
+        /*
+        flashSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+
+                if(isChecked) {
+
+                    //run event;
+                    isFlashBackOn = true;
+                    Toast.makeText(getApplicationContext(), "flashback mode is on", Toast.LENGTH_SHORT).show();
+
+                } else {
+
+                    //close event
+                    isFlashBackOn = false;
+                    Toast.makeText(getApplicationContext(), "flashback mode is off", Toast.LENGTH_SHORT).show();
+                    //
+                }
+            }
+        });*/
+
+        /*
+         * I'm thinking that here, we should make a list of all of the Song objects from songs that
+         * the user has in their R.raw file, and store it in the phone's shared preferences.
+         */
+
+    }
+
+
+    @Override
+    public void onRestart(){
+
+        super.onRestart();
+
+        isFlashBackOn = MainActivity.flashBackState.getBoolean("isOn", isFlashBackOn);
+
+        flashSwitch.setChecked(isFlashBackOn);
+
+
+    }
 }
+

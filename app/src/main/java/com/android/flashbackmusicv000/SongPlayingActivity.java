@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
 import android.location.Address;
@@ -35,9 +36,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.sql.Time;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -48,14 +53,13 @@ import android.widget.Toast;
 
 public class SongPlayingActivity extends AppCompatActivity implements
         OnMapReadyCallback {
-
-    private MediaPlayer mediaPlayer;
+    private ArrayList<Song> songList;
     Context mContext;
 
     private Intent intent;
     private boolean isFlashBackOn;
     private Switch switchy;
-
+    public static MediaPlayer mediaPlayer;
     private FusedLocationProviderClient mFusedLocationClient;
     private Location locationManager;
     LocationRequest mLocationRequest;
@@ -68,6 +72,10 @@ public class SongPlayingActivity extends AppCompatActivity implements
     private GoogleApiClient mGoogleApiClient;
     private AddressResultReceiver mResultReceiver;
 
+    private int songIndex = 0;
+    private SharedPreferences currentSongState;
+
+
     protected String mAddressOutput;
     protected String mAreaOutput;
     protected String mCityOutput;
@@ -75,42 +83,110 @@ public class SongPlayingActivity extends AppCompatActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        onDestory(mediaPlayer);
         Log.i("In: ", "SongPlayingActivity.onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_song_playing);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        mContext = this;
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
+        currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
+        isFlashBackOn = currentSongState.getBoolean("isOn", false);
         Intent i = getIntent();
         setWidgets();
         //bug could be here.... something to do with the intents....
 
-
-
         //song being passed a parcelable, through the intent... but no parcelable was sent...???
 
-        final Song song = (Song) i.getParcelableExtra("name_of_extra");
+        //final Song song = i.getParcelableExtra("name_of_extra");
+        songList = i.getParcelableArrayListExtra("name_of_extra");
+        final Song song = songList.get(songIndex);
+
+        /*
+        Switch flashback = (Switch) findViewById(R.id.flashSwitch);
+        flashback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                LinkedList<Song> songs = new LinkedList<Song>();
+                songs.addAll(songList);
+                FlashBackMode mode = new FlashBackMode(songs);
+                mode.createQueue();
+            }
+        });
+        */
+        Button queue = findViewById(R.id.queue);
+        queue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        //final Song song = (Song) i.getParcelableExtra("name_of_extra");
 
         TextView songTitle = (TextView) findViewById(R.id.songtitle);
         songTitle.setText(song.getTitle());
 
         final int nameInt = song.getSongId();
-        loadMedia(nameInt);
+        mediaPlayer = MediaPlayer.create(this, songList.get(songIndex).getSongId());
+        MediaPlayer tempPlayer = mediaPlayer;
+        //getLocation(savedInstanceState);  TODO Janice: took this out, kept making errors in merge conflict
+
+        for(++songIndex ; songIndex < songList.size(); songIndex++){
+            final Song song1 = songList.get(songIndex);
+            MediaPlayer nextPlayer = MediaPlayer.create(this, songList.get(songIndex).getSongId());
+            nextPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mediaPlayer) {
+                    System.out.println("Supposed to change song info");
+                    //getLocation(savedInstanceState);
+                    song1.setTime(getTime());
+                    song1.setDate(getDate());
+                    song1.setDay(getDay());
+
+                    TextView songTime = (TextView) findViewById(R.id.song_time);
+                    String time = song1.getLastDay() + " " + song1.getLastDate() + " " + song1.getLastTime();
+                    songTime.setText(time);
+
+                    TextView songLocation = (TextView) findViewById(R.id.song_location);
+                    String location = song1.getLocation();
+                    songLocation.setText(location);
+
+                    final Button statusButton = (Button) findViewById(R.id.status);
+                    boolean favorited = song1.isFavorite();
+                    if (favorited) {
+                        //song is favorited
+                        statusButton.setText("✓");
+                    }
+                    statusButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (song1.isNeutral()) {
+                                song1.favorite();
+                                statusButton.setText("✓");
+                            }
+                            if (song1.isFavorite()) {
+                                song1.dislike();
+                                //skip the song here
+                            }
+                        }
+                    });
+                }
+
+            });
+            tempPlayer.setNextMediaPlayer(nextPlayer);
+            tempPlayer = nextPlayer;
+        }
         mediaPlayer.start();
+        //songIndex++;
+
+        //getLocation(savedInstanceState);
 
         song.setTime(getTime());
         song.setDate(getDate());
         song.setDay(getDay());
+        song.setFullDate(getFullDate());
 
         mLocationCallback = new LocationCallback();
         song.setLocation(getLocation());
@@ -121,6 +197,7 @@ public class SongPlayingActivity extends AppCompatActivity implements
 
         TextView songLocation = (TextView) findViewById(R.id.song_location);
         String location = song.getLocation();
+        Log.d("Location", getLocation());
         songLocation.setText(location);
 
         final Button statusButton = (Button) findViewById(R.id.status);
@@ -129,24 +206,23 @@ public class SongPlayingActivity extends AppCompatActivity implements
             //song is favorited
             statusButton.setText("✓");
         }
+
         statusButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (song.isNeutral()) {
-                    song.favorite();
-                    statusButton.setText("✓");
+                @Override
+                public void onClick(View view) {
+                    if (song.isNeutral()) {
+                        song.favorite();
+                        statusButton.setText("✓");
+                    }
+                    if (song.isFavorite()) {
+                        song.dislike();
+                        //skip the song here
+                    }
                 }
-                if (song.isFavorite()) {
-                    song.dislike();
-                    //skip the song here
-                }
-            }
         });
         mResultReceiver = new AddressResultReceiver(new Handler());
-
+        songLocation.setText(mAddressOutput);
     }
-
-
 
     @Override
     protected void onStop() {
@@ -194,11 +270,17 @@ public class SongPlayingActivity extends AppCompatActivity implements
 
     }
 
+    private Date getFullDate() {
+        Calendar calendar = Calendar.getInstance();
+        Date currentTime = calendar.getTime();
+        return currentTime;
+    }
 
     //TODO (if enough time): change this to a Time class, so that it's SRP (but also who cares)
     private String getTime() {
         Calendar calendar = Calendar.getInstance();
         Date currentTime = calendar.getTime();
+        Time time = new Time(currentTime.getTime());
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", Locale.US);
         dateFormat.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
         return dateFormat.format(currentTime);
@@ -286,6 +368,7 @@ public class SongPlayingActivity extends AppCompatActivity implements
         return address;
     }
 
+
     protected void startIntentService(Location location) {
         Log.i("In: ", "SongPlayingActivity.startIntentService");
 
@@ -295,24 +378,30 @@ public class SongPlayingActivity extends AppCompatActivity implements
         startService(intent);
     }
 
-    public void loadMedia(int resourceId){
+    protected void onDestory(MediaPlayer mediaPlayer) {
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer = null;
+        }
+    }
+
+    public void loadMedia(MediaPlayer mediaPlayer, int index){
         Log.i("In: ", "SongPlayingActivity.loadMedia");
 
         if (mediaPlayer == null){
             mediaPlayer = new MediaPlayer();
         }
 
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                mediaPlayer.start();
-            }
-        });
+        System.out.println("Loading media...");
 
-        AssetFileDescriptor assetFileDescriptor = this.getResources().openRawResourceFd(resourceId);
+        AssetFileDescriptor assetFileDescriptor = this.getResources().openRawResourceFd(songList.get(index).getSongId());
         try {
             mediaPlayer.setDataSource(assetFileDescriptor);
             mediaPlayer.prepareAsync();
+            //songIndex++;
+            //MediaPlayer nextPlayer = new MediaPlayer();
+            //loadMedia(nextPlayer);
+            //mediaPlayer.setNextMediaPlayer(nextPlayer);
         }
         catch(Exception e){
             System.out.println(e.toString());
@@ -349,24 +438,25 @@ public class SongPlayingActivity extends AppCompatActivity implements
 
     /*
     public static String printIntent(Intent intent){
-
-
         if (intent == null) {
-
             return null;
-
         }
-
         return intent.toString() + " " + bundleToString(intent.getExtras());
-
-
     }
     */
 
     @Override
-    public void onDestroy(){
-        super.onDestroy();
-        mediaPlayer.release();
+    public void onBackPressed(){
+
+        //super.onBackPressed();
+        //sharedPreferences switch state.
+
+        SharedPreferences.Editor editor = MainActivity.flashBackState.edit();
+        editor.putBoolean("isOn", isFlashBackOn);
+
+        editor.apply();
+        finish();
+
     }
 
     protected void startIntentService() {
@@ -377,23 +467,33 @@ public class SongPlayingActivity extends AppCompatActivity implements
     }
 
     class AddressResultReceiver extends ResultReceiver {
-        String mAddressOutput;
-        public AddressResultReceiver(Handler handler) {
+        AddressResultReceiver(Handler handler) {
             super(handler);
         }
 
+        /**
+         *  Receives data sent from FetchAddressIntentService and updates the UI in MainActivity.
+         */
         @Override
         protected void onReceiveResult(int resultCode, Bundle resultData) {
 
-            // Display the address string
-            // or an error message sent from the intent service.
+            // Display the address string or an error message sent from the intent service.
             mAddressOutput = resultData.getString(FetchAddressIntentService.Constants.RESULT_DATA_KEY);
+            displayAddressOutput();
 
             // Show a toast message if an address was found.
             if (resultCode == FetchAddressIntentService.Constants.SUCCESS_RESULT) {
-
+                //showToast(getString(R.string.address_found));
             }
 
+            // Reset. Enable the Fetch Address button and stop showing the progress bar.
         }
     }
+
+    public void displayAddressOutput() {
+        Log.d("address", mAddressOutput);
+        TextView location = findViewById(R.id.song_location);
+        location.setText(mAddressOutput);
+    }
+
 }

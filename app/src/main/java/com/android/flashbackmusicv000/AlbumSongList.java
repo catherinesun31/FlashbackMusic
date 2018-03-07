@@ -1,6 +1,7 @@
 package com.android.flashbackmusicv000;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Color;
 import android.media.MediaMetadataRetriever;
@@ -69,6 +70,14 @@ public class AlbumSongList extends AppCompatActivity {
         setContentView(R.layout.activity_album_song_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        Switch flashback = (Switch) findViewById(R.id.flashSwitch);
+        flashback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
         int totalSongs = getNumberOfSongs();
         MEDIA_RES_IDS = new int[totalSongs];
@@ -396,6 +405,19 @@ public class AlbumSongList extends AppCompatActivity {
                 }
             }
         });
+    }
+    @Override
+    public void onDestroy(){
+
+        super.onDestroy();
+        //sharedPreferences switch state.
+        //keep the music playing on restart.
+
+        SharedPreferences.Editor editor = MainActivity.flashBackState.edit();
+        editor.putBoolean("isOn", isFlashBackOn);
+
+        editor.commit();
+
     }
 }
 

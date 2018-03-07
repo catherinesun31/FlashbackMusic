@@ -1,6 +1,7 @@
 package com.android.flashbackmusicv000;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Color;
 import android.media.MediaPlayer;
@@ -61,12 +62,21 @@ public class AlbumQueue extends AppCompatActivity {
         Button album5 = (Button) findViewById(R.id.album5);
 
         //get songs to load... and
+        Switch flashback = (Switch) findViewById(R.id.flashSwitch);
+        flashback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
 
         album1.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                launchActivity(albums.get(0));
+                if(albums.size() > 0) {
+                    launchActivity(albums.get(0));
+                }
             }
         });
         album2.setOnClickListener(new View.OnClickListener(){
@@ -118,7 +128,9 @@ public class AlbumQueue extends AppCompatActivity {
         //songs are parcelable
         toSongListIntent.putExtra("songs",songs);
         //temporary
-        toSongListIntent.putExtra("albumOrigin",true);
+        toSongListIntent.putExtra("albumOrigin", true);
+
+        toSongListIntent.putExtra("isOn",isFlashBackOn);
 
         //for loop.... loook at the class.
 
@@ -191,4 +203,44 @@ public class AlbumQueue extends AppCompatActivity {
             }
         });
     }
+
+    /*
+    @Override
+    public void onResume(){
+
+        super.onResume();
+// then you use
+        isFlashBackOn = MainActivity.flashBackState.getBoolean("isOn", isFlashBackOn);
+
+        switchy.setChecked(isFlashBackOn);
+    }
+    */
+
+
+    @Override
+    public void onBackPressed(){
+
+        //super.onBackPressed();
+        //sharedPreferences switch state.
+
+        SharedPreferences.Editor editor = MainActivity.flashBackState.edit();
+        editor.putBoolean("isOn", isFlashBackOn);
+
+        editor.apply();
+        finish();
+
+    }
+
+    @Override
+    public void onRestart(){
+
+        super.onRestart();
+
+        isFlashBackOn = MainActivity.flashBackState.getBoolean("isOn", isFlashBackOn);
+
+        switchy.setChecked(isFlashBackOn);
+
+
+    }
+
 }
