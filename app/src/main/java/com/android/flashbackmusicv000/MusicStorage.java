@@ -3,6 +3,7 @@ package com.android.flashbackmusicv000;
 import android.app.Activity;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
+import android.os.Environment;
 import android.util.ArraySet;
 import android.util.Log;
 
@@ -12,8 +13,16 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Set;
+
 
 /**
  * Created by Chelsea, Janice on 3/2/18.
@@ -25,6 +34,7 @@ public class MusicStorage {
     private SongStorage ss = new SongStorage();
     private AlbumStorage as = new AlbumStorage();
 
+    String url;
 
     public SongStorage getSongStorage() {
         return ss;
@@ -110,8 +120,9 @@ public class MusicStorage {
         dataRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                String url = dataSnapshot.getValue().toString();
-                System.out.println(url);
+                url = dataSnapshot.getValue().toString();
+                String downloadRoute = Environment.getExternalStorageDirectory().toString();
+                downloadFile(url, url, downloadRoute+"/res/raw");
             }
 
             @Override
@@ -126,26 +137,80 @@ public class MusicStorage {
             @Override
             public void onCancelled(DatabaseError databaseError) {}
         });
-        //String url = dataRef.toString();
-        //Log.d("url", url);
-        /*StorageReference storageRef = database.getReference();
-        dataRef.child("URL Download").getDownloadURL().then(function(url) {
-            // `url` is the download URL for 'images/stars.jpg'
 
-            // This can be downloaded directly:
-            var xhr = new XMLHttpRequest();
-            xhr.responseType = 'blob';
-            xhr.onload = function(event) {
-                var blob = xhr.response;
-            };
-            xhr.open('GET', url);
-            xhr.send();
+    }
+    static void downloadFile(String download_file_path, String fileName,
+                             String pathToSave) {
+        int downloadedSize = 0;
+        int totalSize = 0;
 
-            // Or inserted into an <img> element:
-            var img = document.getElementById('myimg');
-            img.src = url;
-        }).catch(function(error) {
-            // Handle any errors
-        });*/
+        try {
+            URL url = new URL(download_file_path);
+            HttpURLConnection urlConnection = (HttpURLConnection) url
+                    .openConnection();
+
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setDoOutput(true);
+
+            // connect
+            urlConnection.connect();
+
+            File myDir;
+            myDir = new File(pathToSave);
+            myDir.mkdirs();
+
+            // create a new file, to save the downloaded file
+
+            String mFileName = fileName;
+            File file = new File(myDir, mFileName);
+
+            FileOutputStream fileOutput = new FileOutputStream(file);
+
+            // Stream used for reading the data from the internet
+            InputStream inputStream = urlConnection.getInputStream();
+
+            // this is the total size of the file which we are downloading
+            totalSize = urlConnection.getContentLength();
+
+            // runOnUiThread(new Runnable() {
+            // public void run() {
+            // pb.setMax(totalSize);
+            // }
+            // });
+
+            // create a buffer...
+            byte[] buffer = new byte[1024];
+            int bufferLength = 0;
+
+            while ((bufferLength = inputStream.read(buffer)) > 0) {
+                fileOutput.write(buffer, 0, bufferLength);
+                downloadedSize += bufferLength;
+                // update the progressbar //
+                // runOnUiThread(new Runnable() {
+                // public void run() {
+                // pb.setProgress(downloadedSize);
+                // float per = ((float)downloadedSize/totalSize) * 100;
+                // cur_val.setText("Downloaded " + downloadedSize + "KB / " +
+                // totalSize + "KB (" + (int)per + "%)" );
+                // }
+                // });
+            }
+            // close the output stream when complete //
+            fileOutput.close();
+            // runOnUiThread(new Runnable() {
+            // public void run() {
+            // // pb.dismiss(); // if you want close it..
+            // }
+            // });
+
+        } catch (final MalformedURLException e) {
+            // showError("Error : MalformedURLException " + e);
+            e.printStackTrace();
+        } catch (final IOException e) {
+            // showError("Error : IOException " + e);
+            e.printStackTrace();
+        } catch (final Exception e) {
+            // showError("Error : Please check your internet connection " + e);
+        }
     }
 }
