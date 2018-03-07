@@ -40,10 +40,8 @@ public class MusicStorage {
         return as;
     }
 
-
     public ArraySet<String> createStorage(Activity a, boolean f, boolean d, boolean n, Set<String> favorites, Set<String> disliked,
                               Set<String> neutral) {
-
 
         if (f || d || n) {
             //TODO what activity here?
