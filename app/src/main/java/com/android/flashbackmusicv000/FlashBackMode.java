@@ -22,6 +22,11 @@ public class FlashBackMode {
     LinkedList<Song> flashQueue;
     LinkedList<Song> unsorted;
 
+    public FlashBackMode(LinkedList<Song> songList) {
+        unsorted = songList;
+        flashQueue = new LinkedList<Song>();
+
+    }
     public LinkedList<Song> createQueue() {
 
         flashQueue.add(unsorted.get(0));

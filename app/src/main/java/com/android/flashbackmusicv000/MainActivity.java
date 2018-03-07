@@ -63,10 +63,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
     ArrayList<Song> songs1;
 
-    private Album allSongs;
+    //private Album allSongs;
 
-    //albums need to be passed...
-    //ArrayList<Album> albums;
     Context mContext;
 
 //albums need to be passed...
@@ -87,7 +85,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     protected String mAreaOutput;
     protected String mCityOutput;
     protected String mStateOutput;
-    private ArrayList<Album> albums;
     private MusicStorage ms;
 
     FirebaseDatabase database;
@@ -150,13 +147,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         }
 
         ms = new MusicStorage();
-
-        //ms. getCurrentSongs();
         neutral = ms.createStorage(MainActivity.this, f,d,n,favorites, disliked, neutral);
-
-
-        songs1 = ms.getSongStorage().songsList;
-        allSongs = ms.getAlbumStorage().allSongs;
 
         final EditText url = (EditText) findViewById(R.id.urlinput);
         url.setOnKeyListener(new View.OnKeyListener() {
@@ -179,11 +170,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     LinkedList<Song> songs = new LinkedList<Song>();
-                    songs.addAll(allSongs.getSongs());
+                    songs.addAll(ms.getAlbumStorage().allSongs.getSongs());
                     FlashBackMode fbm = new FlashBackMode(songs);
                     ArrayList<Song> newSongs = new ArrayList<Song>();
                     //newSongs.addAll(fbm.createQueue());
-                    launchNowPlaying(allSongs.getSongs());
+                    launchNowPlaying(ms.getAlbumStorage().allSongs.getSongs());
                 }
             }
         });
@@ -200,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         songsList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                launchSongs(allSongs);
+                launchSongs(ms.getAlbumStorage().allSongs);
             }
         });
 
@@ -208,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         albumList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                launchAlbums();
+                launchAlbums(ms.getAlbumStorage().getAlbums());
             }
         });
 
@@ -308,6 +299,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
 
 
+/*
             // Janice add in: wanted to pass in the file location as Song variable
             int songId = this.getResources().getIdentifier(fields[i].getName(), "raw", this.getPackageName());
 
@@ -327,11 +319,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
             Song currentSong = new Song(title, songId);
 
-            /* The following conditional statements add to the ArrayLists of strings.
+           /* The following conditional statements add to the ArrayLists of strings.
             * will instead add the strings to the songs... and pass them as albums.
-             */
+            */
 
-            boolean flag = false;
+            /* boolean flag = false;
             if (favorites != null) {
                 if (!favorites.isEmpty()) {
                     if (favorites.contains(title) && !flag) {
@@ -389,9 +381,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
         return songs;
     }
-=======
->>>>>>> a513aa0b4e33e5b8e12d1c585f3da65bb129c2e9
-
+*/
     /*
      * launchSongs:
      * @params: none
@@ -421,19 +411,19 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         startActivity(toSongListIntent);
     }
 
+
     /*
      * launchAlbums:
      */
-    public void launchAlbums() {
-
+    public void launchAlbums(ArrayList<Album> albums) {
         Intent albumsIntent  = new Intent(this, AlbumQueue.class);
         Bundle args = new Bundle();
         args.putSerializable("ARRAYLIST",albums);
         albumsIntent.putExtra("BUNDLE",args);
         albumsIntent.putExtra("isOn", isFlashBackOn);
         startActivity(albumsIntent);
-
     }
+
 
     public void launchNowPlaying(ArrayList<Song> songs) {
         Intent intent = new Intent(this, SongPlayingActivity.class);
@@ -451,9 +441,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
-
-
-
 
 
     /**

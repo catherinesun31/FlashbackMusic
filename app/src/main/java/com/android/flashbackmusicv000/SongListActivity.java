@@ -84,7 +84,7 @@ public class SongListActivity extends AppCompatActivity {
 
         setWidgets();
 
-    }
+
 
 
             ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
