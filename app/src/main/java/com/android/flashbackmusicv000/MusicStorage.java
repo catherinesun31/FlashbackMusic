@@ -29,10 +29,6 @@ public class MusicStorage {
         as.initalizeAlbum();
 
     }
-<<<<<<< HEAD
-
-=======
->>>>>>> e39e543f4eb66a0975feb380b26045d973365e69
 
     public SongStorage getSongStorage(){
         return ss;
