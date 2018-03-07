@@ -13,10 +13,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
 import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -44,10 +46,8 @@ public class MusicStorage {
         return as;
     }
 
-
     public ArraySet<String> createStorage(Activity a, boolean f, boolean d, boolean n, Set<String> favorites, Set<String> disliked,
                               Set<String> neutral) {
-
 
         if (f || d || n) {
             //TODO what activity here?
