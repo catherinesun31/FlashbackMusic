@@ -205,6 +205,11 @@ public class SignInActivity extends AppCompatActivity {
             String displayName = user.getDisplayName();
             Log.i("User info", "Email: " + email + "\n" +
                     "Display Name: " + displayName);
+            IUserBuilder builder = new UserBuilder();
+            builder.setEmail(email);
+            builder.setUsername(displayName);
+            IUser user1 = builder.build();
+
         }
         else {
             //Builder class to create user with anonymous information
