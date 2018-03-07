@@ -1,11 +1,7 @@
 package com.android.flashbackmusicv000;
 
-import android.app.Activity;
-import android.media.MediaMetadataRetriever;
-import android.net.Uri;
 import android.util.Log;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -26,33 +22,13 @@ public class SongStorage {
     }
 
 
-    public void initializeSongs(Activity a, Set<String> fave, Set<String> dis, Set<String> neut){
+    public void initializeSongs(Song currentSong, Set<String> fave, Set<String> dis, Set<String> neut){
 
-        //TODO assuming we download the files into the raw file list.
-        Field[] fields = R.raw.class.getFields();
-        Song[] songs = new Song[fields.length];
-        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-
-        for (int i = 0; i < fields.length; ++i) {
-
-            String path = "android.resource://" + a.getPackageName() + "/raw/" + fields[i].getName();
-            final Uri uri = Uri.parse(path);
-
-            mmr.setDataSource(a.getApplication(), uri);
-
-            // Janice add in: wanted to pass in the file location as Song variable
-            int songId = a.getResources().getIdentifier(fields[i].getName(), "raw", a.getPackageName());
-
-            String title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
-
-
-            Song currentSong = new Song(title, songId);
 
             getSongFavDisNeut(currentSong, fave, dis, neut);
 
             //ADD TO SONGS LIST
             songsList.add(currentSong);
-        }
 
 
     }
@@ -64,6 +40,7 @@ public class SongStorage {
                                   Set<String> favorites,
                                   Set<String> disliked,
                                   Set<String> neutral){
+        Log.d("Attempt", "Attempting to get favdisneut");
         boolean flag = false;
         if (favorites != null) {
             if (!favorites.isEmpty()) {
@@ -73,6 +50,7 @@ public class SongStorage {
                     favorites.add(currentSong.getTitle());
                     //this.favorites[favoritesNow] = currentSong.getTitle();
                    // ++favoritesNow;
+                    Log.d("Added a favorite", "Added a favorite");
                     flag = true;
                 }
 
@@ -85,6 +63,8 @@ public class SongStorage {
                     disliked.add(currentSong.getTitle());
                     //this.disliked[dislikedNow] = currentSong.getTitle();
                    // ++dislikedNow;
+                    Log.d("Added a disliked", "Added a disliked");
+
                 }
 
             }
@@ -94,6 +74,8 @@ public class SongStorage {
                 if (neutral.contains(currentSong.getTitle()) && !flag) {
                     currentSong.neutral();
                     neutral.add(currentSong.getTitle());
+                    Log.d("Added a neutral", "Added a neutral");
+
                     //this.neutral[neutralNow] = currentSong.getTitle();
                     //++neutralNow;
                 }
