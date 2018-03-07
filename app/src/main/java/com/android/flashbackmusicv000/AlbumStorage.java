@@ -1,11 +1,5 @@
 package com.android.flashbackmusicv000;
 
-import android.app.Activity;
-import android.media.MediaMetadataRetriever;
-import android.net.Uri;
-import android.util.Log;
-
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.ListIterator;
 
@@ -69,5 +63,9 @@ public class AlbumStorage {
             }
         }
         return currentAlbum;
+    }
+
+    public ArrayList<Album> getAlbums(){
+        return albumsList;
     }
 }
