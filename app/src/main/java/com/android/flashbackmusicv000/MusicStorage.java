@@ -22,7 +22,7 @@ import java.util.Set;
  * Created by Chelsea, Janice on 3/2/18.
  */
 
-ppublic class MusicStorage {
+public class MusicStorage {
 
 
     private SongStorage ss = new SongStorage();
