@@ -22,13 +22,13 @@ public class MusicStorage {
     private SongStorage ss = new SongStorage();
     private AlbumStorage as = new AlbumStorage();
 
-
+/*
     public void initializeMusic(Activity activity) {
 
         ss.initializeSongs(activity);
         as.initalizeAlbum();
 
-    }
+    }*/
 
     public SongStorage getSongStorage(){
         return ss;
