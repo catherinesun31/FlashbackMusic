@@ -5,8 +5,12 @@ import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.util.ArraySet;
 import android.util.Log;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
+
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -15,7 +19,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Set;
 
 /**
@@ -39,7 +42,7 @@ public class MusicStorage {
 
 
     public ArraySet<String> createStorage(Activity a, boolean f, boolean d, boolean n, Set<String> favorites, Set<String> disliked,
-                                          Set<String> neutral) {
+                              Set<String> neutral) {
 
 
         if (f || d || n) {
