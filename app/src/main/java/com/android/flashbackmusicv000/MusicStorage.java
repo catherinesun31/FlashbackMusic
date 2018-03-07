@@ -29,10 +29,6 @@ public class MusicStorage {
         as.initalizeAlbum();
 
     }
-<<<<<<< HEAD
-
-=======
->>>>>>> e39e543f4eb66a0975feb380b26045d973365e69
 
     public SongStorage getSongStorage(){
         return ss;
@@ -46,12 +42,6 @@ public class MusicStorage {
 
 public void createStorage(boolean f, boolean d, boolean n, Set<String> favorites, Set<String> disliked,
                           Set<String> neutral){
-
-<<<<<<< HEAD
-
-=======
-        
->>>>>>> e39e543f4eb66a0975feb380b26045d973365e69
         if (f || d || n) {
             //TODO what activity here?
             ss.initializeSongs(getActivity(), favorites, disliked, neutral);
