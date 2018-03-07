@@ -37,10 +37,8 @@ public class MusicStorage {
     public AlbumStorage getAlbumStorage(){
         return as;
     }
-
-
-
-public void createStorage(boolean f, boolean d, boolean n, Set<String> favorites, Set<String> disliked,
+    
+    public void createStorage(boolean f, boolean d, boolean n, Set<String> favorites, Set<String> disliked,
                           Set<String> neutral){
 
         if (f || d || n) {
