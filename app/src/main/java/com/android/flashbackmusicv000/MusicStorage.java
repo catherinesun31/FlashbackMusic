@@ -22,13 +22,14 @@ public class MusicStorage {
     private SongStorage ss = new SongStorage();
     private AlbumStorage as = new AlbumStorage();
 
-
+/*
     public void initializeMusic(Activity activity) {
 
         ss.initializeSongs(activity);
         as.initalizeAlbum();
 
-    }
+
+    }*/
 
     public SongStorage getSongStorage(){
         return ss;
@@ -37,11 +38,10 @@ public class MusicStorage {
     public AlbumStorage getAlbumStorage(){
         return as;
     }
-
-
-
-public void createStorage(boolean f, boolean d, boolean n, Set<String> favorites, Set<String> disliked,
+    
+    public void createStorage(boolean f, boolean d, boolean n, Set<String> favorites, Set<String> disliked,
                           Set<String> neutral){
+
         if (f || d || n) {
             //TODO what activity here?
             ss.initializeSongs(getActivity(), favorites, disliked, neutral);
