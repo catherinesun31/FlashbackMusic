@@ -24,7 +24,7 @@ public class AlbumStorage {
         }
     }
 
-    /*
+
     public void initalizeAlbum(Activity a){
         Field[] fields = R.raw.class.getFields();
         Song[] songs = new Song[fields.length];
@@ -73,7 +73,7 @@ public class AlbumStorage {
         }
 
     }
-*/
+
     public boolean checkAlbum(String albumName){
 
         for(Album album: albumsList){
