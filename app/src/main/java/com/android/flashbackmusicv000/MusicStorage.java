@@ -5,11 +5,14 @@ import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.util.ArraySet;
 import android.util.Log;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
+
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Set;
 
 /**
@@ -23,107 +26,126 @@ public class MusicStorage {
     private AlbumStorage as = new AlbumStorage();
 
 
-    public void initializeMusic(Activity activity) {
-
-        ss.initializeSongs(activity);
-        as.initalizeAlbum();
-
-    }
-
-    public SongStorage getSongStorage(){
+    public SongStorage getSongStorage() {
         return ss;
     }
 
-    public AlbumStorage getAlbumStorage(){
+    public AlbumStorage getAlbumStorage() {
         return as;
     }
 
-    public Song[] getCurrentSongs(MainActivity a, Set<String> favorites, Set<String> disliked, Set<String> neutral) {
 
-            /* The following conditional statements add to the ArrayLists of strings.
-            * will instead add the strings to the songs... and pass them as albums.
-             */
+    public ArraySet<String> createStorage(Activity a, boolean f, boolean d, boolean n, Set<String> favorites, Set<String> disliked,
+                              Set<String> neutral) {
 
-            //TODO what is this supposed to be doing lol
 
-            boolean flag = false;
-            if (favorites != null) {
-                if (!favorites.isEmpty()) {
-                    if (favorites.contains(title) && !flag) {
-                        currentSong.favorite();
-                        //adding to the string arrayList.
-                        favorites.add(currentSong.getTitle());
-                        //this.favorites[favoritesNow] = currentSong.getTitle();
-                        ++favoritesNow;
-                        flag = true;
+        if (f || d || n) {
+            //TODO what activity here?
+
+            Field[] fields = R.raw.class.getFields();
+            Song[] songs = new Song[fields.length];
+            MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+
+            for (int i = 0; i < fields.length; ++i) {
+
+                String path = "android.resource://" + a.getPackageName() + "/raw/" + fields[i].getName();
+                final Uri uri = Uri.parse(path);
+
+                mmr.setDataSource(a.getApplication(), uri);
+
+                // Janice add in: wanted to pass in the file location as Song variable
+                int songId = a.getResources().getIdentifier(fields[i].getName(), "raw", a.getPackageName());
+
+                String title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+                String artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+                String albumName = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
+                String duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+
+                long mil = Long.parseLong(duration);
+                int seconds = (int) Math.ceil((mil / 1000) % 60);
+                int minutes = (int) Math.ceil((mil / (1000 * 60)) % 60);
+                duration = minutes + ":" + seconds;
+
+                Log.d("Information: ", "Title: " + title + "\n" +
+                        "Artist: " + artist + "\n" +
+                        "com.android.flashbackmusicv000.Album: " + albumName + "\n" +
+                        "Duration: " + duration);
+
+
+                Song currentSong = new Song(title, songId);
+
+                ss.initializeSongs(currentSong, favorites, disliked, neutral);
+
+                as.initalizeAlbum(currentSong, albumName, i);
+
+            }
+
+            //TODO need to decouple songstorage and albumstorage... creating album
+            // with a song.
+
+            if ((!f && !d && !n) || (favorites.size() + neutral.size() + disliked.size() == 0)) {
+                neutral = new ArraySet<>();
+                Log.d("Is it empty", "It is empty");
+                Log.d("Neutral size", "It is empty");
+
+
+                for (int i = 0; i < ss.songsList.size(); ++i) {
+                    Log.d("Running songsList", "Running for loop " + i);
+
+                    neutral.add(ss.songsList.get(i).getTitle());
+                    if (i == 0) {
+                        as.allSongs = new Album("All Songs From Main Activity", ss.songsList.get(i));
+                    } else {
+                        as.allSongs.addSong(ss.songsList.get(i));
                     }
-
                 }
-            }
-            if (disliked != null) {
-                if (!disliked.isEmpty()) {
-                    if (disliked.contains(title) && !flag) {
-                        currentSong.dislike();
-                        disliked.add(currentSong.getTitle());
-                        //this.disliked[dislikedNow] = currentSong.getTitle();
-                        ++dislikedNow;
-                    }
-
-                }
-            }
-            if (neutral != null) {
-                if (!neutral.isEmpty()) {
-                    if (neutral.contains(title) && !flag) {
-                        currentSong.neutral();
-                        neutral.add(currentSong.getTitle());
-                        //this.neutral[neutralNow] = currentSong.getTitle();
-                        ++neutralNow;
-                    }
-                }
-            }
-
-            //if the album does not exist within the set of albums, add a new album to it with the
-            //set of songs. else simply add to a currently existing album.
-
-            if(!checkAlbum(albumName)){
-
-                albums.add(new Album(albumName, currentSong));
-
-            }
-            else {
-                Album albumToAddSong = retrieveAlbum(albumName);
-                albumToAddSong.addSong(new Song(title, songId));
-            }
-            if(i == 0) {
-                this.allSongs = new Album("All Songs From Main Activity",currentSong);
-            }
-            else {
-                this.allSongs.addSong(currentSong);
-            }
-            songs[i] = currentSong;
-        }
-
-        return songs;
-    }
-
-
-public void createStorage(boolean f, boolean d, boolean n, Set<String> favorites, Set<String> disliked,
-                          Set<String> neutral){
-
-    if (f || d || n) {
-        //do something
-    }
-    if ((!f && !d && !n) || (favorites.size() + neutral.size() + disliked.size() == 0)) {
-        neutral = new ArraySet<>();
-
-        for (int i = 0; i < ss.songsList.size(); ++i) {
-            neutral.add(ss.songsList.get(i).getTitle());
-            if(i == 0) {
-                as.allSongs = new Album("All Songs From Main Activity",ss.songsList.get(i));
-            }
-            else {
-                as.allSongs.addSong(ss.songsList.get(i));
             }
         }
+        return (ArraySet<String>) neutral;
+    }
+
+    public void addStorage(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference dataRef = database.getReference();
+        dataRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                String url = dataSnapshot.getValue().toString();
+                System.out.println(url);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) { }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
+        //String url = dataRef.toString();
+        //Log.d("url", url);
+        /*StorageReference storageRef = database.getReference();
+        dataRef.child("URL Download").getDownloadURL().then(function(url) {
+            // `url` is the download URL for 'images/stars.jpg'
+
+            // This can be downloaded directly:
+            var xhr = new XMLHttpRequest();
+            xhr.responseType = 'blob';
+            xhr.onload = function(event) {
+                var blob = xhr.response;
+            };
+            xhr.open('GET', url);
+            xhr.send();
+
+            // Or inserted into an <img> element:
+            var img = document.getElementById('myimg');
+            img.src = url;
+        }).catch(function(error) {
+            // Handle any errors
+        });*/
     }
 }

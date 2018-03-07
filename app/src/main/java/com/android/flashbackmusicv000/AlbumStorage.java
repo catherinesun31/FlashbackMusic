@@ -1,5 +1,11 @@
 package com.android.flashbackmusicv000;
 
+import android.app.Activity;
+import android.media.MediaMetadataRetriever;
+import android.net.Uri;
+import android.util.Log;
+
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.ListIterator;
 
@@ -18,13 +24,30 @@ public class AlbumStorage {
         }
     }
 
-    public void initalizeAlbum(){
+    public void initalizeAlbum( Song currentSong, String albumName, int i){
 
+        if(!checkAlbum(albumName)){
 
+            albumsList.add(new Album(albumName, currentSong));
+
+        }
+        else {
+            Album albumToAddSong = retrieveAlbum(albumName);
+            // changed below from creating new song
+            albumToAddSong.addSong(currentSong);
+        }
+        if(i == 0) {
+            this.allSongs = new Album("All Songs From Main Activity",currentSong);
+        }
+        else {
+            this.allSongs.addSong(currentSong);
+        }
 
     }
 
-    private boolean checkAlbum(String albumName){
+
+
+    public boolean checkAlbum(String albumName){
 
         for(Album album: albumsList){
             if(album.getName().equals(albumName)){
@@ -34,7 +57,7 @@ public class AlbumStorage {
         return false;
     }
 
-    private Album retrieveAlbum(String albumName){
+    public Album retrieveAlbum(String albumName){
         int index = 0;
         Album currentAlbum = null;
         ListIterator<Album> it = albumsList.listIterator();

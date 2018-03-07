@@ -11,25 +11,20 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.ResultReceiver;
-import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.ArraySet;
 import android.util.Log;
-import android.view.View;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -42,19 +37,13 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
-import static android.app.PendingIntent.getActivity;
 
 public class MainActivity extends AppCompatActivity implements LocationListener, OnMapReadyCallback {
 
@@ -101,6 +90,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     private ArrayList<Album> albums;
     private MusicStorage ms;
 
+    FirebaseDatabase database;
+    DatabaseReference dataRef;
+
 
     /**
      * onCreate Method represents the beginning state of the main activity whenever it is started.
@@ -141,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         disliked = new ArraySet<String>();
 
 
+
         Song[] songs = {};
 
         boolean f = false;
@@ -159,10 +152,27 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         ms = new MusicStorage();
 
         //ms. getCurrentSongs();
-        ms.createStorage(f,d,n,favorites, disliked, neutral);
+        neutral = ms.createStorage(MainActivity.this, f,d,n,favorites, disliked, neutral);
 
 
         songs1 = ms.getSongStorage().songsList;
+        allSongs = ms.getAlbumStorage().allSongs;
+
+        final EditText url = (EditText) findViewById(R.id.urlinput);
+        url.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View view, int keyCode, KeyEvent keyevent) {
+
+                if ((keyevent.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    String getUrl = url.getText().toString();
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference dataRef = database.getReference();
+                    dataRef.child("URLDownload").setValue(getUrl);
+                    ms.addStorage();
+                    return true;
+                }
+                return false;
+            }
+        });
 
         Switch flashback = (Switch) findViewById(R.id.flashSwitch);
         flashback.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -295,24 +305,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         }
     }
 
-    /**
-     * To make the code less fragile we would rather get the list of strings and put them inside the
-     * song object, so we can pass an array of the current songs.
-     * @param favorites the set of unique titles that have been favourited.
-     * @param disliked the set of unique titles that have been disliked.
-     * @param neutral the set of unique titles that have been classified as neutral.
-     *
-     * Thefields are obtained from the directory R.raw's contents
-     * An array for storing the songs to return is created.
-     *                for as long as the length of the fields array,
-     *                MediaMetaDataRetriever obtains the metadata(data that describes other data)source from the URI.
-     *                The URI was an absolute path from the string 'path', pointing to the raw directory containing
-     *                the media files. the MMDR then. A song object is created and has the Strings, extracted
-     *                from the MMDR passed into it. This is added to the songs array.
-     *                Once the loop is finised, the current list of songs is returned.
-     *
-     * @return the list of songs
-     */
+
 
 
             // Janice add in: wanted to pass in the file location as Song variable
