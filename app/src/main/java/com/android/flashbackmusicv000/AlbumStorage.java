@@ -24,7 +24,11 @@ public class AlbumStorage {
         }
     }
 
+<<<<<<< HEAD
 
+=======
+   
+>>>>>>> e39e543f4eb66a0975feb380b26045d973365e69
     public void initalizeAlbum(Activity a){
         Field[] fields = R.raw.class.getFields();
         Song[] songs = new Song[fields.length];
