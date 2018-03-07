@@ -7,8 +7,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1c7ae422-2a75-4758-8bdf-7b1f54c91d93" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/AlbumStorage.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/AlbumStorage.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/MainActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/MainActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/MusicStorage.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/MusicStorage.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/SongStorage.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/SongStorage.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -50,8 +54,42 @@
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="6705">
-              <caret line="508" column="0" lean-forward="false" selection-start-line="508" selection-start-column="0" selection-end-line="508" selection-end-column="0" />
-              <folding />
+              <caret line="497" column="0" lean-forward="false" selection-start-line="497" selection-start-column="0" selection-end-line="497" selection-end-column="0" />
+              <folding>
+                <element signature="imports" expanded="false" />
+                <marker date="1520451413618" expanded="true" signature="6349:8551" ph="{...}" />
+                <marker date="1520451413618" expanded="true" signature="6510:7052" ph="{...}" />
+                <marker date="1520451413618" expanded="true" signature="6599:7042" ph="{...}" />
+                <marker date="1520451413618" expanded="true" signature="7486:7617" ph="{...}" />
+                <marker date="1520451413618" expanded="false" signature="7552:7571" ph=" { " />
+                <marker date="1520451413618" expanded="false" signature="7593:7607" ph=" }" />
+                <marker date="1520451413618" expanded="true" signature="7748:7872" ph="{...}" />
+                <marker date="1520451413618" expanded="false" signature="7814:7833" ph=" { " />
+                <marker date="1520451413618" expanded="false" signature="7848:7862" ph=" }" />
+                <marker date="1520451413618" expanded="true" signature="8289:8468" ph="//..." />
+                <marker date="1520451413618" expanded="true" signature="8597:9750" ph="{...}" />
+                <marker date="1520451413618" expanded="true" signature="9794:10103" ph="{...}" />
+                <marker date="1520451413618" expanded="true" signature="10175:10408" ph="{...}" />
+                <marker date="1520451413618" expanded="true" signature="10472:10602" ph="{...}" />
+                <marker date="1520451413618" expanded="true" signature="10671:10940" ph="{...}" />
+                <marker date="1520451413618" expanded="true" signature="11415:11910" ph="{...}" />
+                <marker date="1520451413618" expanded="true" signature="11793:11863" ph="//..." />
+                <marker date="1520451413618" expanded="true" signature="11979:12278" ph="{...}" />
+                <marker date="1520451413618" expanded="true" signature="12336:12591" ph="{...}" />
+                <marker date="1520451413618" expanded="true" signature="12658:12826" ph="{...}" />
+                <marker date="1520451413618" expanded="true" signature="12836:12896" ph="/**...*/" />
+                <marker date="1520451413618" expanded="true" signature="12967:13390" ph="{...}" />
+                <marker date="1520451413618" expanded="true" signature="12977:13173" ph="//..." />
+                <marker date="1520451413618" expanded="true" signature="13397:13446" ph="/**...*/" />
+                <marker date="1520451413618" expanded="true" signature="13571:13995" ph="{...}" />
+                <marker date="1520451413618" expanded="true" signature="14054:14419" ph="{...}" />
+                <marker date="1520451413618" expanded="true" signature="14454:15832" ph="{...}" />
+                <marker date="1520451413618" expanded="true" signature="15161:15799" ph="{...}" />
+                <marker date="1520451413618" expanded="true" signature="15254:15781" ph="{...}" />
+                <marker date="1520451413618" expanded="true" signature="15634:15733" ph="//..." />
+                <marker date="1520451413618" expanded="true" signature="15862:16972" ph="{...}" />
+                <marker date="1520451413618" expanded="true" signature="17016:17189" ph="{...}" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -84,9 +122,14 @@
       <file leaf-file-name="MusicStorage.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/MusicStorage.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="395">
-              <caret line="43" column="0" lean-forward="false" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
-              <folding />
+            <state relative-caret-position="168">
+              <caret line="47" column="15" lean-forward="false" selection-start-line="47" selection-start-column="11" selection-end-line="47" selection-end-column="15" />
+              <folding>
+                <element signature="e#873#874#0" expanded="true" />
+                <element signature="e#898#899#0" expanded="true" />
+                <element signature="e#943#944#0" expanded="true" />
+                <element signature="e#968#969#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -2141,7 +2184,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1520451182028" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1520451515095" />
       </method>
     </configuration>
     <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Instrumented Tests">
@@ -2189,7 +2232,7 @@
       </Profilers>
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1520451182028" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1520451515095" />
       </method>
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -2351,7 +2394,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1520451182029" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1520451515095" />
       </method>
     </configuration>
     <list size="1">
@@ -2403,9 +2446,11 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="618" y="0" width="1062" height="1050" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32891247" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2627451" sideWeight="0.5054645" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
@@ -2413,7 +2458,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="16" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32891247" sideWeight="0.5" order="16" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25306123" sideWeight="0.5" order="16" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25306123" sideWeight="0.5" order="16" side_tool="false" content_ui="tabs" />
       <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3037433" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
@@ -2432,7 +2477,6 @@
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find Sample Code" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32959184" sideWeight="0.5" order="19" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.10379919" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -2765,8 +2809,42 @@
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="6705">
-          <caret line="508" column="0" lean-forward="false" selection-start-line="508" selection-start-column="0" selection-end-line="508" selection-end-column="0" />
-          <folding />
+          <caret line="497" column="0" lean-forward="false" selection-start-line="497" selection-start-column="0" selection-end-line="497" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <marker date="1520451413618" expanded="true" signature="6349:8551" ph="{...}" />
+            <marker date="1520451413618" expanded="true" signature="6510:7052" ph="{...}" />
+            <marker date="1520451413618" expanded="true" signature="6599:7042" ph="{...}" />
+            <marker date="1520451413618" expanded="true" signature="7486:7617" ph="{...}" />
+            <marker date="1520451413618" expanded="false" signature="7552:7571" ph=" { " />
+            <marker date="1520451413618" expanded="false" signature="7593:7607" ph=" }" />
+            <marker date="1520451413618" expanded="true" signature="7748:7872" ph="{...}" />
+            <marker date="1520451413618" expanded="false" signature="7814:7833" ph=" { " />
+            <marker date="1520451413618" expanded="false" signature="7848:7862" ph=" }" />
+            <marker date="1520451413618" expanded="true" signature="8289:8468" ph="//..." />
+            <marker date="1520451413618" expanded="true" signature="8597:9750" ph="{...}" />
+            <marker date="1520451413618" expanded="true" signature="9794:10103" ph="{...}" />
+            <marker date="1520451413618" expanded="true" signature="10175:10408" ph="{...}" />
+            <marker date="1520451413618" expanded="true" signature="10472:10602" ph="{...}" />
+            <marker date="1520451413618" expanded="true" signature="10671:10940" ph="{...}" />
+            <marker date="1520451413618" expanded="true" signature="11415:11910" ph="{...}" />
+            <marker date="1520451413618" expanded="true" signature="11793:11863" ph="//..." />
+            <marker date="1520451413618" expanded="true" signature="11979:12278" ph="{...}" />
+            <marker date="1520451413618" expanded="true" signature="12336:12591" ph="{...}" />
+            <marker date="1520451413618" expanded="true" signature="12658:12826" ph="{...}" />
+            <marker date="1520451413618" expanded="true" signature="12836:12896" ph="/**...*/" />
+            <marker date="1520451413618" expanded="true" signature="12967:13390" ph="{...}" />
+            <marker date="1520451413618" expanded="true" signature="12977:13173" ph="//..." />
+            <marker date="1520451413618" expanded="true" signature="13397:13446" ph="/**...*/" />
+            <marker date="1520451413618" expanded="true" signature="13571:13995" ph="{...}" />
+            <marker date="1520451413618" expanded="true" signature="14054:14419" ph="{...}" />
+            <marker date="1520451413618" expanded="true" signature="14454:15832" ph="{...}" />
+            <marker date="1520451413618" expanded="true" signature="15161:15799" ph="{...}" />
+            <marker date="1520451413618" expanded="true" signature="15254:15781" ph="{...}" />
+            <marker date="1520451413618" expanded="true" signature="15634:15733" ph="//..." />
+            <marker date="1520451413618" expanded="true" signature="15862:16972" ph="{...}" />
+            <marker date="1520451413618" expanded="true" signature="17016:17189" ph="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -2869,9 +2947,14 @@
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/GetLocation.java" />
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/MusicStorage.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="395">
-          <caret line="43" column="0" lean-forward="false" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="168">
+          <caret line="47" column="15" lean-forward="false" selection-start-line="47" selection-start-column="11" selection-end-line="47" selection-end-column="15" />
+          <folding>
+            <element signature="e#873#874#0" expanded="true" />
+            <element signature="e#898#899#0" expanded="true" />
+            <element signature="e#943#944#0" expanded="true" />
+            <element signature="e#968#969#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
