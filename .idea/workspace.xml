@@ -51,7 +51,41 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="6705">
               <caret line="508" column="0" lean-forward="false" selection-start-line="508" selection-start-column="0" selection-end-line="508" selection-end-column="0" />
-              <folding />
+              <folding>
+                <element signature="imports" expanded="false" />
+                <marker date="1520451635256" expanded="true" signature="6808:9010" ph="{...}" />
+                <marker date="1520451635256" expanded="true" signature="6969:7511" ph="{...}" />
+                <marker date="1520451635256" expanded="true" signature="7058:7501" ph="{...}" />
+                <marker date="1520451635256" expanded="true" signature="7945:8076" ph="{...}" />
+                <marker date="1520451635256" expanded="false" signature="8011:8030" ph=" { " />
+                <marker date="1520451635256" expanded="false" signature="8052:8066" ph=" }" />
+                <marker date="1520451635256" expanded="true" signature="8207:8331" ph="{...}" />
+                <marker date="1520451635256" expanded="false" signature="8273:8292" ph=" { " />
+                <marker date="1520451635256" expanded="false" signature="8307:8321" ph=" }" />
+                <marker date="1520451635256" expanded="true" signature="8748:8927" ph="//..." />
+                <marker date="1520451635256" expanded="true" signature="9056:10209" ph="{...}" />
+                <marker date="1520451635256" expanded="true" signature="10253:10562" ph="{...}" />
+                <marker date="1520451635256" expanded="true" signature="10634:10867" ph="{...}" />
+                <marker date="1520451635256" expanded="true" signature="10931:11061" ph="{...}" />
+                <marker date="1520451635256" expanded="true" signature="11130:11399" ph="{...}" />
+                <marker date="1520451635256" expanded="true" signature="11874:12369" ph="{...}" />
+                <marker date="1520451635256" expanded="true" signature="12252:12322" ph="//..." />
+                <marker date="1520451635256" expanded="true" signature="12438:12737" ph="{...}" />
+                <marker date="1520451635256" expanded="true" signature="12795:13050" ph="{...}" />
+                <marker date="1520451635256" expanded="true" signature="13117:13285" ph="{...}" />
+                <marker date="1520451635256" expanded="true" signature="13295:13355" ph="/**...*/" />
+                <marker date="1520451635256" expanded="true" signature="13426:13849" ph="{...}" />
+                <marker date="1520451635256" expanded="true" signature="13436:13632" ph="//..." />
+                <marker date="1520451635256" expanded="true" signature="13856:13905" ph="/**...*/" />
+                <marker date="1520451635256" expanded="true" signature="14030:14454" ph="{...}" />
+                <marker date="1520451635256" expanded="true" signature="14513:14878" ph="{...}" />
+                <marker date="1520451635256" expanded="true" signature="14913:16291" ph="{...}" />
+                <marker date="1520451635256" expanded="true" signature="15620:16258" ph="{...}" />
+                <marker date="1520451635256" expanded="true" signature="15713:16240" ph="{...}" />
+                <marker date="1520451635256" expanded="true" signature="16093:16192" ph="//..." />
+                <marker date="1520451635256" expanded="true" signature="16321:17431" ph="{...}" />
+                <marker date="1520451635256" expanded="true" signature="17475:17648" ph="{...}" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -84,9 +118,14 @@
       <file leaf-file-name="MusicStorage.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/MusicStorage.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="395">
-              <caret line="43" column="0" lean-forward="false" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
-              <folding />
+            <state relative-caret-position="1410">
+              <caret line="110" column="17" lean-forward="false" selection-start-line="110" selection-start-column="17" selection-end-line="110" selection-end-column="17" />
+              <folding>
+                <element signature="e#850#851#0" expanded="true" />
+                <element signature="e#875#876#0" expanded="true" />
+                <element signature="e#920#921#0" expanded="true" />
+                <element signature="e#945#946#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -2141,7 +2180,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1520451182028" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1520451703892" />
       </method>
     </configuration>
     <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Instrumented Tests">
@@ -2189,7 +2228,7 @@
       </Profilers>
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1520451182028" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1520451703892" />
       </method>
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -2351,7 +2390,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1520451182029" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1520451703892" />
       </method>
     </configuration>
     <list size="1">
@@ -2403,9 +2442,11 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="618" y="0" width="1062" height="1050" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32891247" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2627451" sideWeight="0.5054645" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
@@ -2413,7 +2454,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="16" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32891247" sideWeight="0.5" order="16" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25306123" sideWeight="0.5" order="16" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25306123" sideWeight="0.5" order="16" side_tool="false" content_ui="tabs" />
       <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3037433" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
@@ -2427,15 +2468,37 @@
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2627451" sideWeight="0.5054645" order="0" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="16" side_tool="true" content_ui="tabs" />
+      <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3037433" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Find Sample Code" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32959184" sideWeight="0.5" order="19" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Device File Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32891247" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.10379919" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32891247" sideWeight="0.5" order="16" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25306123" sideWeight="0.5" order="16" side_tool="false" content_ui="tabs" />
+      <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2627451" sideWeight="0.4945355" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32934132" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="true" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -2766,7 +2829,41 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="6705">
           <caret line="508" column="0" lean-forward="false" selection-start-line="508" selection-start-column="0" selection-end-line="508" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <marker date="1520451635256" expanded="true" signature="6808:9010" ph="{...}" />
+            <marker date="1520451635256" expanded="true" signature="6969:7511" ph="{...}" />
+            <marker date="1520451635256" expanded="true" signature="7058:7501" ph="{...}" />
+            <marker date="1520451635256" expanded="true" signature="7945:8076" ph="{...}" />
+            <marker date="1520451635256" expanded="false" signature="8011:8030" ph=" { " />
+            <marker date="1520451635256" expanded="false" signature="8052:8066" ph=" }" />
+            <marker date="1520451635256" expanded="true" signature="8207:8331" ph="{...}" />
+            <marker date="1520451635256" expanded="false" signature="8273:8292" ph=" { " />
+            <marker date="1520451635256" expanded="false" signature="8307:8321" ph=" }" />
+            <marker date="1520451635256" expanded="true" signature="8748:8927" ph="//..." />
+            <marker date="1520451635256" expanded="true" signature="9056:10209" ph="{...}" />
+            <marker date="1520451635256" expanded="true" signature="10253:10562" ph="{...}" />
+            <marker date="1520451635256" expanded="true" signature="10634:10867" ph="{...}" />
+            <marker date="1520451635256" expanded="true" signature="10931:11061" ph="{...}" />
+            <marker date="1520451635256" expanded="true" signature="11130:11399" ph="{...}" />
+            <marker date="1520451635256" expanded="true" signature="11874:12369" ph="{...}" />
+            <marker date="1520451635256" expanded="true" signature="12252:12322" ph="//..." />
+            <marker date="1520451635256" expanded="true" signature="12438:12737" ph="{...}" />
+            <marker date="1520451635256" expanded="true" signature="12795:13050" ph="{...}" />
+            <marker date="1520451635256" expanded="true" signature="13117:13285" ph="{...}" />
+            <marker date="1520451635256" expanded="true" signature="13295:13355" ph="/**...*/" />
+            <marker date="1520451635256" expanded="true" signature="13426:13849" ph="{...}" />
+            <marker date="1520451635256" expanded="true" signature="13436:13632" ph="//..." />
+            <marker date="1520451635256" expanded="true" signature="13856:13905" ph="/**...*/" />
+            <marker date="1520451635256" expanded="true" signature="14030:14454" ph="{...}" />
+            <marker date="1520451635256" expanded="true" signature="14513:14878" ph="{...}" />
+            <marker date="1520451635256" expanded="true" signature="14913:16291" ph="{...}" />
+            <marker date="1520451635256" expanded="true" signature="15620:16258" ph="{...}" />
+            <marker date="1520451635256" expanded="true" signature="15713:16240" ph="{...}" />
+            <marker date="1520451635256" expanded="true" signature="16093:16192" ph="//..." />
+            <marker date="1520451635256" expanded="true" signature="16321:17431" ph="{...}" />
+            <marker date="1520451635256" expanded="true" signature="17475:17648" ph="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -2869,9 +2966,14 @@
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/GetLocation.java" />
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/android/flashbackmusicv000/MusicStorage.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="395">
-          <caret line="43" column="0" lean-forward="false" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="1410">
+          <caret line="110" column="17" lean-forward="false" selection-start-line="110" selection-start-column="17" selection-end-line="110" selection-end-column="17" />
+          <folding>
+            <element signature="e#850#851#0" expanded="true" />
+            <element signature="e#875#876#0" expanded="true" />
+            <element signature="e#920#921#0" expanded="true" />
+            <element signature="e#945#946#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
