@@ -84,10 +84,42 @@ public class SongListActivity extends AppCompatActivity {
 
         setWidgets();
 
+        songs = new ArrayList<String>();
+        if (favorites != null) {
+            songs.addAll(favorites);
+        }
+        if (disliked != null) {
+            songs.addAll(disliked);
+
+        }
+        if (neutral != null) {
+            songs.addAll(neutral);
+        }
+        //do this to show songs in alphabetical order
+        Collections.sort(songs);
+
+        Switch flashback = (Switch) findViewById(R.id.flashSwitch);
+        flashback.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    /*
+                    LinkedList<Song> songs1 = new LinkedList<Song>();
+                    songs1.addAll(actualSongs);
+                    FlashBackMode fbm = new FlashBackMode(songs1);
+                    ArrayList<Song> newSongs = new ArrayList<Song>();
+                    newSongs.addAll(fbm.createQueue());
+                    launchActivity(newSongs);
+                    */
+                }
+            }
+        });
 
 
 
-            ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
+
+
+
+        ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
 
             final float scale = this.getResources().getDisplayMetrics().density;
             int songId = songs.get(0).hashCode();
