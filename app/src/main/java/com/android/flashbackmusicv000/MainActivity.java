@@ -208,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
         //close event
         isFlashBackOn = false;
-        Toast.makeText(getApplicationContext(), "flashback mode is off", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "vibe mode is off", Toast.LENGTH_SHORT).show();
         //
 
         /*
