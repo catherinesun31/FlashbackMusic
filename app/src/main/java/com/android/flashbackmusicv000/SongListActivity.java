@@ -123,8 +123,6 @@ public class SongListActivity extends AppCompatActivity{
 
             //counter loop creates a new button. Attaches a 'new song' to the click listener.
 
-        Button titleButton = (Button) findViewById(R.id.titleButton);
-
             for (index = 0; index < actualSongs.size(); index++) {
                 final String fileName = actualSongs.get(index).getTitle();
 
@@ -206,10 +204,10 @@ public class SongListActivity extends AppCompatActivity{
                 if (index == 0) {
                     constraintSet.connect(
                             button.getId(), ConstraintSet.TOP,
-                            ConstraintSet.PARENT_ID, ConstraintSet.TOP, 110);
+                            ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
                     constraintSet.connect(
                             add.getId(), ConstraintSet.TOP,
-                            ConstraintSet.PARENT_ID, ConstraintSet.TOP, 110);
+                            ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
                 } else {
                     constraintSet.connect(
                             button.getId(), ConstraintSet.TOP,
