@@ -21,6 +21,25 @@ public class HashMap {
         return list;
     }
 
+    public String hash(int userVal) {
+        int val = userVal%list.size();
+        //hash to that index, if it has not already been used
+        ArrayList<String> hashed = list.get(val);
+        String hashValue = hashed.get(1);
+        if (hashValue.equals("0")) {
+            hashed.set(val, "1");
+            return hashed.get(0);
+        }
+        else {
+            ++val;
+            while (!hashValue.equals("0")) {
+                hashValue = list.get(val).get(1);
+            }
+            hashed = list.get(val);
+            return hashed.get(0);
+        }
+    }
+
     private ArrayList<String> createFruits() {
         ArrayList<String> fruits = new ArrayList<>();
         fruits.add("Granny Smith");
