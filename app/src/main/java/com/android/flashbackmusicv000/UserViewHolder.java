@@ -36,23 +36,6 @@ public class UserViewHolder {
         profileUrl = (TextView) layoutRow.findViewById(R.id.textView_contactProfileUrl);
     }
 
-    /**
-     * It maps the data in the entry contact to the row layout elements referred
-     * by the view holder. It also starts an asynchronous request to set the
-     * ImageView object with a bitmap specified by the image URL in the entry
-     * contact.
-     *
-     * As soon as the bitmap is given available, the bitmap handler object sets
-     * it to the ImageView object if the view holder still refers the row layout
-     * elements in the list view @param position.
-     *
-     * @param position
-     *            refers the contact index in the list view object defined by
-     *            activity_friends_list layout
-     * @param contact
-     *            entry data to be mapped to the row layout elements
-     */
-
 
     /**
      * It returns the ImageView object referred by the view holder
