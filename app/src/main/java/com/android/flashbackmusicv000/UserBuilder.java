@@ -4,20 +4,19 @@ package com.android.flashbackmusicv000;
  * Created by cailintreseder on 3/5/18.
  */
 
-public class UserBuilder implements IUserBuilder {
+public class UserBuilder extends User {
     private String username;
     private String email;
 
-    public void setUsername(String username) {
+    private void setUsername(String username) {
         this.username = username;
     }
-    public void setEmail(String email) {
+    private void setEmail(String email) {
         this.email = email;
     }
-    String getUsername() { return this.username; }
-    String getEmail() { return this.email; }
 
-    public IUser build() {
+    public User build() {
+        /*
         String un = "";
         if (username != null) un = username;
         else {
@@ -29,6 +28,18 @@ public class UserBuilder implements IUserBuilder {
             //set anonymous email
         }
         User user = new User(em, un);
+        return user;
+        */
+        User user;
+        if (email.equals("")) {
+            //create an anonymous user
+            user = new AnonymousUser();
+        }
+        else {
+            //create a not-anonymous user
+            user = new SignedInUser(username, email);
+        }
+
         return user;
     }
 }
