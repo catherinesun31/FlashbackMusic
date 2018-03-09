@@ -165,6 +165,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             }
         });
 
+
         Switch flashback = (Switch) findViewById(R.id.flashSwitch);
         flashback.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -207,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
         //close event
         isFlashBackOn = false;
-        Toast.makeText(getApplicationContext(), "flashback mode is off", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Vibe mode is off", Toast.LENGTH_SHORT).show();
         //
 
         /*
