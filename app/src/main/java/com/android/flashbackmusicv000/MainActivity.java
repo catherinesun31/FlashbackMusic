@@ -536,7 +536,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
         //Set the local destination for the downloaded file to a path within the application's external files directory
       //request.setDestinationInExternalFilesDir(MainActivity.this, "../","AndroidTutorialPoint.mp3");
-        request.setDestinationInExternalPublicDir("../../res/raw","NewSong.mp3");
+        request.setDestinationInExternalPublicDir("/","NewSong.mp3");
 
         //Enqueue download and save into referenceId
         downloadReference = downloadManager.enqueue(request);
