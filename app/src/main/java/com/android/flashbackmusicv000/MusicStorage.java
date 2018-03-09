@@ -1,11 +1,14 @@
 package com.android.flashbackmusicv000;
 
 import android.app.Activity;
+import android.app.DownloadManager;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.ArraySet;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -35,8 +38,6 @@ public class MusicStorage {
 
     private SongStorage ss = new SongStorage();
     private AlbumStorage as = new AlbumStorage();
-
-    String url;
 
     public SongStorage getSongStorage() {
         return ss;
@@ -114,103 +115,4 @@ public class MusicStorage {
         return (ArraySet<String>) neutral;
     }
 
-    public void addStorage(){
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference dataRef = database.getReference();
-        dataRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                url = dataSnapshot.getValue().toString();
-                String downloadRoute = Environment.getExternalStorageDirectory().toString();
-                downloadFile(url, url, downloadRoute+"/res/raw");
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) { }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {}
-        });
-
-    }
-    static void downloadFile(String download_file_path, String fileName,
-                             String pathToSave) {
-        int downloadedSize = 0;
-        int totalSize = 0;
-
-        try {
-            URL url = new URL(download_file_path);
-            HttpURLConnection urlConnection = (HttpURLConnection) url
-                    .openConnection();
-
-            urlConnection.setRequestMethod("POST");
-            urlConnection.setDoOutput(true);
-
-            // connect
-            urlConnection.connect();
-
-            File myDir;
-            myDir = new File(pathToSave);
-            myDir.mkdirs();
-
-            // create a new file, to save the downloaded file
-
-            String mFileName = fileName;
-            File file = new File(myDir, mFileName);
-
-            FileOutputStream fileOutput = new FileOutputStream(file);
-
-            // Stream used for reading the data from the internet
-            InputStream inputStream = urlConnection.getInputStream();
-
-            // this is the total size of the file which we are downloading
-            totalSize = urlConnection.getContentLength();
-
-            // runOnUiThread(new Runnable() {
-            // public void run() {
-            // pb.setMax(totalSize);
-            // }
-            // });
-
-            // create a buffer...
-            byte[] buffer = new byte[1024];
-            int bufferLength = 0;
-
-            while ((bufferLength = inputStream.read(buffer)) > 0) {
-                fileOutput.write(buffer, 0, bufferLength);
-                downloadedSize += bufferLength;
-                // update the progressbar //
-                // runOnUiThread(new Runnable() {
-                // public void run() {
-                // pb.setProgress(downloadedSize);
-                // float per = ((float)downloadedSize/totalSize) * 100;
-                // cur_val.setText("Downloaded " + downloadedSize + "KB / " +
-                // totalSize + "KB (" + (int)per + "%)" );
-                // }
-                // });
-            }
-            // close the output stream when complete //
-            fileOutput.close();
-            // runOnUiThread(new Runnable() {
-            // public void run() {
-            // // pb.dismiss(); // if you want close it..
-            // }
-            // });
-
-        } catch (final MalformedURLException e) {
-            // showError("Error : MalformedURLException " + e);
-            e.printStackTrace();
-        } catch (final IOException e) {
-            // showError("Error : IOException " + e);
-            e.printStackTrace();
-        } catch (final Exception e) {
-            // showError("Error : Please check your internet connection " + e);
-        }
-    }
 }

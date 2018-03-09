@@ -6,13 +6,16 @@
  */
 package com.android.flashbackmusicv000;
 
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -37,6 +40,9 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -58,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     public static MediaPlayer mediaPlayer;
     private boolean isFlashBackOn;
     private Switch flashSwitch;
+    String url;
+    DownloadManager downloadManager;
     public static SharedPreferences flashBackState;
 
 
@@ -159,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference dataRef = database.getReference();
                     dataRef.child("URLDownload").setValue(getUrl);
-                    ms.addStorage();
+                    addStorage();
                     return true;
                 }
                 return false;
@@ -486,6 +494,54 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         flashSwitch.setChecked(isFlashBackOn);
 
 
+    }
+    public void addStorage(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference dataRef = database.getReference();
+        dataRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                url = dataSnapshot.getValue().toString();
+                String downloadRoute = Environment.getExternalStorageDirectory().toString();
+                Uri music_uri = Uri.parse(url);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) { }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
+
+    }
+    private long DownloadData (Uri uri, View v) {
+
+        long downloadReference;
+
+        // Create request for android download manager
+        downloadManager = (DownloadManager)getSystemService(DOWNLOAD_SERVICE);
+        DownloadManager.Request request = new DownloadManager.Request(uri);
+
+        //Setting title of request
+        request.setTitle("Data Download");
+
+        //Setting description of request
+        request.setDescription("Android Data download using DownloadManager.");
+
+        //Set the local destination for the downloaded file to a path within the application's external files directory
+      //request.setDestinationInExternalFilesDir(MainActivity.this, "../","AndroidTutorialPoint.mp3");
+        request.setDestinationInExternalPublicDir("../../res/raw","NewSong.mp3");
+
+        //Enqueue download and save into referenceId
+        downloadReference = downloadManager.enqueue(request);
+
+        return downloadReference;
     }
 }
 
