@@ -12,8 +12,19 @@ buildscript {
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
         classpath 'com.google.gms:google-services:3.1.0'
+
     }
 }
+
+/**
+ * Also added for instrumental JUnit testing.
+
+
+android {
+    defaultConfig {
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+}*/
 
 allprojects {
     repositories {

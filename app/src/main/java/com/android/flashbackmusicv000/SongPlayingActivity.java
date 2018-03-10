@@ -93,7 +93,7 @@ public class SongPlayingActivity extends AppCompatActivity implements
         currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
         isFlashBackOn = currentSongState.getBoolean("isOn", false);
         Intent i = getIntent();
-        setWidgets();
+        setSwitch();
         //bug could be here.... something to do with the intents....
 
         //song being passed a parcelable, through the intent... but no parcelable was sent...???
@@ -407,7 +407,7 @@ public class SongPlayingActivity extends AppCompatActivity implements
             System.out.println(e.toString());
         }
     }
-    private void setWidgets(){
+    private void setSwitch(){
 
         intent = getIntent();
         switchy = (Switch) findViewById(R.id.flashSwitch);

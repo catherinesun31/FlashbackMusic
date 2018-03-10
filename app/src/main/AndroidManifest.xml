@@ -71,7 +71,9 @@
         <service
             android:name=".MusicBackgroundSerivce"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+        <activity android:name=".ForAccessingResourcesActivity"></activity>
     </application>
 
 </manifest>
