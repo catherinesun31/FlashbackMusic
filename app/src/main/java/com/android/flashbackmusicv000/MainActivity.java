@@ -22,7 +22,6 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnKeyListener;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -64,10 +63,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
     ArrayList<Song> songs1;
 
-    private Album allSongs;
+    //private Album allSongs;
 
-    //albums need to be passed...
-    //ArrayList<Album> albums;
     Context mContext;
 
 //albums need to be passed...
@@ -89,7 +86,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     protected String mAreaOutput;
     protected String mCityOutput;
     protected String mStateOutput;
-    private ArrayList<Album> albums;
     private MusicStorage ms;
 
     FirebaseDatabase database;
@@ -134,20 +130,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         neutral = new ArraySet<String>();
         disliked = new ArraySet<String>();
 
-        final EditText url = (EditText) findViewById(R.id.urlinput);
-        url.setOnKeyListener(new OnKeyListener() {
-            public boolean onKey(View view, int keyCode, KeyEvent keyevent) {
 
-                if ((keyevent.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    String getUrl = url.getText().toString();
-                    FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference dataRef = database.getReference();
-                    dataRef.child("URL Download").setValue(getUrl);
-                    return true;
-                }
-                return false;
-            }
-        });
 
         Song[] songs = {};
 
@@ -165,24 +148,34 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         }
 
         ms = new MusicStorage();
-
-        //ms. getCurrentSongs();
         neutral = ms.createStorage(MainActivity.this, f,d,n,favorites, disliked, neutral);
 
+        final EditText url = (EditText) findViewById(R.id.urlinput);
+        url.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View view, int keyCode, KeyEvent keyevent) {
 
-        songs1 = ms.getSongStorage().songsList;
-        allSongs = ms.getAlbumStorage().allSongs;
+                if ((keyevent.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    String getUrl = url.getText().toString();
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference dataRef = database.getReference();
+                    dataRef.child("URLDownload").setValue(getUrl);
+                    ms.addStorage();
+                    return true;
+                }
+                return false;
+            }
+        });
 
         Switch flashback = (Switch) findViewById(R.id.flashSwitch);
         flashback.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     LinkedList<Song> songs = new LinkedList<Song>();
-                    songs.addAll(allSongs.getSongs());
+                    songs.addAll(ms.getAlbumStorage().allSongs.getSongs());
                     FlashBackMode fbm = new FlashBackMode(songs);
                     ArrayList<Song> newSongs = new ArrayList<Song>();
                     //newSongs.addAll(fbm.createQueue());
-                    launchNowPlaying(allSongs.getSongs());
+                    launchNowPlaying(ms.getAlbumStorage().allSongs.getSongs());
                 }
             }
         });
@@ -199,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         songsList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                launchSongs(allSongs);
+                launchSongs(ms.getAlbumStorage().allSongs);
             }
         });
 
@@ -207,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         albumList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                launchAlbums();
+                launchAlbums(ms.getAlbumStorage().getAlbums());
             }
         });
 
@@ -215,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
         //close event
         isFlashBackOn = false;
-        Toast.makeText(getApplicationContext(), "flashback mode is off", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "vibe mode is off", Toast.LENGTH_SHORT).show();
         //
 
         /*
@@ -303,9 +296,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         }
     }
 
-
-
-
     /*
      * launchSongs:
      * @params: none
@@ -335,19 +325,19 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         startActivity(toSongListIntent);
     }
 
+
     /*
      * launchAlbums:
      */
-    public void launchAlbums() {
-
+    public void launchAlbums(ArrayList<Album> albums) {
         Intent albumsIntent  = new Intent(this, AlbumQueue.class);
         Bundle args = new Bundle();
         args.putSerializable("ARRAYLIST",albums);
         albumsIntent.putExtra("BUNDLE",args);
         albumsIntent.putExtra("isOn", isFlashBackOn);
         startActivity(albumsIntent);
-
     }
+
 
     public void launchNowPlaying(ArrayList<Song> songs) {
         Intent intent = new Intent(this, SongPlayingActivity.class);
@@ -365,9 +355,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
-
-
-
 
 
     /**
