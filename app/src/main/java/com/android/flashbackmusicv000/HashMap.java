@@ -2,20 +2,40 @@ package com.android.flashbackmusicv000;
 
 import android.util.Log;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 
 public class HashMap {
     private ArrayList<ArrayList<String>> list;
+    private FirebaseDatabase database;
+    private DatabaseReference ref;
 
     public HashMap() {
-        String val = "0";
-        ArrayList<String> fruits = createFruits();
-        list = new ArrayList<ArrayList<String>>();
-        for (String fruit: fruits) {
-            ArrayList<String> fruitPair = new ArrayList<String>();
-            fruitPair.add(0, fruit);
-            fruitPair.add(1, val);
-            list.add(fruitPair);
+        //Check that the hash map has not already been instantiated on Firebase
+        database = FirebaseDatabase.getInstance();
+        ref = database.getReference();
+        ArrayList<ArrayList<String>> databaseInstance = getInstance();
+        if (databaseInstance != null) {
+            list = databaseInstance;
+        }
+        //If it has not, create a new hash map
+        else {
+            String val = "0";
+            ArrayList<String> fruits = createFruits();
+            list = new ArrayList<ArrayList<String>>();
+            for (String fruit : fruits) {
+                ArrayList<String> fruitPair = new ArrayList<String>();
+                fruitPair.add(0, fruit);
+                fruitPair.add(1, val);
+                list.add(fruitPair);
+            }
+            update();
         }
     }
 
@@ -30,6 +50,7 @@ public class HashMap {
         String hashValue = hashed.get(1);
         if (hashValue.equals("0")) {
             hashed.set(1, "1");
+            update();
             return hashed.get(0);
         }
         //if it has been used, go through all succeeding indices until one has
@@ -54,8 +75,41 @@ public class HashMap {
             }
             //set the value as "used"
             hashed.set(1, "1");
+            update();
             return hashed.get(0);
         }
+    }
+
+    //Updates the Firebase Database with new information for the usernames
+    private void update() {
+        for (ArrayList<String> pair: list) {
+            String username = pair.get(0);
+            String val = pair.get(1);
+            ref.child("anonymous_users").child(username).setValue(val);
+        }
+    }
+
+    private ArrayList<ArrayList<String>> getInstance() {
+        ArrayList<ArrayList<String>> dataList = new ArrayList<>();
+        Query queryRef = ref.orderByChild("anonymous_users");
+        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot == null || dataSnapshot.getValue() == null) {
+                    //do nothing
+                }
+                else {
+                    //list = dataSnapshot;
+                    dataSnapshot.getValue();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        return dataList;
     }
 
     private ArrayList<String> createFruits() {

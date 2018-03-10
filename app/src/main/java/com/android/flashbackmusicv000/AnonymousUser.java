@@ -4,9 +4,10 @@ public class AnonymousUser extends User {
     private String email;
     private String username;
 
-    AnonymousUser() {
+    AnonymousUser(String username) {
         email = "anonymous@email.com";
         //set username as a random value from the phone
+        this.username = username;
     }
 
     public String getEmail() {
@@ -15,5 +16,4 @@ public class AnonymousUser extends User {
     public String getUsername() {
         return this.username;
     }
-
 }

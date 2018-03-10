@@ -1,8 +1,8 @@
 package com.android.flashbackmusicv000;
 
 public abstract class User {
-    String email = "Unknown Email";
-    String username = "Unknown Username";
+    private String email = "Unknown Email";
+    private String username = "Unknown Username";
 
     String getEmail() {
         return email;

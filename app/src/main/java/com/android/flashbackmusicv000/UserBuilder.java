@@ -1,13 +1,19 @@
 package com.android.flashbackmusicv000;
 
-public class UserBuilder extends User {
+import android.content.ContentResolver;
+import android.content.Context;
+import android.provider.Settings;
+
+import com.google.android.gms.ads.identifier.AdvertisingIdClient;
+
+public class UserBuilder implements IUserBuilder {
     private String username;
     private String email;
 
-    private void setUsername(String username) {
+    public void setUsername(String username) {
         this.username = username;
     }
-    private void setEmail(String email) {
+    public void setEmail(String email) {
         this.email = email;
     }
 
@@ -29,13 +35,23 @@ public class UserBuilder extends User {
         User user;
         if (email.equals("")) {
             //create an anonymous user
-            user = new AnonymousUser();
+            HashMap map = new HashMap();
+
+            /*
+            String deviceId = Settings.Secure.getString(this.getApplicationContext().
+                            getContentResolver(),
+                    Settings.Secure.ANDROID_ID);
+            int val = Integer.parseInt(deviceId);
+            String username = map.hash(val);
+            user = new AnonymousUser(username);
+            */
         }
         else {
             //create a not-anonymous user
             user = new SignedInUser(username, email);
         }
 
-        return user;
+        return null;
+        //return user;
     }
 }
