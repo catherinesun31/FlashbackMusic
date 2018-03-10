@@ -127,7 +127,7 @@ public class SongListActivity extends AppCompatActivity{
 
             //counter loop creates a new button. Attaches a 'new song' to the click listener.
         File file = Environment.getExternalStorageDirectory();
-        //downloadManager.addCompletedDownload(file.getName(), file.getName(), true, "application/json", file.getAbsolutePath(),file.length(),true);
+        //downloadManager.addCompletedDownload(file.getName(), file.getName(), true, "application/mp3", file.getAbsolutePath(),file.length(),true);
         Song song = new Song(file.getName(),file.getName().hashCode());
         actualSongs.add(song);
         songs.add(song.getTitle());
