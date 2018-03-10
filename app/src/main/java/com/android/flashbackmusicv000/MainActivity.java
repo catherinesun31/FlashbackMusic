@@ -46,6 +46,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Set;
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     private boolean isFlashBackOn;
     private Switch flashSwitch;
     String url;
-    DownloadManager downloadManager;
+
     public static SharedPreferences flashBackState;
 
 
@@ -95,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     protected String mCityOutput;
     protected String mStateOutput;
     private MusicStorage ms;
+    DownloadManager downloadManager;
 
     FirebaseDatabase database;
     DatabaseReference dataRef;
@@ -525,8 +527,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
         long downloadReference;
 
-        // Create request for android download manager
         downloadManager = (DownloadManager)getSystemService(DOWNLOAD_SERVICE);
+
+        // Create request for android download manager
         DownloadManager.Request request = new DownloadManager.Request(uri);
 
         //Setting title of request
