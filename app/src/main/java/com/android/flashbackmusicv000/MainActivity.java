@@ -504,6 +504,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                 url = dataSnapshot.getValue().toString();
                 String downloadRoute = Environment.getExternalStorageDirectory().toString();
                 Uri music_uri = Uri.parse(url);
+                DownloadData(music_uri);
             }
 
             @Override
@@ -520,7 +521,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         });
 
     }
-    private long DownloadData (Uri uri, View v) {
+    private long DownloadData (Uri uri) {
 
         long downloadReference;
 
@@ -535,9 +536,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         request.setDescription("Android Data download using DownloadManager.");
 
         //Set the local destination for the downloaded file to a path within the application's external files directory
-      //request.setDestinationInExternalFilesDir(MainActivity.this, "../","AndroidTutorialPoint.mp3");
-        request.setDestinationInExternalPublicDir("/","NewSong.mp3");
-
+        request.setDestinationInExternalFilesDir(MainActivity.this, Environment.DIRECTORY_DOWNLOADS,"AndroidTutorialPoint.mp3");
         //Enqueue download and save into referenceId
         downloadReference = downloadManager.enqueue(request);
 
