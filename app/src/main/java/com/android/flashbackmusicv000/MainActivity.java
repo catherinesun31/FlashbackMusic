@@ -530,13 +530,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         DownloadManager.Request request = new DownloadManager.Request(uri);
 
         //Setting title of request
-        request.setTitle("Data Download");
+        request.setTitle("Downloading Song");
 
         //Setting description of request
-        request.setDescription("Android Data download using DownloadManager.");
+        request.setDescription("Downloading Song from URL");
 
         //Set the local destination for the downloaded file to a path within the application's external files directory
-        request.setDestinationInExternalFilesDir(MainActivity.this, Environment.DIRECTORY_DOWNLOADS,"AndroidTutorialPoint.mp3");
+        request.setDestinationInExternalFilesDir(MainActivity.this, Environment.DIRECTORY_DOWNLOADS, "DownloadSong.mp3");
         //Enqueue download and save into referenceId
         downloadReference = downloadManager.enqueue(request);
 
