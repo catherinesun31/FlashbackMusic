@@ -1,18 +1,20 @@
 package com.android.flashbackmusicv000;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 public class HashMap {
     private ArrayList<ArrayList<String>> list;
 
-    HashMap() {
+    public HashMap() {
         String val = "0";
         ArrayList<String> fruits = createFruits();
         list = new ArrayList<ArrayList<String>>();
         for (String fruit: fruits) {
             ArrayList<String> fruitPair = new ArrayList<String>();
-            fruitPair.add(fruit);
-            fruitPair.add(val);
+            fruitPair.add(0, fruit);
+            fruitPair.add(1, val);
             list.add(fruitPair);
         }
     }
@@ -27,15 +29,31 @@ public class HashMap {
         ArrayList<String> hashed = list.get(val);
         String hashValue = hashed.get(1);
         if (hashValue.equals("0")) {
-            hashed.set(val, "1");
+            hashed.set(1, "1");
             return hashed.get(0);
         }
+        //if it has been used, go through all succeeding indices until one has
+        //not been used. If they have all been used, print an error.
         else {
-            ++val;
-            while (!hashValue.equals("0")) {
-                hashValue = list.get(val).get(1);
+            int count = 0;
+            while (hashValue.equals("1")) {
+                ++val;
+                //return to the beginning if reached the end of the list
+                if (val == list.size()) {
+                    val = 0;
+                    ++count;
+                    if (count > 5) {
+                        Log.e("HASH ERROR", "Iterated over the list more than 5 times." +
+                                "Check for error.");
+                        return "Default Fruit";
+                    }
+                }
+                hashed = list.get(val);
+                hashValue = hashed.get(1);
+
             }
-            hashed = list.get(val);
+            //set the value as "used"
+            hashed.set(1, "1");
             return hashed.get(0);
         }
     }
