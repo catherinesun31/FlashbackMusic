@@ -128,12 +128,16 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         neutralNow = 0;
 
         currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
-        SharedPreferences.Editor editor = currentSongState.edit();
+        final SharedPreferences.Editor editor = currentSongState.edit();
 
         Set<String> fave = currentSongState.getStringSet("favorites", null);
         Set<String> dis = currentSongState.getStringSet("disliked", null);
         Set<String> neut = currentSongState.getStringSet("neutral", null);
+
         isFlashBackOn = currentSongState.getBoolean("flashback", false);
+        Switch flashback = (Switch) findViewById(R.id.flashSwitch);
+        flashback.setChecked(isFlashBackOn);
+
 
 
         favorites = new ArraySet<String>();
@@ -176,7 +180,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             }
         });
 
-        Switch flashback = (Switch) findViewById(R.id.flashSwitch);
         flashback.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
@@ -185,7 +188,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                     FlashBackMode fbm = new FlashBackMode(songs);
                     ArrayList<Song> newSongs = new ArrayList<Song>();
                     //newSongs.addAll(fbm.createQueue());
+                    editor.putBoolean("isOn", true);
                     launchNowPlaying(ms.getAlbumStorage().allSongs.getSongs());
+                }
+                else{
+                    editor.putBoolean("isOn", false);
                 }
             }
         });
@@ -214,11 +221,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             }
         });
 
-        setSwitch();
-
         //close event
-        isFlashBackOn = false;
-        Toast.makeText(getApplicationContext(), "vibe mode is off", Toast.LENGTH_SHORT).show();
+        //isFlashBackOn = false;
+        //Toast.makeText(getApplicationContext(), "vibe mode is off", Toast.LENGTH_SHORT).show();
         //
 
         /*
@@ -452,51 +457,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
     }
 
-    private void setSwitch(){
-
-        flashSwitch = (Switch) findViewById(R.id.flashSwitch);
-        flashBackState = getApplicationContext().getSharedPreferences("isOn", MODE_PRIVATE);
-
-        /*
-        flashSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-
-                if(isChecked) {
-
-                    //run event;
-                    isFlashBackOn = true;
-                    Toast.makeText(getApplicationContext(), "flashback mode is on", Toast.LENGTH_SHORT).show();
-
-                } else {
-
-                    //close event
-                    isFlashBackOn = false;
-                    Toast.makeText(getApplicationContext(), "flashback mode is off", Toast.LENGTH_SHORT).show();
-                    //
-                }
-            }
-        });*/
-
-        /*
-         * I'm thinking that here, we should make a list of all of the Song objects from songs that
-         * the user has in their R.raw file, and store it in the phone's shared preferences.
-         */
-
-    }
-
-
-    @Override
-    public void onRestart(){
-
-        super.onRestart();
-
-        isFlashBackOn = MainActivity.flashBackState.getBoolean("isOn", isFlashBackOn);
-
-        flashSwitch.setChecked(isFlashBackOn);
-
-
-    }
     public void addStorage(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference dataRef = database.getReference();
