@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.ArraySet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -126,11 +127,18 @@ public class SongListActivity extends AppCompatActivity{
             int buttonId = songId + 1;
 
             //counter loop creates a new button. Attaches a 'new song' to the click listener.
-        File file = Environment.getExternalStorageDirectory();
-        //downloadManager.addCompletedDownload(file.getName(), file.getName(), true, "application/mp3", file.getAbsolutePath(),file.length(),true);
-        Song song = new Song(file.getName(),file.getName().hashCode());
-        actualSongs.add(song);
-        songs.add(song.getTitle());
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
+        Log.d("Files", "Path: " + path);
+        File directory = new File(path);
+        File[] files = directory.listFiles();
+        if (files != null) {
+            for (int i = 0; i < files.length; i++) {
+                //downloadManager.addCompletedDownload(file.getName(), file.getName(), true, "application/mp3", file.getAbsolutePath(),file.length(),true);
+                Song song = new Song(files[i].getName(), files[i].getName().hashCode());
+                actualSongs.add(song);
+                songs.add(song.getTitle());
+            }
+        }
             for (index = 0; index < actualSongs.size(); index++) {
                 final String fileName = actualSongs.get(index).getTitle();
 
