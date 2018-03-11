@@ -1,10 +1,14 @@
 package com.android.flashbackmusicv000;
 
 import android.app.Activity;
+import android.app.DownloadManager;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
+import android.os.Environment;
 import android.util.ArraySet;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -12,14 +16,18 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 import java.lang.reflect.Field;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Set;
+
 
 /**
  * Created by Chelsea, Janice on 3/2/18.
@@ -30,7 +38,6 @@ public class MusicStorage {
 
     private SongStorage ss = new SongStorage();
     private AlbumStorage as = new AlbumStorage();
-
 
     public SongStorage getSongStorage() {
         return ss;
@@ -108,46 +115,4 @@ public class MusicStorage {
         return (ArraySet<String>) neutral;
     }
 
-    public void addStorage(){
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference dataRef = database.getReference();
-        dataRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                String url = dataSnapshot.getValue().toString();
-                System.out.println(url);
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) { }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {}
-        });
-        //String url = dataRef.toString();
-        //Log.d("url", url);
-        /*StorageReference storageRef = database.getReference();
-        dataRef.child("URL Download").getDownloadURL().then(function(url) {
-            // `url` is the download URL for 'images/stars.jpg'
-            // This can be downloaded directly:
-            var xhr = new XMLHttpRequest();
-            xhr.responseType = 'blob';
-            xhr.onload = function(event) {
-                var blob = xhr.response;
-            };
-            xhr.open('GET', url);
-            xhr.send();
-            // Or inserted into an <img> element:
-            var img = document.getElementById('myimg');
-            img.src = url;
-        }).catch(function(error) {
-            // Handle any errors
-        });*/
-    }
 }

@@ -190,57 +190,18 @@ public class AlbumQueue extends AppCompatActivity {
 
                     //run event;
                     isFlashBackOn = true;
-                    Toast.makeText(getApplicationContext(), "flashback mode is on", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "vibe mode is on", Toast.LENGTH_SHORT).show();
 
                 } else {
 
 
                     //close event
                     isFlashBackOn = false;
-                    Toast.makeText(getApplicationContext(), "flashback mode is off", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "vibe mode is off", Toast.LENGTH_SHORT).show();
                     //
                 }
             }
         });
-    }
-
-    /*
-    @Override
-    public void onResume(){
-
-        super.onResume();
-// then you use
-        isFlashBackOn = MainActivity.flashBackState.getBoolean("isOn", isFlashBackOn);
-
-        switchy.setChecked(isFlashBackOn);
-    }
-    */
-
-
-    @Override
-    public void onBackPressed(){
-
-        //super.onBackPressed();
-        //sharedPreferences switch state.
-
-        SharedPreferences.Editor editor = MainActivity.flashBackState.edit();
-        editor.putBoolean("isOn", isFlashBackOn);
-
-        editor.apply();
-        finish();
-
-    }
-
-    @Override
-    public void onRestart(){
-
-        super.onRestart();
-
-        isFlashBackOn = MainActivity.flashBackState.getBoolean("isOn", isFlashBackOn);
-
-        switchy.setChecked(isFlashBackOn);
-
-
     }
 
 }
