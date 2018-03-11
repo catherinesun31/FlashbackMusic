@@ -11,6 +11,10 @@ import android.widget.Button;
 import com.android.flashbackmusicv000.R;
 import com.android.flashbackmusicv000.SongPlayingActivity;
 
+
+//querying and updating the model, model to handle database seperately
+//send data from input to the model,
+
 /**
  * Created by MobileComputerWizard on 3/10/2018.
  */
@@ -64,14 +68,12 @@ public class TrackListController extends Fragment {
 
             switch(v.getId()){
 
-                //querying and updating the model, model to handle database seperately
-                //send data from input to the model,
-                /*
+                //Decorator pattern could be used..... All doing the same thing.
                 case R.id.titleButton:  ;break;
                 case R.id.artistButton:  ;break;
                 case R.id.albumButton:  ;break;
                 case R.id.favoriteButton:  ;break;
-                */
+
             }
 
         }
