@@ -97,10 +97,11 @@ public class HashMap {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot == null || dataSnapshot.getValue() == null) {
                     //do nothing
+
                 }
                 else {
                     //list = dataSnapshot;
-                    dataSnapshot.getValue();
+                    getUsers((String)dataSnapshot.getValue());
                 }
             }
 
@@ -109,6 +110,13 @@ public class HashMap {
 
             }
         });
+        return dataList;
+    }
+
+    private ArrayList<ArrayList<String>> getUsers(String value) {
+        ArrayList<ArrayList<String>> dataList = new ArrayList<>();
+
+
         return dataList;
     }
 
