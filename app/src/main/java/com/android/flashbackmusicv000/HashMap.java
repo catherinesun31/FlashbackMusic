@@ -91,6 +91,7 @@ public class HashMap {
 
     private ArrayList<ArrayList<String>> getInstance() {
         ArrayList<ArrayList<String>> dataList = new ArrayList<>();
+        //TODO: get all usernames from Firebase, add them to a list
         Query queryRef = ref.orderByChild("anonymous_users");
         queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
