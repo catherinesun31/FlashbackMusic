@@ -1,11 +1,13 @@
 package com.android.flashbackmusicv000;
 
 import android.annotation.SuppressLint;
+import android.app.DownloadManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +24,7 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Set;
@@ -32,6 +35,7 @@ public class SongListActivity extends AppCompatActivity{
     private boolean isFlashBackOn;
     private boolean isFromAlbum = false;
     public int index;
+    DownloadManager downloadManager;
 
     SharedPreferences currentSongState;
     public ArraySet<String> favorites;
@@ -122,7 +126,11 @@ public class SongListActivity extends AppCompatActivity{
             int buttonId = songId + 1;
 
             //counter loop creates a new button. Attaches a 'new song' to the click listener.
-
+        File file = Environment.getExternalStorageDirectory();
+        //downloadManager.addCompletedDownload(file.getName(), file.getName(), true, "application/mp3", file.getAbsolutePath(),file.length(),true);
+        Song song = new Song(file.getName(),file.getName().hashCode());
+        actualSongs.add(song);
+        songs.add(song.getTitle());
             for (index = 0; index < actualSongs.size(); index++) {
                 final String fileName = actualSongs.get(index).getTitle();
 
