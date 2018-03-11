@@ -14,6 +14,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
@@ -499,7 +500,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         request.setDescription("Downloading Song from URL");
 
         //Set the local destination for the downloaded file to a path within the application's external files directory
-        request.setDestinationInExternalFilesDir(MainActivity.this, Environment.DIRECTORY_DOWNLOADS, "DownloadSong.mp3");
+        request.setDestinationInExternalFilesDir(MainActivity.this, Environment.DIRECTORY_DOWNLOADS, "Download.mp3");
         //Enqueue download and save into referenceId
         downloadReference = downloadManager.enqueue(request);
 
