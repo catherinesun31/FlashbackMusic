@@ -8,7 +8,7 @@ public interface IUserBuilder {
     String username = "Unknown username";
     String email = "Unknown email";
 
-    abstract void setUsername(String username);
-    abstract void setEmail(String email);
-    abstract IUser build();
+    void setUsername(String username);
+    void setEmail(String email);
+    User build();
 }
