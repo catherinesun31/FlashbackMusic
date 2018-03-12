@@ -6,6 +6,8 @@ import android.provider.Settings;
 
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 
+import java.util.UUID;
+
 public class UserBuilder implements IUserBuilder {
     private String username;
     private String email;
@@ -15,6 +17,10 @@ public class UserBuilder implements IUserBuilder {
     }
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String createID() {
+        return UUID.randomUUID().toString();
     }
 
     public User build() {
@@ -37,14 +43,12 @@ public class UserBuilder implements IUserBuilder {
             //create an anonymous user
             HashMap map = new HashMap();
 
-            /*
-            String deviceId = Settings.Secure.getString(this.getApplicationContext().
-                            getContentResolver(),
-                    Settings.Secure.ANDROID_ID);
+
+            String deviceId = createID();
             int val = Integer.parseInt(deviceId);
             String username = map.hash(val);
             user = new AnonymousUser(username);
-            */
+
         }
         else {
             //create a not-anonymous user

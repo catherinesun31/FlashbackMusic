@@ -13,12 +13,12 @@ import java.util.ArrayList;
 
 public class HashMap {
     private ArrayList<ArrayList<String>> list;
-    private FirebaseDatabase database;
     private DatabaseReference ref;
+    private static final String TAG = "HASH ERROR";
 
-    public HashMap() {
+    HashMap() {
         //Check that the hash map has not already been instantiated on Firebase
-        database = FirebaseDatabase.getInstance();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
         ref = database.getReference();
         ArrayList<ArrayList<String>> databaseInstance = getInstance();
         if (databaseInstance != null) {
@@ -43,6 +43,7 @@ public class HashMap {
         return list;
     }
 
+    //TODO: Test Hash functionality
     public String hash(int userVal) {
         int val = userVal%list.size();
         //hash to that index, if it has not already been used
@@ -64,7 +65,7 @@ public class HashMap {
                     val = 0;
                     ++count;
                     if (count > 5) {
-                        Log.e("HASH ERROR", "Iterated over the list more than 5 times." +
+                        Log.e(TAG, "Iterated over the list more than 5 times." +
                                 "Check for error.");
                         return "Default Fruit";
                     }
@@ -81,6 +82,7 @@ public class HashMap {
     }
 
     //Updates the Firebase Database with new information for the usernames
+    //TODO: check that update works on Firebase
     private void update() {
         for (ArrayList<String> pair: list) {
             String username = pair.get(0);
@@ -90,35 +92,38 @@ public class HashMap {
     }
 
     private ArrayList<ArrayList<String>> getInstance() {
-        ArrayList<ArrayList<String>> dataList = new ArrayList<>();
+        //ArrayList<ArrayList<String>> dataList;
         //TODO: get all usernames from Firebase, add them to a list
         Query queryRef = ref.orderByChild("anonymous_users");
         queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot == null || dataSnapshot.getValue() == null) {
-                    //do nothing
-
-                }
-                else {
-                    //list = dataSnapshot;
-                    getUsers((String)dataSnapshot.getValue());
-                }
-            }
+                if (dataSnapshot != null && dataSnapshot.getValue() != null) {
+                    ArrayList<ArrayList<String>> dataList = new ArrayList<>();
+                    if (dataSnapshot.getChildrenCount() != 0) {
+                        for (DataSnapshot child : dataSnapshot.getChildren()) {
+                            String username = child.toString();
+                            String val = (String) child.getValue();
+                            ArrayList<String> pair = new ArrayList<>();
+                            pair.set(0, username);
+                            pair.set(1, val);
+                            dataList.add(pair);
+                        }
+                        list = dataList;
+                    }
+                    else {
+                        Log.e(TAG, "No children");
+                        //list will still be null
+                    }
+                }            }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.e(TAG, "Cancelled");
             }
         });
-        return dataList;
-    }
-
-    private ArrayList<ArrayList<String>> getUsers(String value) {
-        ArrayList<ArrayList<String>> dataList = new ArrayList<>();
-
-
-        return dataList;
+        return null;
+        //return dataList;
     }
 
     private ArrayList<String> createFruits() {
