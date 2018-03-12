@@ -1,6 +1,7 @@
 package com.android.flashbackmusicv000;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -150,31 +151,7 @@ public class SignInActivity extends AppCompatActivity {
 
     public void signIn(boolean anon) {
         if (anon) {
-            mAuth.signInAnonymously()
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                // Sign in success, update UI with the signed-in user's information
-                                Log.d(TAG, "signInAnonymously:success");
-                                FirebaseUser user = mAuth.getCurrentUser();
-                                createUser(user);
-                                updateUI(user);
-                            }
-                            else {
-                                // If sign in fails, display a message to the user.
-                                Log.w(TAG, "signInAnonymously:failure", task.getException());
-                                Toast.makeText(SignInActivity.this, "Authentication failed.",
-                                        Toast.LENGTH_SHORT).show();
-                                try {
-                                    mAuth.signOut();
-                                }
-                                catch (Exception e) {
-                                    Log.e("Error", "Anonymous user error", e);
-                                }
-                            }
-                        }
-                    });
+            createUser(null);
         }
         else {
             Log.d("GOOGLE SIGN IN", "Signed in with Google");
@@ -182,6 +159,11 @@ public class SignInActivity extends AppCompatActivity {
             Intent signInIntent = googleSignInClient.getSignInIntent();
             startActivityForResult(signInIntent, RC_SIGN_IN);
         }
+    }
+
+    public SharedPreferences getSharedPrefs() {
+        SharedPreferences prefs = getSharedPreferences("IDS", MODE_PRIVATE);
+        return prefs;
     }
 
     private void updateUI(FirebaseUser user) {
@@ -197,13 +179,13 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void createUser(FirebaseUser user) {
+        IUserBuilder builder = new UserBuilder();
         if (user != null) {
             //Builder class to create a user with their information and go to main activity
             String email = user.getEmail();
             String displayName = user.getDisplayName();
             Log.i("User info", "Email: " + email + "\n" +
                     "Display Name: " + displayName);
-            IUserBuilder builder = new UserBuilder();
             builder.setEmail(email);
             builder.setUsername(displayName);
             User user1 = builder.build();
@@ -211,6 +193,7 @@ public class SignInActivity extends AppCompatActivity {
         }
         else {
             //Builder class to create user with anonymous information
+            User anonymousUser = builder.build();
         }
     }
 }

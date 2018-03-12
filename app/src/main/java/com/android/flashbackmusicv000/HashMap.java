@@ -1,5 +1,6 @@
 package com.android.flashbackmusicv000;
 
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
@@ -20,12 +21,9 @@ public class HashMap {
         //Check that the hash map has not already been instantiated on Firebase
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         ref = database.getReference();
-        ArrayList<ArrayList<String>> databaseInstance = getInstance();
-        if (databaseInstance != null) {
-            list = databaseInstance;
-        }
+        getInstance();
         //If it has not, create a new hash map
-        else {
+        if (list == null) {
             String val = "0";
             ArrayList<String> fruits = createFruits();
             list = new ArrayList<ArrayList<String>>();
@@ -91,7 +89,7 @@ public class HashMap {
         }
     }
 
-    private ArrayList<ArrayList<String>> getInstance() {
+    private void getInstance() {
         //ArrayList<ArrayList<String>> dataList;
         //TODO: get all usernames from Firebase, add them to a list
         Query queryRef = ref.orderByChild("anonymous_users");
@@ -115,15 +113,14 @@ public class HashMap {
                         Log.e(TAG, "No children");
                         //list will still be null
                     }
-                }            }
+                }
+            }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.e(TAG, "Cancelled");
             }
         });
-        return null;
-        //return dataList;
     }
 
     private ArrayList<String> createFruits() {

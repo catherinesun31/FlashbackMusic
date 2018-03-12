@@ -2,13 +2,12 @@ package com.android.flashbackmusicv000;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.provider.Settings;
-
-import com.google.android.gms.ads.identifier.AdvertisingIdClient;
-
+import android.support.v7.app.AppCompatActivity;
 import java.util.UUID;
 
-public class UserBuilder implements IUserBuilder {
+public class UserBuilder implements IUserBuilder  {
     private String username;
     private String email;
 
@@ -19,33 +18,22 @@ public class UserBuilder implements IUserBuilder {
         this.email = email;
     }
 
-    public String createID() {
-        return UUID.randomUUID().toString();
+    private int createID() {
+        int id = UUID.randomUUID().hashCode();
+        SignInActivity activity = new SignInActivity();
+        SharedPreferences preferences = activity.getSharedPrefs();
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("Id", id);
+        editor.apply();
+        return id;
     }
 
     public User build() {
-        /*
-        String un = "";
-        if (username != null) un = username;
-        else {
-            //Set username to be anonymous fruit
-        }
-        String em = "";
-        if (email != null) em = email;
-        else {
-            //set anonymous email
-        }
-        User user = new User(em, un);
-        return user;
-        */
         User user;
-        if (email.equals("")) {
+        if (email == null) {
             //create an anonymous user
             HashMap map = new HashMap();
-
-
-            String deviceId = createID();
-            int val = Integer.parseInt(deviceId);
+            int val = createID();
             String username = map.hash(val);
             user = new AnonymousUser(username);
 
@@ -54,8 +42,6 @@ public class UserBuilder implements IUserBuilder {
             //create a not-anonymous user
             user = new SignedInUser(username, email);
         }
-
-        return null;
-        //return user;
+        return user;
     }
 }
