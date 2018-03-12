@@ -91,7 +91,7 @@ public class SongPlayingActivity extends AppCompatActivity implements
         setSupportActionBar(toolbar);
 
         currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
-        isFlashBackOn = currentSongState.getBoolean("isOn", false);
+        isFlashBackOn = currentSongState.getBoolean("flashback", false);
         Intent i = getIntent();
         setSwitch();
         //bug could be here.... something to do with the intents....
@@ -115,6 +115,26 @@ public class SongPlayingActivity extends AppCompatActivity implements
             }
         });
         */
+        final SharedPreferences.Editor editor = currentSongState.edit();
+        Switch flashback = (Switch) findViewById(R.id.flashSwitch);
+        flashback.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    //LinkedList<Song> songs = new LinkedList<Song>();
+                    //songs.addAll(ms.getAlbumStorage().allSongs.getSongs());
+                    //FlashBackMode fbm = new FlashBackMode(songs);
+                    //ArrayList<Song> newSongs = new ArrayList<Song>();
+                    //newSongs.addAll(fbm.createQueue());
+                    editor.putBoolean("flashback", true);
+                    editor.commit();
+                }
+                else{
+                    editor.putBoolean("flashback", false);
+                    editor.commit();
+                }
+            }
+        });
+
         Button queue = findViewById(R.id.queue);
         queue.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -409,12 +429,14 @@ public class SongPlayingActivity extends AppCompatActivity implements
     }
     private void setSwitch(){
 
-        intent = getIntent();
+        //intent = getIntent();
         switchy = (Switch) findViewById(R.id.flashSwitch);
-        isFlashBackOn = intent.getBooleanExtra("isOn",isFlashBackOn);
+        isFlashBackOn = currentSongState.getBoolean("flashback", false);
+        //isFlashBackOn = intent.getBooleanExtra("isOn",isFlashBackOn);
 
         switchy.setChecked(isFlashBackOn);
 
+        /*
         switchy.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -433,7 +455,7 @@ public class SongPlayingActivity extends AppCompatActivity implements
                     //
                 }
             }
-        });
+        });*/
     }
 
     /*
@@ -445,19 +467,6 @@ public class SongPlayingActivity extends AppCompatActivity implements
     }
     */
 
-    @Override
-    public void onBackPressed(){
-
-        //super.onBackPressed();
-        //sharedPreferences switch state.
-
-        SharedPreferences.Editor editor = MainActivity.flashBackState.edit();
-        editor.putBoolean("isOn", isFlashBackOn);
-
-        editor.apply();
-        finish();
-
-    }
 
     protected void startIntentService() {
         Intent intent = new Intent(this, FetchAddressIntentService.class);
