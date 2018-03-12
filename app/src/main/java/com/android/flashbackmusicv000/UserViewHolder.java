@@ -6,16 +6,15 @@ import android.widget.TextView;
 
 import com.android.flashbackmusicv000.R;
 
+import org.w3c.dom.Text;
+
 
 /**
  * Created by Chelsea on 3/9/18.
  */
 
 public class UserViewHolder {
-    private final ImageView picture;
     private final TextView name;
-    private final TextView profileUrl;
-
     // It handles how to set bitmaps for the ImageView object referred by the
     // view holder
 
@@ -31,22 +30,18 @@ public class UserViewHolder {
      *            activity_friends_list layout.
      */
     public UserViewHolder(View layoutRow) {
-        picture = (ImageView) layoutRow.findViewById(R.id.imageView_contactPicture);
-        name = (TextView) layoutRow.findViewById(R.id.textView_contactName);
-        profileUrl = (TextView) layoutRow.findViewById(R.id.textView_contactProfileUrl);
+
     }
 
 
     /**
      * It returns the ImageView object referred by the view holder
      */
-    public ImageView getPicture() {
-        return picture;
+
+    public void setData(int position, User contact) {
+        name.setText(contact.getUsername());
+
     }
 
-    /**
-     * It returns a reference to the last task thrown to download a bitmap for
-     * the ImageView object referred by the view holder.
-     */
 
 }

@@ -117,20 +117,7 @@ public class FriendsList extends Activity implements GoogleApiClient.ConnectionC
 
         // Setting the adapter already loaded with all contacts retrieved from
         // the connected user account
-        final ListView mListViewContacts = (ListView) findViewById(R.id.listView_contactsList);
-        mListViewContacts.setAdapter(new UserAdapter(this, arrayListContacts));
-
-        // Setting a listener to monitor each line in the list view. Clicking it
-        // will raise an intent to open the contact's profile in the Google+
-        mListViewContacts.setOnItemClickListener(new OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-                User contact = (User) mListViewContacts.getItemAtPosition(position);
-
-            }
-
-        });
+        
 
     }
 
