@@ -1,6 +1,5 @@
 package com.android.flashbackmusicv000;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -25,10 +23,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-/**
- * Created by cailintreseder on 3/3/18.
- */
 
 public class SignInActivity extends AppCompatActivity {
     private static final String TAG = "GoogleActivity";
@@ -49,22 +43,23 @@ public class SignInActivity extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance();
         dataRef = database.getReference();
-        mAuth = FirebaseAuth.getInstance();
 
         GoogleSignInOptions gso = new GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
         googleSignInClient = GoogleSignIn.getClient(this, gso);
         mAuth = FirebaseAuth.getInstance();
 
-        Log.d("in", "onCreate");
+        mAuth.signOut();
+        googleSignInClient.signOut();
+
         com.google.android.gms.common.SignInButton signInButton =
                 findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("in", "onClick");
                 signIn(false);
             }
         });
@@ -82,17 +77,16 @@ public class SignInActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         // Check if user is signed in or anonymous, and go to Main Activity
-        if (mAuth.getCurrentUser() != null) {
-            finish();
-            startActivity(new Intent(this, MainActivity.class));
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            Log.d("LOGIN", "User is already logged in");
         }
+        updateUI(currentUser);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (isAnon) Log.d("is anonymous", "true");
-        else Log.d("is anonymous", "false");
 
         //if the requestCode is the Google Sign In code that we defined at starting
         if (requestCode == RC_SIGN_IN) {
@@ -106,16 +100,14 @@ public class SignInActivity extends AppCompatActivity {
                 //authenticating with firebase
                 firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
-                Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "Google sign in failed", e);
+                updateUI(null);
             }
         }
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
-
-        if (isAnon) Log.d("Is anonymous", "true");
-        else Log.d("Is anonymous", "false");
 
         //getting the auth credential
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
@@ -129,12 +121,26 @@ public class SignInActivity extends AppCompatActivity {
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
 
+                            if (user != null) {
+                                createUser(user);
+                            }
+                            updateUI(user);
+
                             Toast.makeText(SignInActivity.this, "User Signed In", Toast.LENGTH_SHORT).show();
-                        } else {
+                        }
+                        else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             Toast.makeText(SignInActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
+                            try {
+                                mAuth.signOut();
+                                googleSignInClient.signOut();
+                            }
+                            catch (Exception e) {
+                                Log.e("Error", "Authentication error", e);
+                            }
+                            updateUI(null);
 
                         }
                     }
@@ -152,40 +158,59 @@ public class SignInActivity extends AppCompatActivity {
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d(TAG, "signInAnonymously:success");
                                 FirebaseUser user = mAuth.getCurrentUser();
-                                //updateUI(user);
-                            } else {
+                                createUser(user);
+                                updateUI(user);
+                            }
+                            else {
                                 // If sign in fails, display a message to the user.
                                 Log.w(TAG, "signInAnonymously:failure", task.getException());
                                 Toast.makeText(SignInActivity.this, "Authentication failed.",
                                         Toast.LENGTH_SHORT).show();
-                                //updateUI(null);
+                                try {
+                                    mAuth.signOut();
+                                }
+                                catch (Exception e) {
+                                    Log.e("Error", "Anonymous user error", e);
+                                }
                             }
                         }
                     });
         }
         else {
+            Log.d("GOOGLE SIGN IN", "Signed in with Google");
 
             Intent signInIntent = googleSignInClient.getSignInIntent();
             startActivityForResult(signInIntent, RC_SIGN_IN);
-/*
-            mAuth.signInWithCredential(credential)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                Log.d(TAG, "signInWithCredential:success");
-                                FirebaseUser user = mAuth.getCurrentUser();
+        }
+    }
 
-                                Toast.makeText(SignInActivity.this, "User Signed In", Toast.LENGTH_SHORT).show();
-                            } else {
-                                // If sign in fails, display a message to the user.
-                                Log.w(TAG, "signInWithCredential:failure", task.getException());
-                                Toast.makeText(SignInActivity.this, "Authentication failed.",
-                                        Toast.LENGTH_SHORT).show();
+    private void updateUI(FirebaseUser user) {
+        if (user != null) {
+            //Check that the current user's information has been added to the
+            //database already
 
-                            }
-                        }
-                    });*/
+            //Go to main activity
+        }
+        else {
+            //Create an anonymous user to use as a proxy
+        }
+    }
+
+    private void createUser(FirebaseUser user) {
+        if (user != null) {
+            //Builder class to create a user with their information and go to main activity
+            String email = user.getEmail();
+            String displayName = user.getDisplayName();
+            Log.i("User info", "Email: " + email + "\n" +
+                    "Display Name: " + displayName);
+            IUserBuilder builder = new UserBuilder();
+            builder.setEmail(email);
+            builder.setUsername(displayName);
+            User user1 = builder.build();
+
+        }
+        else {
+            //Builder class to create user with anonymous information
         }
     }
 }

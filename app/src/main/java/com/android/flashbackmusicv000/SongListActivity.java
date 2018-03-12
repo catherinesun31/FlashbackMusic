@@ -1,17 +1,20 @@
 package com.android.flashbackmusicv000;
 
 import android.annotation.SuppressLint;
+import android.app.DownloadManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.ArraySet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +25,7 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Set;
@@ -32,6 +36,7 @@ public class SongListActivity extends AppCompatActivity{
     private boolean isFlashBackOn;
     private boolean isFromAlbum = false;
     public int index;
+    DownloadManager downloadManager;
 
     SharedPreferences currentSongState;
     public ArraySet<String> favorites;
@@ -122,7 +127,18 @@ public class SongListActivity extends AppCompatActivity{
             int buttonId = songId + 1;
 
             //counter loop creates a new button. Attaches a 'new song' to the click listener.
-
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
+        Log.d("Files", "Path: " + path);
+        File directory = new File(path);
+        File[] files = directory.listFiles();
+        if (files != null) {
+            for (int i = 0; i < files.length; i++) {
+                //downloadManager.addCompletedDownload(file.getName(), file.getName(), true, "application/mp3", file.getAbsolutePath(),file.length(),true);
+                Song song = new Song(files[i].getName(), files[i].getName().hashCode());
+                actualSongs.add(song);
+                songs.add(song.getTitle());
+            }
+        }
             for (index = 0; index < actualSongs.size(); index++) {
                 final String fileName = actualSongs.get(index).getTitle();
 
@@ -316,43 +332,18 @@ public class SongListActivity extends AppCompatActivity{
 
                     //run event;
                     isFlashBackOn = true;
-                    Toast.makeText(getApplicationContext(), "flashback mode is on", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "vibe mode is on", Toast.LENGTH_SHORT).show();
 
                 } else {
 
 
                     //close event
                     isFlashBackOn = false;
-                    Toast.makeText(getApplicationContext(), "flashback mode is off", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "vibe mode is off", Toast.LENGTH_SHORT).show();
                     //
                 }
             }
         });
-    }
-
-    @Override
-    public void onBackPressed(){
-
-        //super.onBackPressed();
-        //sharedPreferences switch state.
-
-        SharedPreferences.Editor editor = MainActivity.flashBackState.edit();
-        editor.putBoolean("isOn", isFlashBackOn);
-
-        editor.apply();
-        finish();
-
-    }
-
-    public void onRestart(){
-
-        super.onRestart();
-
-        isFlashBackOn = MainActivity.flashBackState.getBoolean("isOn", isFlashBackOn);
-
-        switchy.setChecked(isFlashBackOn);
-
-
     }
 
 }
