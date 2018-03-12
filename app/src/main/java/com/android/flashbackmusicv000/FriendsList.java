@@ -28,6 +28,8 @@ import com.google.android.gms.plus.model.people.PersonBuffer;
 import com.android.flashbackmusicv000.User;
 import com.android.flashbackmusicv000.UserAdapter;
 
+import java.util.ArrayList;
+
 /**
  * Created by Chelsea 3/9/18.
  */
@@ -36,7 +38,7 @@ public class FriendsList extends Activity implements GoogleApiClient.ConnectionC
         GoogleApiClient.OnConnectionFailedListener, ResultCallback<People.LoadPeopleResult>{
 
     private GoogleApiClient mGAC = null;
-    private static final String TAG = "Friendslist"
+    private static final String TAG = "Friendslist";
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -80,4 +82,58 @@ public class FriendsList extends Activity implements GoogleApiClient.ConnectionC
         Log.d(TAG, "onConnectionSuspended called");
     }
 
+    @Override
+    public void onResult(LoadPeopleResult peopleData){
+        Log.d(TAG, "onResult called - setting adapter");
+
+        User user;
+        ArrayList<User> arrayListContacts = new ArrayList<User>();
+
+        if (peopleData.getStatus().getStatusCode() == CommonStatusCodes.SUCCESS) {
+
+            PersonBuffer personBuffer = peopleData.getPersonBuffer();
+
+            try {
+
+                int count = personBuffer.getCount();
+                for (int i = 0; i < count; i++) {
+
+                    user = new User(personBuffer.get(i).hasId() ? personBuffer.get(i).getId()
+                            : null, personBuffer.get(i).hasDisplayName() ? personBuffer.get(i)
+                            .getDisplayName() : null, personBuffer.get(i).hasUrl() ? personBuffer
+                            .get(i).getUrl() : null, personBuffer.get(i).hasImage() ? personBuffer
+                            .get(i).getImage().getUrl() : null);
+
+                    arrayListContacts.add(user);
+
+                }
+
+            } finally {
+                personBuffer.close();
+            }
+        } else {
+            Log.e(TAG, "Error requesting visible circles : " + peopleData.getStatus());
+        }
+
+        // Setting the adapter already loaded with all contacts retrieved from
+        // the connected user account
+        final ListView mListViewContacts = (ListView) findViewById(R.id.listView_contactsList);
+        mListViewContacts.setAdapter(new UserAdapter(this, arrayListContacts));
+
+        // Setting a listener to monitor each line in the list view. Clicking it
+        // will raise an intent to open the contact's profile in the Google+
+        mListViewContacts.setOnItemClickListener(new OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+                User contact = (User) mListViewContacts.getItemAtPosition(position);
+
+            }
+
+        });
+
+    }
+
 }
+
+

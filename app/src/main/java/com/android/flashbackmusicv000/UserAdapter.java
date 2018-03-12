@@ -49,7 +49,7 @@ public class UserAdapter extends BaseAdapter{
         UserViewHolder viewHolder;
 
         if(convertView == null){
-            convertView = linf.inflate(R.layout.row, parent, false);
+          //  convertView = linf.inflate(R.layout.row, parent, false);
 
             viewHolder = new UserViewHolder(convertView);
             convertView.setTag(viewHolder);
@@ -59,7 +59,7 @@ public class UserAdapter extends BaseAdapter{
             viewHolder = (UserViewHolder) convertView.getTag();
         }
 
-        viewHolder.setData(position, (User) getItem(position));
+       // viewHolder.setData(position, (User) getItem(position));
 
         return convertView;
     }
