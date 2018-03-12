@@ -54,6 +54,7 @@ import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements LocationListener, OnMapReadyCallback {
 
+    //currentSOngState
     SharedPreferences currentSongState;
     //SharedPreferences widgetState;
     Set<String> favorites;
@@ -455,6 +456,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     private void setSwitch(){
 
         flashSwitch = (Switch) findViewById(R.id.flashSwitch);
+
         flashBackState = getApplicationContext().getSharedPreferences("isOn", MODE_PRIVATE);
 
         /*
@@ -495,8 +497,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
         flashSwitch.setChecked(isFlashBackOn);
 
-
     }
+
     public void addStorage(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference dataRef = database.getReference();
@@ -541,6 +543,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         //Set the local destination for the downloaded file to a path within the application's external files directory
         request.setDestinationInExternalFilesDir(MainActivity.this, Environment.DIRECTORY_DOWNLOADS, "DownloadSong.mp3");
         //Enqueue download and save into referenceId
+        //Environment.directory.downloads.....mp3.
         downloadReference = downloadManager.enqueue(request);
 
         return downloadReference;
