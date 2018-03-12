@@ -32,13 +32,15 @@ import java.util.ArrayList;
 
 /**
  * Created by Chelsea 3/9/18.
+ *
+ * ADDED TO THE SIGN IN ACTIVITY class
  */
 
 public class FriendsList extends Activity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, ResultCallback<People.LoadPeopleResult>{
 
     private GoogleApiClient mGAC = null;
-    private static final String TAG = "Friendslist";
+    private static final String TAG2 = "Friendslist";
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -51,7 +53,7 @@ public class FriendsList extends Activity implements GoogleApiClient.ConnectionC
     @Override
     protected  void onStart(){
         super.onStart();
-        Log.d(TAG, "onStart called");
+        Log.d(TAG2, "onStart called");
         mGAC.connect();
 
     }
@@ -59,7 +61,7 @@ public class FriendsList extends Activity implements GoogleApiClient.ConnectionC
     @Override
     protected void onStop(){
         super.onStop();
-        Log.d(TAG, "onStop called");
+        Log.d(TAG2, "onStop called");
 
         if(mGAC.isConnected()){
             mGAC.disconnect();
@@ -68,23 +70,23 @@ public class FriendsList extends Activity implements GoogleApiClient.ConnectionC
 
     @Override
     public void onConnected(Bundle connectionHint){
-        Log.d(TAG, "onConnection called");
+        Log.d(TAG2, "onConnection called");
 
         Plus.PeopleApi.loadVisible(mGAC, null).setResultCallback(this);
     }
     @Override
     public void onConnectionFailed(ConnectionResult result) {
-        Log.d(TAG, "onConnectionFailed called");
+        Log.d(TAG2, "onConnectionFailed called");
     }
 
     @Override
     public void onConnectionSuspended(int arg0) {
-        Log.d(TAG, "onConnectionSuspended called");
+        Log.d(TAG2, "onConnectionSuspended called");
     }
 
     @Override
     public void onResult(LoadPeopleResult peopleData){
-        Log.d(TAG, "onResult called - setting adapter");
+        Log.d(TAG2, "onResult called - setting adapter");
 
         User user;
         ArrayList<User> arrayListContacts = new ArrayList<User>();
@@ -112,12 +114,12 @@ public class FriendsList extends Activity implements GoogleApiClient.ConnectionC
                 personBuffer.close();
             }
         } else {
-            Log.e(TAG, "Error requesting visible circles : " + peopleData.getStatus());
+            Log.e(TAG2, "Error requesting visible circles : " + peopleData.getStatus());
         }
 
         // Setting the adapter already loaded with all contacts retrieved from
         // the connected user account
-        
+
 
     }
 

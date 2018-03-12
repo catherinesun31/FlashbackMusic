@@ -13,9 +13,17 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.plus.People;
+import com.google.android.gms.plus.Plus;
+import com.google.android.gms.plus.model.people.PersonBuffer;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.api.services.people.v1.PeopleService;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -24,9 +32,14 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class SignInActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class SignInActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener, ResultCallback<People.LoadPeopleResult> {
     private static final String TAG = "GoogleActivity";
     private static final int RC_SIGN_IN = 9001;
+    private GoogleApiClient mGAC = null;
+    private static final String TAG2 = "Friendslist";
 
     FirebaseDatabase database;
     DatabaseReference dataRef;
@@ -71,6 +84,10 @@ public class SignInActivity extends AppCompatActivity {
                 signIn(true);
             }
         });
+
+        mGAC = new GoogleApiClient.Builder(this).addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this).addApi(Plus.API)
+                .addScope(Plus.SCOPE_PLUS_LOGIN).addScope(Plus.SCOPE_PLUS_PROFILE).build();
     }
 
     @Override
@@ -82,6 +99,9 @@ public class SignInActivity extends AppCompatActivity {
             Log.d("LOGIN", "User is already logged in");
         }
         updateUI(currentUser);
+
+        Log.d(TAG2, "onStart called");
+        mGAC.connect();
     }
 
     @Override
@@ -213,4 +233,63 @@ public class SignInActivity extends AppCompatActivity {
             //Builder class to create user with anonymous information
         }
     }
+    @Override
+    public void onConnected(Bundle connectionHint){
+        Log.d(TAG2, "onConnection called");
+
+        Plus.PeopleApi.loadVisible(mGAC, null).setResultCallback(this);
+    }
+    @Override
+    public void onConnectionFailed(ConnectionResult result) {
+        Log.d(TAG2, "onConnectionFailed called");
+    }
+
+    @Override
+    public void onConnectionSuspended(int arg0) {
+        Log.d(TAG2, "onConnectionSuspended called");
+    }
+
+    @Override
+    public void onResult(People.LoadPeopleResult peopleData){
+        Log.d(TAG2, "onResult called - setting adapter");
+
+        /*
+        TODO get user from shared preferences to load
+         */
+        User user;
+        ArrayList<User> arrayListContacts = new ArrayList<User>();
+
+        if (peopleData.getStatus().getStatusCode() == CommonStatusCodes.SUCCESS) {
+
+            PersonBuffer personBuffer = peopleData.getPersonBuffer();
+
+            try {
+
+                int count = personBuffer.getCount();
+                for (int i = 0; i < count; i++) {
+
+                    user = new User(personBuffer.get(i).hasId() ? personBuffer.get(i).getId()
+                            : null, personBuffer.get(i).hasDisplayName() ? personBuffer.get(i)
+                            .getDisplayName() : null, personBuffer.get(i).hasUrl() ? personBuffer
+                            .get(i).getUrl() : null, personBuffer.get(i).hasImage() ? personBuffer
+                            .get(i).getImage().getUrl() : null);
+
+                    arrayListContacts.add(user);
+
+                }
+
+            } finally {
+                personBuffer.close();
+            }
+        } else {
+            Log.e(TAG2, "Error requesting visible circles : " + peopleData.getStatus());
+        }
+
+        // Setting the adapter already loaded with all contacts retrieved from
+        // the connected user account
+
+
+    }
+
+}
 }
