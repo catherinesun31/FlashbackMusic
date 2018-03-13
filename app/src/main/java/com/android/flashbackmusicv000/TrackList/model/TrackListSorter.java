@@ -1,5 +1,6 @@
 package com.android.flashbackmusicv000.TrackList.model;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Arrays;
@@ -8,9 +9,9 @@ import java.util.Arrays;
 public class TrackListSorter{
 	
 	private Comparator<DownloadedSong> sortStrategy;
-	private DownloadedSong[] dsList;
+	private ArrayList<DownloadedSong> dsList;
 
-	public TrackListSorter(DownloadedSong[] dsList){
+	public TrackListSorter(ArrayList<DownloadedSong> dsList){
 
 		this.dsList = dsList;
 
@@ -26,12 +27,12 @@ public class TrackListSorter{
 
 		if(this.sortStrategy != null) {
 
-			Arrays.sort(dsList, sortStrategy);
+			Collections.sort(dsList, sortStrategy);
 
 		}
 	}
 
-	public DownloadedSong[] getSongs(){
+	public ArrayList<DownloadedSong> getSongs(){
 
 		return dsList;
 
