@@ -478,12 +478,15 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
                     isFlashBackOn = true;
                     Toast.makeText(getApplicationContext(), "Vibe mode is on", Toast.LENGTH_SHORT).show();
 
+
+
                 } else {
 
 
                     //close event
                     isFlashBackOn = false;
                     Toast.makeText(getApplicationContext(), "Vibe mode is off", Toast.LENGTH_SHORT).show();
+
                     //
                 }
             }

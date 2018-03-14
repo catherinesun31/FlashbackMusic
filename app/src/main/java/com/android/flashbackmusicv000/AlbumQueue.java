@@ -198,7 +198,6 @@ public class AlbumQueue extends AppCompatActivity {
                     //close event
                     isFlashBackOn = false;
                     Toast.makeText(getApplicationContext(), "Vibe mode is off", Toast.LENGTH_SHORT).show();
-                    //
                 }
             }
         });

@@ -208,8 +208,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
         //close event
         isFlashBackOn = false;
+
         Toast.makeText(getApplicationContext(), "Vibe mode is off", Toast.LENGTH_SHORT).show();
-        //
+
 
         /*
          * I'm thinking that here, we should make a list of all of the Song objects from songs that

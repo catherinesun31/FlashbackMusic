@@ -322,6 +322,7 @@ public class SongListActivity extends AppCompatActivity {
 
                     //run event;
                     isFlashBackOn = true;
+
                     Toast.makeText(getApplicationContext(), "Vibe mode is on", Toast.LENGTH_SHORT).show();
 
                 } else {
@@ -329,6 +330,7 @@ public class SongListActivity extends AppCompatActivity {
 
                     //close event
                     isFlashBackOn = false;
+
                     Toast.makeText(getApplicationContext(), "Vibe mode is off", Toast.LENGTH_SHORT).show();
                     //
                 }
