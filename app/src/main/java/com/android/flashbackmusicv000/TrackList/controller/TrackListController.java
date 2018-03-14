@@ -29,8 +29,11 @@ import com.android.flashbackmusicv000.TrackList.model.DownloadedSong;
 import com.android.flashbackmusicv000.TrackList.model.FavouriteSorter;
 import com.android.flashbackmusicv000.TrackList.model.TitleSorter;
 import com.android.flashbackmusicv000.TrackList.model.TrackListSorter;
+import com.android.flashbackmusicv000.utility.Globals;
 
 import java.util.ArrayList;
+
+import static com.android.flashbackmusicv000.utility.Globals.isOn;
 
 
 //querying and updating the model, model to handle database seperately
@@ -177,37 +180,13 @@ public class TrackListController extends Fragment {
     //If I can globalise then I do not need to use shared preferences across different activities, as
     //state is globally accessible. The abstraction is that this is only one button.
     //private void setSwitch(){
-    private void setSwitch(){
+    private void setSwitch() {
 
+        Globals.currentContext = context;
         switchy = (Switch) view.findViewById(R.id.flashSwitch);
+        switchy.setChecked(Globals.isOn);
+        switchy.setOnCheckedChangeListener(new Globals.SwitchListener());
 
-        //isFlashBackOn = intent.getBooleanExtra("isOn",isFlashBackOn);
-
-        //currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
-        //isFlashBackOn = currentSongState.getBoolean("isOn", false);
-
-        //switchy.setChecked(isFlashBackOn);
-
-        switchy.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-
-                if(isChecked) {
-
-                    //run event;
-                    //isFlashBackOn = true;
-                    Toast.makeText(context.getApplicationContext(), "vibe mode is on", Toast.LENGTH_SHORT).show();
-
-                } else {
-
-
-                    //close event
-                    //isFlashBackOn = false;
-                    Toast.makeText(context.getApplicationContext(), "vibe mode is off", Toast.LENGTH_SHORT).show();
-                    //
-                }
-            }
-        });
     }
 
     private void setListeners(){
