@@ -19,6 +19,7 @@ public class Song implements Parcelable{
     //Janice add in:
     private int songId;
 
+    private String fileLocation;
     private String title;
     private String lastLocation;
     private String lastTimeOfDay;
@@ -29,10 +30,17 @@ public class Song implements Parcelable{
     private boolean favorite = false;
     private boolean dislike = false;
 
-    // Song Constructor
+    // Song Constructor for raw files
     public Song (String name, int songId) {
         title = name;
         this.songId = songId;
+    }
+
+    // Song Constructor for url links
+    public Song (String name, String fileLocation){
+        title = name;
+        this.fileLocation = fileLocation;
+        this.songId = 0;
     }
 
     // Setters for Song
@@ -78,6 +86,8 @@ public class Song implements Parcelable{
     // Getters for Song
     public int getSongId() {return songId;}
 
+    public String getFileLocation() {return fileLocation;}
+
     public String getTitle() {
         return title;
     }
@@ -117,6 +127,7 @@ public class Song implements Parcelable{
     public void writeToParcel(Parcel out, int flags) {
 
         out.writeInt(songId);
+        out.writeString(fileLocation);
         out.writeString(title);
         out.writeString(lastLocation);
         out.writeString(lastTime);
@@ -140,6 +151,7 @@ public class Song implements Parcelable{
     private Song(Parcel in) {
 
         songId = in.readInt();
+        fileLocation = in.readString();
         title = in.readString();
         lastLocation = in.readString();
         lastTime = in.readString();
