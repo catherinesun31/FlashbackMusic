@@ -425,7 +425,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         startService(intent);
     }
 
-    private String getLocation() {
+    public String getLocation() {
         Log.i("In: ", "SongPlayingActivity.getLocation");
 
         String address = "";
