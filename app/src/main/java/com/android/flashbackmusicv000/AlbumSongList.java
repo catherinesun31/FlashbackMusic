@@ -83,6 +83,8 @@ public class AlbumSongList extends AppCompatActivity {
 
         int totalSongs = getNumberOfSongs();
         MEDIA_RES_IDS = new int[totalSongs];
+        currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
+        isFlashBackOn = currentSongState.getBoolean("flashback", false);
         setWidgets();
 
         ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
@@ -384,32 +386,9 @@ public class AlbumSongList extends AppCompatActivity {
     private void setWidgets(){
 
         switchy = (Switch) findViewById(R.id.flashSwitch);
-        //isFlashBackOn = intent.getBooleanExtra("isOn",isFlashBackOn);
-        currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
-        isFlashBackOn = currentSongState.getBoolean("isOn", false);
-
+        isFlashBackOn = currentSongState.getBoolean("flashback", false);
         switchy.setChecked(isFlashBackOn);
 
-        switchy.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-
-                if(isChecked) {
-
-                    //run event;
-                    isFlashBackOn = true;
-                    Toast.makeText(getApplicationContext(), "vibe mode is on", Toast.LENGTH_SHORT).show();
-
-                } else {
-
-
-                    //close event
-                    isFlashBackOn = false;
-                    Toast.makeText(getApplicationContext(), "vibe mode is off", Toast.LENGTH_SHORT).show();
-                    //
-                }
-            }
-        });
     }
 }
 
