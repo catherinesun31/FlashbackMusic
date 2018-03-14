@@ -14,7 +14,7 @@ import org.w3c.dom.Text;
  */
 
 public class UserViewHolder {
-    private final TextView name;
+    //private final TextView name;
     // It handles how to set bitmaps for the ImageView object referred by the
     // view holder
 
@@ -39,7 +39,7 @@ public class UserViewHolder {
      */
 
     public void setData(int position, User contact) {
-        name.setText(contact.getUsername());
+        //name.setText(contact.getUsername());
 
     }
 
