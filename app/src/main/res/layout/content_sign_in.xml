@@ -9,13 +9,6 @@
     tools:context="com.android.flashbackmusicv000.SignInActivity"
     tools:showIn="@layout/activity_sign_in">
 
-<Button
-        android:id="@+id/friend_button"
-        android:layout_width="match_parent"
-        android:layout_height = "wrap_content"
-        android:text = "SHOW FRIENDS"
-        android:layout_gravity = "center_vertical"
-        />
 
     <TextView
         android:id="@+id/welcome_message"
