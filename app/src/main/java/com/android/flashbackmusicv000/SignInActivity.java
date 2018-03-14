@@ -228,6 +228,33 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
             builder.setUsername(displayName);
             User user1 = builder.build();
 
+           /* ArrayList<User> arrayListContacts = new ArrayList<User>();
+
+            if (peopleData.getStatus().getStatusCode() == CommonStatusCodes.SUCCESS) {
+
+                PersonBuffer personBuffer = peopleData.getPersonBuffer();
+
+                try {
+
+                    int count = personBuffer.getCount();
+                    for (int i = 0; i < count; i++) {
+
+                        user = new User(personBuffer.get(i).hasId() ? personBuffer.get(i).getId()
+                                : null, personBuffer.get(i).hasDisplayName() ? personBuffer.get(i)
+                                .getDisplayName() : null, personBuffer.get(i).hasUrl() ? personBuffer
+                                .get(i).getUrl() : null, personBuffer.get(i).hasImage() ? personBuffer
+                                .get(i).getImage().getUrl() : null);
+
+                        arrayListContacts.add(user);
+
+                    }
+
+                } finally {
+                    personBuffer.close();
+                }
+            } else {
+                Log.e(TAG2, "Error requesting visible circles : " + peopleData.getStatus());
+            }*/
         }
         else {
             //Builder class to create user with anonymous information
@@ -253,43 +280,8 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
     public void onResult(People.LoadPeopleResult peopleData){
         Log.d(TAG2, "onResult called - setting adapter");
 
-        /*
-        TODO get user from shared preferences to populate user's arraylist.
-         */
-        User user;
-        ArrayList<User> arrayListContacts = new ArrayList<User>();
-
-        if (peopleData.getStatus().getStatusCode() == CommonStatusCodes.SUCCESS) {
-
-            PersonBuffer personBuffer = peopleData.getPersonBuffer();
-
-            try {
-
-                int count = personBuffer.getCount();
-                for (int i = 0; i < count; i++) {
-
-                    user = new User(personBuffer.get(i).hasId() ? personBuffer.get(i).getId()
-                            : null, personBuffer.get(i).hasDisplayName() ? personBuffer.get(i)
-                            .getDisplayName() : null, personBuffer.get(i).hasUrl() ? personBuffer
-                            .get(i).getUrl() : null, personBuffer.get(i).hasImage() ? personBuffer
-                            .get(i).getImage().getUrl() : null);
-
-                    arrayListContacts.add(user);
-
-                }
-
-            } finally {
-                personBuffer.close();
-            }
-        } else {
-            Log.e(TAG2, "Error requesting visible circles : " + peopleData.getStatus());
-        }
-
-        // Setting the adapter already loaded with all contacts retrieved from
-        // the connected user account
-
 
     }
 
 }
-}
+

@@ -45,7 +45,7 @@ public class FriendsList extends Activity implements GoogleApiClient.ConnectionC
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.SignInActivity);
+        setContentView(R.layout.activity_sign_in);
         mGAC = new GoogleApiClient.Builder(this).addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this).addApi(Plus.API)
                 .addScope(Plus.SCOPE_PLUS_LOGIN).addScope(Plus.SCOPE_PLUS_PROFILE).build();
@@ -100,13 +100,13 @@ public class FriendsList extends Activity implements GoogleApiClient.ConnectionC
                 int count = personBuffer.getCount();
                 for (int i = 0; i < count; i++) {
 
-                    user = new User(personBuffer.get(i).hasId() ? personBuffer.get(i).getId()
+                  /*  user = new User(personBuffer.get(i).hasId() ? personBuffer.get(i).getId()
                             : null, personBuffer.get(i).hasDisplayName() ? personBuffer.get(i)
                             .getDisplayName() : null, personBuffer.get(i).hasUrl() ? personBuffer
                             .get(i).getUrl() : null, personBuffer.get(i).hasImage() ? personBuffer
                             .get(i).getImage().getUrl() : null);
 
-                    arrayListContacts.add(user);
+                    arrayListContacts.add(user);*/
 
                 }
 
