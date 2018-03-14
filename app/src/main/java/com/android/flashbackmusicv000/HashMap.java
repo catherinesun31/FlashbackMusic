@@ -1,13 +1,12 @@
 package com.android.flashbackmusicv000;
 
-import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -16,17 +15,25 @@ public class HashMap {
     private ArrayList<ArrayList<String>> list;
     private DatabaseReference ref;
     private static final String TAG = "HASH ERROR";
+    private static final String ANON = "anonymous_users";
 
     HashMap() {
         //Check that the hash map has not already been instantiated on Firebase
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        ref = database.getReference();
-        getInstance();
+        ref = database.getReference(ANON);
+        getInstance(new FirebaseCallback() {
+            @Override
+            public void onCallback(String value) {
+                Log.d(TAG, value);
+            }
+        });
+        //ref.child("Anonymous").setValue(true);
+
         //If it has not, create a new hash map
         if (list == null) {
             String val = "0";
             ArrayList<String> fruits = createFruits();
-            list = new ArrayList<ArrayList<String>>();
+            list = new ArrayList<>();
             for (String fruit : fruits) {
                 ArrayList<String> fruitPair = new ArrayList<String>();
                 fruitPair.add(0, fruit);
@@ -85,27 +92,42 @@ public class HashMap {
         for (ArrayList<String> pair: list) {
             String username = pair.get(0);
             String val = pair.get(1);
-            ref.child("anonymous_users").child(username).setValue(val);
+            ref.child(username).setValue(val);
         }
     }
 
-    private void getInstance() {
-        //ArrayList<ArrayList<String>> dataList;
+    private void getInstance(FirebaseCallback callback) {
+        final FirebaseCallback cb = callback;
         //TODO: get all usernames from Firebase, add them to a list
-        Query queryRef = ref.orderByChild("anonymous_users");
-        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        ref.addValueEventListener(new ValueEventListener() {
+        //queryRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    if (child.getKey().equals(ANON)) {
+                        for (DataSnapshot ds: child.getChildren()) {
+                            String username = ds.toString();
+                            String val = (String) ds.getValue();
+                            ArrayList<String> pair = new ArrayList<>();
+                            pair.set(0, username);
+                            cb.onCallback("USERNAME: " + username + " " + val);
+                        }
+                    }
+                }
                 if (dataSnapshot != null && dataSnapshot.getValue() != null) {
                     ArrayList<ArrayList<String>> dataList = new ArrayList<>();
                     if (dataSnapshot.getChildrenCount() != 0) {
                         for (DataSnapshot child : dataSnapshot.getChildren()) {
-                            String username = child.toString();
-                            String val = (String) child.getValue();
-                            ArrayList<String> pair = new ArrayList<>();
-                            pair.set(0, username);
-                            pair.set(1, val);
-                            dataList.add(pair);
+                            if (child.getKey().equals(ANON)) {
+                                for (DataSnapshot ds: child.getChildren()) {
+                                    String username = ds.toString();
+                                    String val = (String) ds.getValue();
+                                    ArrayList<String> pair = new ArrayList<>();
+                                    pair.set(0, username);
+                                    pair.set(1, val);
+                                    dataList.add(pair);
+                                }
+                            }
                         }
                         list = dataList;
                     }
@@ -121,6 +143,98 @@ public class HashMap {
                 Log.e(TAG, "Cancelled");
             }
         });
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    if (child.getKey().equals(ANON)) {
+                        for (DataSnapshot ds: child.getChildren()) {
+                            String username = ds.toString();
+                            String val = (String) ds.getValue();
+                            ArrayList<String> pair = new ArrayList<>();
+                            pair.set(0, username);
+                            cb.onCallback("USERNAME: " + username + " " + val);
+                        }
+                    }
+                }
+                if (dataSnapshot != null && dataSnapshot.getValue() != null) {
+                    ArrayList<ArrayList<String>> dataList = new ArrayList<>();
+                    if (dataSnapshot.getChildrenCount() != 0) {
+                        for (DataSnapshot child : dataSnapshot.getChildren()) {
+                            if (child.getKey().equals(ANON)) {
+                                for (DataSnapshot ds : child.getChildren()) {
+                                    String username = ds.toString();
+                                    String val = (String) ds.getValue();
+                                    ArrayList<String> pair = new ArrayList<>();
+                                    pair.set(0, username);
+                                    pair.set(1, val);
+                                    dataList.add(pair);
+                                }
+                            }
+                        }
+                        list = dataList;
+                    } else {
+                        Log.e(TAG, "No children");
+                        //list will still be null
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        ref.addChildEventListener(new ChildEventListener() {
+        //queryRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if (dataSnapshot != null && dataSnapshot.getValue() != null) {
+                    ArrayList<ArrayList<String>> dataList = new ArrayList<>();
+                    if (dataSnapshot.getChildrenCount() != 0) {
+                        for (DataSnapshot child : dataSnapshot.getChildren()) {
+                            if (child.getKey().equals(ANON)) {
+                                String username = child.toString();
+                                String val = (String) child.getValue();
+                                ArrayList<String> pair = new ArrayList<>();
+                                pair.set(0, username);
+                                pair.set(1, val);
+                                cb.onCallback("USERNAME: " + username + " " + val);
+                                dataList.add(pair);
+                            }
+                        }
+                        list = dataList;
+                    }
+                    else {
+                        Log.e(TAG, "No children");
+                        //list will still be null
+                    }
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e(TAG, "Cancelled");
+            }
+        });
+
     }
 
     private ArrayList<String> createFruits() {

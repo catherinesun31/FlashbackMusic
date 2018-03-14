@@ -10,6 +10,7 @@ import java.util.UUID;
 public class UserBuilder implements IUserBuilder  {
     private String username;
     private String email;
+    private int ID = -1;
 
     public void setUsername(String username) {
         this.username = username;
@@ -17,26 +18,18 @@ public class UserBuilder implements IUserBuilder  {
     public void setEmail(String email) {
         this.email = email;
     }
-
-    private int createID() {
-        int id = UUID.randomUUID().hashCode();
-        SignInActivity activity = new SignInActivity();
-        SharedPreferences preferences = activity.getSharedPrefs();
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt("Id", id);
-        editor.apply();
-        return id;
+    public void setID(int id) {
+        this.ID = id;
     }
 
     public User build() {
         User user;
-        if (email == null) {
-            //create an anonymous user
+        if (ID != -1) {
+            //create an anonymous username
             HashMap map = new HashMap();
-            int val = createID();
+            int val = this.ID;
             String username = map.hash(val);
-            user = new AnonymousUser(username);
-
+            user = new AnonymousUser(username, val);
         }
         else {
             //create a not-anonymous user

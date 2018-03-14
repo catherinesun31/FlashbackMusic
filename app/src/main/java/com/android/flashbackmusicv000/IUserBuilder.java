@@ -1,10 +1,10 @@
 package com.android.flashbackmusicv000;
 
-public interface IUserBuilder {
-    String username = "Unknown username";
-    String email = "Unknown email";
+import android.content.SharedPreferences;
 
+public interface IUserBuilder {
     void setUsername(String username);
     void setEmail(String email);
+    void setID(int id);
     User build();
 }
