@@ -102,18 +102,22 @@ public class SongListActivity extends AppCompatActivity{
             //do this to show songs in alphabetical order
             Collections.sort(songs);
 
+        final SharedPreferences.Editor editor = currentSongState.edit();
         Switch flashback = (Switch) findViewById(R.id.flashSwitch);
         flashback.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    /*
-                    LinkedList<Song> songs1 = new LinkedList<Song>();
-                    songs1.addAll(actualSongs);
-                    FlashBackMode fbm = new FlashBackMode(songs1);
-                    ArrayList<Song> newSongs = new ArrayList<Song>();
-                    newSongs.addAll(fbm.createQueue());
-                    launchActivity(newSongs);
-                    */
+                    //LinkedList<Song> songs = new LinkedList<Song>();
+                    //songs.addAll(ms.getAlbumStorage().allSongs.getSongs());
+                    //FlashBackMode fbm = new FlashBackMode(songs);
+                    //ArrayList<Song> newSongs = new ArrayList<Song>();
+                    //newSongs.addAll(fbm.createQueue());
+                    editor.putBoolean("flashback", true);
+                    editor.commit();
+                }
+                else{
+                    editor.putBoolean("flashback", false);
+                    editor.commit();
                 }
             }
         });
@@ -262,6 +266,7 @@ public class SongListActivity extends AppCompatActivity{
         @SuppressLint("ResourceType") String songButtonName = ((Button)findViewById(button.getId() - 1)).getText().toString();
         String name = button.getText().toString();
         currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
+        isFlashBackOn = currentSongState.getBoolean("flashback", false);
         SharedPreferences.Editor editor = currentSongState.edit();
         switch (name) {
             case "+":
@@ -330,29 +335,8 @@ public class SongListActivity extends AppCompatActivity{
     private void setWidgets(){
 
         switchy = (Switch) findViewById(R.id.flashSwitch);
-        isFlashBackOn = in.getBooleanExtra("isOn",isFlashBackOn);
+        isFlashBackOn = currentSongState.getBoolean("flashback",false);
         switchy.setChecked(isFlashBackOn);
-
-        switchy.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-
-                if(isChecked) {
-
-                    //run event;
-                    isFlashBackOn = true;
-                    Toast.makeText(getApplicationContext(), "vibe mode is on", Toast.LENGTH_SHORT).show();
-
-                } else {
-
-
-                    //close event
-                    isFlashBackOn = false;
-                    Toast.makeText(getApplicationContext(), "vibe mode is off", Toast.LENGTH_SHORT).show();
-                    //
-                }
-            }
-        });
     }
 
 }

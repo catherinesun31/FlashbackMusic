@@ -439,34 +439,9 @@ public class SongPlayingActivity extends AppCompatActivity implements
     }
 
     private void setWidgets(){
-
-        //intent = getIntent();
         switchy = (Switch) findViewById(R.id.flashSwitch);
         isFlashBackOn = currentSongState.getBoolean("flashback", false);
-        //isFlashBackOn = intent.getBooleanExtra("isOn",isFlashBackOn);
-
         switchy.setChecked(isFlashBackOn);
-
-        /*
-        switchy.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-
-                if(isChecked) {
-                    //run event;
-                    isFlashBackOn = true;
-                    Toast.makeText(getApplicationContext(), "vibe mode is on", Toast.LENGTH_SHORT).show();
-
-                } else {
-
-
-                    //close event
-                    isFlashBackOn = false;
-                    Toast.makeText(getApplicationContext(), "vibe mode is off", Toast.LENGTH_SHORT).show();
-                    //
-                }
-            }
-        });*/
     }
 
     /*
