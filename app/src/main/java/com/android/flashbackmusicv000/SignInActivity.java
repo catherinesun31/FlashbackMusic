@@ -254,7 +254,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
         Log.d(TAG2, "onResult called - setting adapter");
 
         /*
-        TODO get user from shared preferences to load
+        TODO get user from shared preferences to populate user's arraylist.
          */
         User user;
         ArrayList<User> arrayListContacts = new ArrayList<User>();
