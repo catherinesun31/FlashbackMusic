@@ -23,13 +23,17 @@ public class HashMap {
         ref = database.getReference(ANON);
         getInstance(new FirebaseCallback() {
             @Override
-            public void onCallback(String value) {
-                Log.d(TAG, value);
+            public void onCallback(String username, String value) {
+                ArrayList<String> pair = new ArrayList<>();
+                pair.add(0, username);
+                pair.add(1, value);
+                list.add(pair);
             }
         });
         //ref.child("Anonymous").setValue(true);
 
         //If it has not, create a new hash map
+        /*
         if (list == null) {
             String val = "0";
             ArrayList<String> fruits = createFruits();
@@ -41,7 +45,7 @@ public class HashMap {
                 list.add(fruitPair);
             }
             update();
-        }
+        }*/
     }
 
     public ArrayList<ArrayList<String>> getList() {
@@ -99,118 +103,23 @@ public class HashMap {
     private void getInstance(FirebaseCallback callback) {
         final FirebaseCallback cb = callback;
         //TODO: get all usernames from Firebase, add them to a list
-        ref.addValueEventListener(new ValueEventListener() {
-        //queryRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    if (child.getKey().equals(ANON)) {
-                        for (DataSnapshot ds: child.getChildren()) {
-                            String username = ds.toString();
-                            String val = (String) ds.getValue();
-                            ArrayList<String> pair = new ArrayList<>();
-                            pair.set(0, username);
-                            cb.onCallback("USERNAME: " + username + " " + val);
-                        }
-                    }
-                }
-                if (dataSnapshot != null && dataSnapshot.getValue() != null) {
-                    ArrayList<ArrayList<String>> dataList = new ArrayList<>();
-                    if (dataSnapshot.getChildrenCount() != 0) {
-                        for (DataSnapshot child : dataSnapshot.getChildren()) {
-                            if (child.getKey().equals(ANON)) {
-                                for (DataSnapshot ds: child.getChildren()) {
-                                    String username = ds.toString();
-                                    String val = (String) ds.getValue();
-                                    ArrayList<String> pair = new ArrayList<>();
-                                    pair.set(0, username);
-                                    pair.set(1, val);
-                                    dataList.add(pair);
-                                }
-                            }
-                        }
-                        list = dataList;
-                    }
-                    else {
-                        Log.e(TAG, "No children");
-                        //list will still be null
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e(TAG, "Cancelled");
-            }
-        });
-
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    if (child.getKey().equals(ANON)) {
-                        for (DataSnapshot ds: child.getChildren()) {
-                            String username = ds.toString();
-                            String val = (String) ds.getValue();
-                            ArrayList<String> pair = new ArrayList<>();
-                            pair.set(0, username);
-                            cb.onCallback("USERNAME: " + username + " " + val);
-                        }
-                    }
-                }
-                if (dataSnapshot != null && dataSnapshot.getValue() != null) {
-                    ArrayList<ArrayList<String>> dataList = new ArrayList<>();
-                    if (dataSnapshot.getChildrenCount() != 0) {
-                        for (DataSnapshot child : dataSnapshot.getChildren()) {
-                            if (child.getKey().equals(ANON)) {
-                                for (DataSnapshot ds : child.getChildren()) {
-                                    String username = ds.toString();
-                                    String val = (String) ds.getValue();
-                                    ArrayList<String> pair = new ArrayList<>();
-                                    pair.set(0, username);
-                                    pair.set(1, val);
-                                    dataList.add(pair);
-                                }
-                            }
-                        }
-                        list = dataList;
-                    } else {
-                        Log.e(TAG, "No children");
-                        //list will still be null
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
         ref.addChildEventListener(new ChildEventListener() {
         //queryRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot != null && dataSnapshot.getValue() != null) {
                     ArrayList<ArrayList<String>> dataList = new ArrayList<>();
-                    if (dataSnapshot.getChildrenCount() != 0) {
-                        for (DataSnapshot child : dataSnapshot.getChildren()) {
-                            if (child.getKey().equals(ANON)) {
-                                String username = child.toString();
-                                String val = (String) child.getValue();
-                                ArrayList<String> pair = new ArrayList<>();
-                                pair.set(0, username);
-                                pair.set(1, val);
-                                cb.onCallback("USERNAME: " + username + " " + val);
-                                dataList.add(pair);
-                            }
-                        }
-                        list = dataList;
-                    }
-                    else {
-                        Log.e(TAG, "No children");
-                        //list will still be null
-                    }
+                    String username = (String)dataSnapshot.getKey();
+                    String val = (String)dataSnapshot.getValue();
+                    ArrayList<String> pair = new ArrayList<>(2);
+                    pair.add(0, username);
+                    pair.add(1, val);
+                    cb.onCallback(username, val);
+                    dataList.add(pair);
+                }
+                else {
+                    Log.e(TAG, "No children");
+                    //list will still be null
                 }
             }
 
