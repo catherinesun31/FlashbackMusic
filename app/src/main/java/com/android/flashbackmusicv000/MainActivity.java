@@ -14,7 +14,6 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
@@ -30,7 +29,6 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
-import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -47,7 +45,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Set;
@@ -502,8 +499,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         request.setDescription("Downloading Song from URL");
 
         //Set the local destination for the downloaded file to a path within the application's external files directory
-        request.setDestinationInExternalFilesDir(MainActivity.this, Environment.DIRECTORY_DOWNLOADS, "Download.mp3");
+        // This puts it into Android/data/com.android.flashbackmusicv000/files/Download
+        //request.setDestinationInExternalFilesDir(MainActivity.this, "/storage/emulated/0/Download", "Song.mp3");
+
+        // This puts it into storage/emulated/0/Download
+        request.setDestinationInExternalPublicDir(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() , "Download.mp3");
         //Enqueue download and save into referenceId
+
         downloadReference = downloadManager.enqueue(request);
 
         return downloadReference;

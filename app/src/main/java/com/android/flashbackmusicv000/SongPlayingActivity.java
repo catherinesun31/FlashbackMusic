@@ -1,55 +1,43 @@
 package com.android.flashbackmusicv000;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
-
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.tasks.OnSuccessListener;
-
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
-import android.widget.CompoundButton;
-import android.widget.Switch;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class SongPlayingActivity extends AppCompatActivity implements
         OnMapReadyCallback {
@@ -94,11 +82,7 @@ public class SongPlayingActivity extends AppCompatActivity implements
         isFlashBackOn = currentSongState.getBoolean("flashback", false);
         Intent i = getIntent();
         setWidgets();
-        //bug could be here.... something to do with the intents....
 
-        //song being passed a parcelable, through the intent... but no parcelable was sent...???
-
-        //final Song song = i.getParcelableExtra("name_of_extra");
         songList = i.getParcelableArrayListExtra("name_of_extra");
         final Song song = songList.get(songIndex);
 
@@ -143,19 +127,37 @@ public class SongPlayingActivity extends AppCompatActivity implements
             }
         });
 
-        //final Song song = (Song) i.getParcelableExtra("name_of_extra");
-
         TextView songTitle = (TextView) findViewById(R.id.songtitle);
         songTitle.setText(song.getTitle());
 
-        final int nameInt = song.getSongId();
-        mediaPlayer = MediaPlayer.create(this, songList.get(songIndex).getSongId());
+        if( songList.get(songIndex).getSongId() > 0)
+            mediaPlayer = MediaPlayer.create(this, songList.get(songIndex).getSongId());
+        else {
+            try {
+                mediaPlayer = new MediaPlayer();
+                loadDownload(mediaPlayer,  songList.get(songIndex).getFileLocation());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
         MediaPlayer tempPlayer = mediaPlayer;
-        //getLocation(savedInstanceState);  TODO Janice: took this out, kept making errors in merge conflict
+        //getLocation(savedInstanceState);
 
         for(++songIndex ; songIndex < songList.size(); songIndex++){
             final Song song1 = songList.get(songIndex);
-            MediaPlayer nextPlayer = MediaPlayer.create(this, songList.get(songIndex).getSongId());
+            MediaPlayer nextPlayer = new MediaPlayer();
+            if(songList.get(songIndex).getSongId() > 0)
+                nextPlayer = MediaPlayer.create(this, songList.get(songIndex).getSongId());
+            else{
+                try {
+                    nextPlayer.setDataSource(songList.get(songIndex).getFileLocation());
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
             nextPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mediaPlayer) {
@@ -199,7 +201,6 @@ public class SongPlayingActivity extends AppCompatActivity implements
             tempPlayer = nextPlayer;
         }
         mediaPlayer.start();
-        //songIndex++;
 
         //getLocation(savedInstanceState);
 
@@ -427,6 +428,16 @@ public class SongPlayingActivity extends AppCompatActivity implements
             System.out.println(e.toString());
         }
     }
+
+    /*
+     * Loads a downloaded song onto the mediaPlayer and starts playing
+     */
+    public void loadDownload(MediaPlayer mediaPlayer, String url) throws Exception{
+        mediaPlayer.setDataSource(url);
+        mediaPlayer.prepare();
+        mediaPlayer.start();
+    }
+
     private void setWidgets(){
 
         //intent = getIntent();
