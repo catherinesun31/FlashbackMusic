@@ -79,7 +79,7 @@ public class SongPlayingActivity extends AppCompatActivity implements
         setSupportActionBar(toolbar);
 
         currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
-        isFlashBackOn = currentSongState.getBoolean("isOn", false);
+        isFlashBackOn = currentSongState.getBoolean("flashback", false);
         Intent i = getIntent();
         setWidgets();
 
@@ -109,10 +109,12 @@ public class SongPlayingActivity extends AppCompatActivity implements
                     //FlashBackMode fbm = new FlashBackMode(songs);
                     //ArrayList<Song> newSongs = new ArrayList<Song>();
                     //newSongs.addAll(fbm.createQueue());
-                    editor.putBoolean("isOn", true);
+                    editor.putBoolean("flashback", true);
+                    editor.commit();
                 }
                 else{
-                    editor.putBoolean("isOn", false);
+                    editor.putBoolean("flashback", false);
+                    editor.commit();
                 }
             }
         });
@@ -440,11 +442,12 @@ public class SongPlayingActivity extends AppCompatActivity implements
 
         //intent = getIntent();
         switchy = (Switch) findViewById(R.id.flashSwitch);
-        isFlashBackOn = currentSongState.getBoolean("isOn", false);
+        isFlashBackOn = currentSongState.getBoolean("flashback", false);
         //isFlashBackOn = intent.getBooleanExtra("isOn",isFlashBackOn);
 
         switchy.setChecked(isFlashBackOn);
 
+        /*
         switchy.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -463,7 +466,7 @@ public class SongPlayingActivity extends AppCompatActivity implements
                     //
                 }
             }
-        });
+        });*/
     }
 
     /*

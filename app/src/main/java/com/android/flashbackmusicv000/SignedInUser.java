@@ -1,19 +1,27 @@
 package com.android.flashbackmusicv000;
 
-public class AnonymousUser extends User {
+import java.util.ArrayList;
+
+public class SignedInUser extends User {
     private String email;
     private String username;
+    //private ArrayList<User> friends;
 
-    AnonymousUser(String username) {
-        email = "anonymous@email.com";
-        //set username as a random value from the phone
+    SignedInUser(String username, String email) {
         this.username = username;
+        this.email = email;
+        //friends = new ArrayList<User>();
     }
 
     public String getEmail() {
         return this.email;
     }
+
     public String getUsername() {
         return this.username;
+    }
+
+    public void addFriend() {
+
     }
 }

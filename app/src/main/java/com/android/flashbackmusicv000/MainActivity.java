@@ -186,11 +186,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                     FlashBackMode fbm = new FlashBackMode(songs);
                     ArrayList<Song> newSongs = new ArrayList<Song>();
                     //newSongs.addAll(fbm.createQueue());
-                    editor.putBoolean("isOn", true);
+                    editor.putBoolean("flashback", true);
+                    editor.commit();
                     launchNowPlaying(ms.getAlbumStorage().allSongs.getSongs());
                 }
                 else{
-                    editor.putBoolean("isOn", false);
+                    editor.putBoolean("flashback", false);
+                    editor.commit();
                 }
             }
         });
