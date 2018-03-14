@@ -1,8 +1,12 @@
 package com.android.flashbackmusicv000;
 
-/**
- * Created by cailintreseder on 3/5/18.
- */
+import android.content.ContentResolver;
+import android.content.Context;
+import android.provider.Settings;
+
+import com.google.android.gms.ads.identifier.AdvertisingIdClient;
+
+import java.util.UUID;
 
 public class UserBuilder implements IUserBuilder {
     private String username;
@@ -14,10 +18,13 @@ public class UserBuilder implements IUserBuilder {
     public void setEmail(String email) {
         this.email = email;
     }
-    String getUsername() { return this.username; }
-    String getEmail() { return this.email; }
 
-    public IUser build() {
+    public String createID() {
+        return UUID.randomUUID().toString();
+    }
+
+    public User build() {
+        /*
         String un = "";
         if (username != null) un = username;
         else {
@@ -30,5 +37,25 @@ public class UserBuilder implements IUserBuilder {
         }
         User user = new User(em, un);
         return user;
+        */
+        User user;
+        if (email.equals("")) {
+            //create an anonymous user
+            HashMap map = new HashMap();
+
+
+            String deviceId = createID();
+            int val = Integer.parseInt(deviceId);
+            String username = map.hash(val);
+            user = new AnonymousUser(username);
+
+        }
+        else {
+            //create a not-anonymous user
+            user = new SignedInUser(username, email);
+        }
+
+        return null;
+        //return user;
     }
 }

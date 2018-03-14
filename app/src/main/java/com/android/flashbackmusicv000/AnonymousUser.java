@@ -1,34 +1,19 @@
 package com.android.flashbackmusicv000;
 
-/**
- * Created by cailintreseder on 3/7/18.
- */
-
-public class AnonymousUser implements IUser {
+public class AnonymousUser extends User {
     private String email;
     private String username;
 
-    AnonymousUser() {
-
+    AnonymousUser(String username) {
+        email = "anonymous@email.com";
+        //set username as a random value from the phone
+        this.username = username;
     }
 
     public String getEmail() {
         return this.email;
     }
-
     public String getUsername() {
         return this.username;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void addFriend() {
-
     }
 }

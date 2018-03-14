@@ -54,6 +54,8 @@ public class AlbumSongList extends AppCompatActivity {
     private Intent intent;
     private ArrayList<Song> actualSongs;
 
+    private SharedPreferences currentSongState;
+
     //MEDIA_RES_IDS = new int[totalSongs];
 
 
@@ -382,7 +384,10 @@ public class AlbumSongList extends AppCompatActivity {
     private void setWidgets(){
 
         switchy = (Switch) findViewById(R.id.flashSwitch);
-        isFlashBackOn = intent.getBooleanExtra("isOn",isFlashBackOn);
+        //isFlashBackOn = intent.getBooleanExtra("isOn",isFlashBackOn);
+        currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
+        isFlashBackOn = currentSongState.getBoolean("isOn", false);
+
         switchy.setChecked(isFlashBackOn);
 
         switchy.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -409,19 +414,6 @@ public class AlbumSongList extends AppCompatActivity {
                 }
             }
         });
-    }
-    @Override
-    public void onDestroy(){
-
-        super.onDestroy();
-        //sharedPreferences switch state.
-        //keep the music playing on restart.
-
-        SharedPreferences.Editor editor = MainActivity.flashBackState.edit();
-        editor.putBoolean("isOn", isFlashBackOn);
-
-        editor.commit();
-
     }
 }
 

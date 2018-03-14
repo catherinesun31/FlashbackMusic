@@ -6,13 +6,17 @@
  */
 package com.android.flashbackmusicv000;
 
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -37,9 +41,13 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Set;
@@ -58,6 +66,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     public static MediaPlayer mediaPlayer;
     private boolean isFlashBackOn;
     private Switch flashSwitch;
+    String url;
+
     public static SharedPreferences flashBackState;
 
 
@@ -86,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     protected String mCityOutput;
     protected String mStateOutput;
     private MusicStorage ms;
+    DownloadManager downloadManager;
 
     FirebaseDatabase database;
     DatabaseReference dataRef;
@@ -117,12 +128,16 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         neutralNow = 0;
 
         currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
-        SharedPreferences.Editor editor = currentSongState.edit();
+        final SharedPreferences.Editor editor = currentSongState.edit();
 
         Set<String> fave = currentSongState.getStringSet("favorites", null);
         Set<String> dis = currentSongState.getStringSet("disliked", null);
         Set<String> neut = currentSongState.getStringSet("neutral", null);
+
         isFlashBackOn = currentSongState.getBoolean("flashback", false);
+        Switch flashback = (Switch) findViewById(R.id.flashSwitch);
+        flashback.setChecked(isFlashBackOn);
+
 
 
         favorites = new ArraySet<String>();
@@ -158,15 +173,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference dataRef = database.getReference();
                     dataRef.child("URLDownload").setValue(getUrl);
-                    ms.addStorage();
+                    addStorage();
                     return true;
                 }
                 return false;
             }
         });
 
-
-        Switch flashback = (Switch) findViewById(R.id.flashSwitch);
         flashback.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
@@ -175,7 +188,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                     FlashBackMode fbm = new FlashBackMode(songs);
                     ArrayList<Song> newSongs = new ArrayList<Song>();
                     //newSongs.addAll(fbm.createQueue());
+                    editor.putBoolean("flashback", true);
+                    editor.commit();
                     launchNowPlaying(ms.getAlbumStorage().allSongs.getSongs());
+                }
+                else{
+                    editor.putBoolean("flashback", false);
+                    editor.commit();
                 }
             }
         });
@@ -203,8 +222,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                 launchAlbums(ms.getAlbumStorage().getAlbums());
             }
         });
-
-        setSwitch();
 
         //close event
         isFlashBackOn = false;
@@ -530,50 +547,53 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
     }
 
-    private void setSwitch(){
-
-        flashSwitch = (Switch) findViewById(R.id.flashSwitch);
-        flashBackState = getApplicationContext().getSharedPreferences("isOn", MODE_PRIVATE);
-
-        /*
-        flashSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+    public void addStorage(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference dataRef = database.getReference();
+        dataRef.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-
-                if(isChecked) {
-
-                    //run event;
-                    isFlashBackOn = true;
-                    Toast.makeText(getApplicationContext(), "flashback mode is on", Toast.LENGTH_SHORT).show();
-
-                } else {
-
-                    //close event
-                    isFlashBackOn = false;
-                    Toast.makeText(getApplicationContext(), "flashback mode is off", Toast.LENGTH_SHORT).show();
-                    //
-                }
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                url = dataSnapshot.getValue().toString();
+                String downloadRoute = Environment.getExternalStorageDirectory().toString();
+                Uri music_uri = Uri.parse(url);
+                DownloadData(music_uri);
             }
-        });*/
 
-        /*
-         * I'm thinking that here, we should make a list of all of the Song objects from songs that
-         * the user has in their R.raw file, and store it in the phone's shared preferences.
-         */
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) { }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
 
     }
+    private long DownloadData (Uri uri) {
 
+        long downloadReference;
 
-    @Override
-    public void onRestart(){
+        downloadManager = (DownloadManager)getSystemService(DOWNLOAD_SERVICE);
 
-        super.onRestart();
+        // Create request for android download manager
+        DownloadManager.Request request = new DownloadManager.Request(uri);
 
-        isFlashBackOn = MainActivity.flashBackState.getBoolean("isOn", isFlashBackOn);
+        //Setting title of request
+        request.setTitle("Downloading Song");
 
-        flashSwitch.setChecked(isFlashBackOn);
+        //Setting description of request
+        request.setDescription("Downloading Song from URL");
 
+        //Set the local destination for the downloaded file to a path within the application's external files directory
+        request.setDestinationInExternalFilesDir(MainActivity.this, Environment.DIRECTORY_DOWNLOADS, "Download.mp3");
+        //Enqueue download and save into referenceId
+        downloadReference = downloadManager.enqueue(request);
 
+        return downloadReference;
     }
 }
 
