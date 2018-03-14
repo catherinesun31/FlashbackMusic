@@ -10,6 +10,4 @@ public abstract class User {
     String getUsername() {
         return username;
     }
-
-
 }

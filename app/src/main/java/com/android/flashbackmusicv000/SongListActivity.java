@@ -131,18 +131,26 @@ public class SongListActivity extends AppCompatActivity{
             int buttonId = songId + 1;
 
             //counter loop creates a new button. Attaches a 'new song' to the click listener.
-        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
-        Log.d("Files", "Path: " + path);
+        String path = Environment.getExternalStorageDirectory().toString() + "/storage/emulated/0/Download";
+        Log.d("Files", "Path: " + Environment.getExternalStorageDirectory().toString() + "/storage/emulated/0/Download");
         File directory = new File(path);
         File[] files = directory.listFiles();
         if (files != null) {
             for (int i = 0; i < files.length; i++) {
-                //downloadManager.addCompletedDownload(file.getName(), file.getName(), true, "application/mp3", file.getAbsolutePath(),file.length(),true);
-                Song song = new Song(files[i].getName(), files[i].getName().hashCode());
+                //downloadManager.addCompletedDownload(file.getName(), file.getName(), true, "application/mp3", file.getAbsolutePath(),file.length(),true)
+                String fileName = files[i].getName();
+                path += "/" + fileName;
+                System.out.println(path);
+                fileName = fileName.replace(".mp3", "");
+                Song song = new Song(fileName, path);
                 actualSongs.add(song);
                 songs.add(song.getTitle());
             }
         }
+        else{
+            System.err.println("Access denied");
+        }
+
             for (index = 0; index < actualSongs.size(); index++) {
                 final String fileName = actualSongs.get(index).getTitle();
 
@@ -179,6 +187,7 @@ public class SongListActivity extends AppCompatActivity{
                             if (!isFromAlbum) {
                                 songsToPlay = new ArrayList<Song>();
                                 songsToPlay.add(actualSongs.get(songIndex));
+                                System.out.println("HELLO? " + actualSongs.get(songIndex).getFileLocation());
                             }
                             launchActivity(songsToPlay);
                         }
@@ -290,7 +299,7 @@ public class SongListActivity extends AppCompatActivity{
         editor.commit();
     }
 
-    public void launchActivity(ArrayList<Song> songList /*Song song*/) {
+    public void launchActivity(ArrayList<Song> songList) {
         //new intent ... should have the
         Intent intent = new Intent(this, SongPlayingActivity.class);
 
