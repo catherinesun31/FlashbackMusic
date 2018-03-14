@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     //private Album allSongs;
 
     Context mContext;
+    private Switch switchy;
 
 //albums need to be passed...
 
@@ -142,7 +143,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         neutral = new ArraySet<String>();
         disliked = new ArraySet<String>();
 
-
+        currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
+        isFlashBackOn = currentSongState.getBoolean("flashback", false);
+        setWidgets();
 
         Song[] songs = {};
 
@@ -242,6 +245,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     protected void onStart() {
         Log.i("In: ", "MainActivity.onStart");
         super.onStart();
+        setWidgets();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         if (ActivityCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -509,6 +513,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         downloadReference = downloadManager.enqueue(request);
 
         return downloadReference;
+    }
+    private void setWidgets() {
+        switchy = (Switch) findViewById(R.id.flashSwitch);
+        isFlashBackOn = currentSongState.getBoolean("flashback", false);
+        switchy.setChecked(isFlashBackOn);
     }
 }
 
