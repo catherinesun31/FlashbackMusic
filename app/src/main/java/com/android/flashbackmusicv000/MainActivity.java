@@ -132,8 +132,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         neutral = new ArraySet<String>();
         disliked = new ArraySet<String>();
 
-        currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
-        isFlashBackOn = currentSongState.getBoolean("flashback", false);
+        //currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
+        //isFlashBackOn = currentSongState.getBoolean("flashback", false);
         setWidgets();
 
         Song[] songs = {};
@@ -576,6 +576,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
     }
 
+    /* DownloadData downloads the desired mp3 from the given url. Does checks on whether it has
+     * completely downloaded
+     *
+     * DEPENDS ON EMULATOR for the request.setDestinationInExternalPublicDir(Environ,getExternal...
+     *      for Nexus 4, just replace the whole first parameter with Environment.DIRECTORY_DOWNLOADS
+     *
+     * @param uri - the url for the mp3 we want
+     */
     private long DownloadData (Uri uri) {
 
         long downloadReference;
@@ -591,9 +599,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         //Setting description of request
         request.setDescription("Downloading Song from URL");
 
-        //Set the local destination for the downloaded file to a path within the application's external files directory
+        //Set local destination for downloaded file to path in application's external files directory
         // This puts it into storage/emulated/0/Download
+<<<<<<< HEAD
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS , "Download.mp3");
+=======
+        request.setDestinationInExternalPublicDir(Environment.getExternalStoragePublicDirectory
+                (Environment.DIRECTORY_DOWNLOADS).toString() , "Download.mp3");
+>>>>>>> a497175688958e02c49e3e7508c933cba9991ddf
         //Enqueue download and save into referenceId
 
         downloadReference = downloadManager.enqueue(request);
@@ -611,7 +624,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             status = DownloadStatus(cursor, downloadReference);
         }
         if(status){
-            ms.addDownload(this, Environment.getExternalStorageDirectory().toString() + "/storage/emulated/0/Download/Download.mp3");
+            ms.addNewDownload(this, Environment.getExternalStorageDirectory().toString() +
+                    "/storage/emulated/0/Download/Download.mp3", favorites, disliked, neutral);
         }
 
         return downloadReference;

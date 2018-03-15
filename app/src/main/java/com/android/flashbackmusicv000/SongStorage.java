@@ -21,11 +21,14 @@ public class SongStorage {
 
     }
 
+    /*
+     * Add a song to our song list
+     */
+    public void initializeSongs(Song currentSong, Set<String> favorites, Set<String> disliked,
+                                Set<String> neutral){
 
-    public void initializeSongs(Song currentSong, Set<String> fave, Set<String> dis, Set<String> neut){
 
-
-            getSongFavDisNeut(currentSong, fave, dis, neut);
+            setSongFavDisNeut(currentSong, favorites, disliked, neutral);
 
             //ADD TO SONGS LIST
             songsList.add(currentSong);
@@ -34,9 +37,9 @@ public class SongStorage {
     }
 
     /*
-    Update a song's favorited, disliked and neutralized songs.
+     * Update a song's favorited, disliked and neutralized.
      */
-    public void getSongFavDisNeut(Song currentSong,
+    public void setSongFavDisNeut(Song currentSong,
                                   Set<String> favorites,
                                   Set<String> disliked,
                                   Set<String> neutral){
@@ -47,9 +50,9 @@ public class SongStorage {
                 if (favorites.contains(currentSong.getTitle()) && !flag) {
                     currentSong.favorite();
                     //adding to the string arrayList.
-                    favorites.add(currentSong.getTitle());
+                    //favorites.add(currentSong.getTitle());
                     //this.favorites[favoritesNow] = currentSong.getTitle();
-                   // ++favoritesNow;
+                    // ++favoritesNow;
                     Log.d("Added a favorite", "Added a favorite");
                     flag = true;
                 }
@@ -60,9 +63,9 @@ public class SongStorage {
             if (!disliked.isEmpty()) {
                 if (disliked.contains(currentSong.getTitle()) && !flag) {
                     currentSong.dislike();
-                    disliked.add(currentSong.getTitle());
+                    //disliked.add(currentSong.getTitle());
                     //this.disliked[dislikedNow] = currentSong.getTitle();
-                   // ++dislikedNow;
+                    // ++dislikedNow;
                     Log.d("Added a disliked", "Added a disliked");
 
                 }
@@ -73,9 +76,8 @@ public class SongStorage {
             if (!neutral.isEmpty()) {
                 if (neutral.contains(currentSong.getTitle()) && !flag) {
                     currentSong.neutral();
-                    neutral.add(currentSong.getTitle());
+                    //neutral.add(currentSong.getTitle());
                     Log.d("Added a neutral", "Added a neutral");
-
                     //this.neutral[neutralNow] = currentSong.getTitle();
                     //++neutralNow;
                 }
