@@ -1,31 +1,12 @@
 package com.android.flashbackmusicv000;
 
 import android.app.Activity;
-import android.app.DownloadManager;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
-import android.os.Environment;
 import android.util.ArraySet;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 
 import java.lang.reflect.Field;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Set;
 
 
@@ -113,6 +94,30 @@ public class MusicStorage {
             }
         }
         return (ArraySet<String>) neutral;
+    }
+
+    public void addDownload(Activity a, String path){
+        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        mmr.setDataSource(path);
+
+        String title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+        String artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+        String albumName = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
+        String duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+
+        long mil = Long.parseLong(duration);
+        int seconds = (int) Math.ceil((mil / 1000) % 60);
+        int minutes = (int) Math.ceil((mil / (1000 * 60)) % 60);
+        duration = minutes + ":" + seconds;
+
+        Log.d("Information: ", "Title: " + title + "\n" +
+                "Artist: " + artist + "\n" +
+                "com.android.flashbackmusicv000.Album: " + albumName + "\n" +
+                "Duration: " + duration);
+
+
+        Song currentSong = new Song(title, path);
+        // DO THIS LATER
     }
 
 }
