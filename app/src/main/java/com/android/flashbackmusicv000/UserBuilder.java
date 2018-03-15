@@ -26,10 +26,9 @@ public class UserBuilder implements IUserBuilder  {
         User user;
         if (ID != -1) {
             //create an anonymous username
-            HashMap map = new HashMap();
-            int val = this.ID;
-            String username = map.hash(val);
-            user = new AnonymousUser(username, val);
+            HashMap map = new HashMap(this.ID);
+            //String username = map.hash(val);
+            user = new AnonymousUser(username, this.ID);
         }
         else {
             //create a not-anonymous user
