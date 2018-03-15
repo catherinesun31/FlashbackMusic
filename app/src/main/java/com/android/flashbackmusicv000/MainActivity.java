@@ -463,7 +463,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
     public void addStorage(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference dataRef = database.getReference();
+        final DatabaseReference dataRef = database.getReference();
         dataRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -507,7 +507,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         //request.setDestinationInExternalFilesDir(MainActivity.this, "/storage/emulated/0/Download", "Song.mp3");
 
         // This puts it into storage/emulated/0/Download
-        request.setDestinationInExternalPublicDir(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() , "Download.mp3");
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS , "Download.mp3");
         //Enqueue download and save into referenceId
 
         downloadReference = downloadManager.enqueue(request);
