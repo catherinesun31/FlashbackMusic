@@ -60,24 +60,12 @@ public class SignInActivity extends AppCompatActivity {
         googleSignInClient = GoogleSignIn.getClient(this, gso);
         mAuth = FirebaseAuth.getInstance();
 
-        //TODO: take out after testing purposes
-        mAuth.signOut();
-        googleSignInClient.signOut();
-
         com.google.android.gms.common.SignInButton signInButton =
                 findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                signIn(false);
-            }
-        });
-
-        Button anonymousUser = findViewById(R.id.anonymous_user);
-        anonymousUser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                signIn(true);
+                signIn();
             }
         });
     }
@@ -85,12 +73,12 @@ public class SignInActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in or anonymous, and go to Main Activity
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null) {
-            Log.d("LOGIN", "User is already logged in");
+        // Check if user is signed in, and go to Main Activity
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if (account != null) {
+            Log.i("LOGIN", account.getDisplayName() + " is already logged in");
+            launchActivity();
         }
-        //launchActivity(currentUser);
     }
 
     @Override
@@ -115,7 +103,7 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
+        Log.i(TAG, "firebaseAuthWithGoogle:" + acct.getId());
 
         //getting the auth credential
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
@@ -126,16 +114,16 @@ public class SignInActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Log.d(TAG, "signInWithCredential:success");
+                            Log.i(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
 
                             if (user != null) {
                                 User us = createUser(user);
-                                launchActivity(us);
+                                Log.i("User", "Username: " + us.getUsername() + "\n" +
+                                        "Email: " + us.getEmail());
+                                Toast.makeText(SignInActivity.this, user.getDisplayName() + " Signed In", Toast.LENGTH_SHORT).show();
+                                launchActivity();
                             }
-
-                            Toast.makeText(SignInActivity.this, "User Signed In", Toast.LENGTH_SHORT).show();
-
                         }
                         else {
                             // If sign in fails, display a message to the user.
@@ -155,41 +143,30 @@ public class SignInActivity extends AppCompatActivity {
 
     }
 
-    private void launchActivity(User user) {
+    private void launchActivity() {
         Intent intent = new Intent(this, MainActivity.class);
-        //intent.putExtra("User", user);
         startActivity(intent);
     }
 
-    public void signIn(boolean anon) {
-        if (anon) {
-            User user = createUser(null);
-            launchActivity(user);
-        }
-        else {
-            Log.d("GOOGLE SIGN IN", "Signed in with Google");
-
-            Intent signInIntent = googleSignInClient.getSignInIntent();
-            startActivityForResult(signInIntent, RC_SIGN_IN);
-        }
+    public void signIn() {
+        Intent signInIntent = googleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
     private User createUser(FirebaseUser firebaseUser) {
         IUserBuilder builder = new UserBuilder();
         User user;
-        if (firebaseUser != null) {
+        //if (firebaseUser != null) {
             //Builder class to create a user with their information and go to main activity
             String email = firebaseUser.getEmail();
             String displayName = firebaseUser.getDisplayName();
-            Log.i("User info", "Email: " + email + "\n" +
-                    "Display Name: " + displayName);
 
             builder.setEmail(email);
             builder.setUsername(displayName);
             user = builder.build();
-            Log.i("Builder info:", "Email: " + user.getEmail() + "\n" +
+            Log.i("User info:", "Email: " + user.getEmail() + "\n" +
                     "Username: " + user.getUsername());
-        }
+        /*}
         else {
             //Create a unique ID for the current anonymous user
             int ID = UUID.randomUUID().hashCode();
@@ -201,7 +178,7 @@ public class SignInActivity extends AppCompatActivity {
             builder.setID(ID);
             user = builder.build();
             Log.i("User info", "Username: " + user.getUsername());
-        }
+        }*/
         return user;
     }
 
