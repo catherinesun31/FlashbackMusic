@@ -132,8 +132,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         neutral = new ArraySet<String>();
         disliked = new ArraySet<String>();
 
-        currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
-        isFlashBackOn = currentSongState.getBoolean("flashback", false);
+        //currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
+        //isFlashBackOn = currentSongState.getBoolean("flashback", false);
         setWidgets();
 
         Song[] songs = {};
@@ -620,8 +620,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             status = DownloadStatus(cursor, downloadReference);
         }
         if(status){
-            ms.addDownload(this, Environment.getExternalStorageDirectory().toString() +
-                    "/storage/emulated/0/Download/Download.mp3");
+            ms.addNewDownload(this, Environment.getExternalStorageDirectory().toString() +
+                    "/storage/emulated/0/Download/Download.mp3", favorites, disliked, neutral);
         }
 
         return downloadReference;
