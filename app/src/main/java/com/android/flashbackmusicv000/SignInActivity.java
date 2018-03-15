@@ -73,8 +73,7 @@ public class SignInActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        Log.i("LOGIN", "In onStart");
-        // Check if user is signed in or anonymous, and go to Main Activity
+        // Check if user is signed in, and go to Main Activity
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if (account != null) {
             Log.i("LOGIN", account.getDisplayName() + " is already logged in");
@@ -120,6 +119,8 @@ public class SignInActivity extends AppCompatActivity {
 
                             if (user != null) {
                                 User us = createUser(user);
+                                Log.i("User", "Username: " + us.getUsername() + "\n" +
+                                        "Email: " + us.getEmail());
                                 Toast.makeText(SignInActivity.this, user.getDisplayName() + " Signed In", Toast.LENGTH_SHORT).show();
                                 launchActivity();
                             }
@@ -144,13 +145,10 @@ public class SignInActivity extends AppCompatActivity {
 
     private void launchActivity() {
         Intent intent = new Intent(this, MainActivity.class);
-        //intent.putExtra("User", user);
         startActivity(intent);
     }
 
     public void signIn() {
-        Log.i("GOOGLE SIGN IN", "Signed in with Google");
-
         Intent signInIntent = googleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -162,13 +160,11 @@ public class SignInActivity extends AppCompatActivity {
             //Builder class to create a user with their information and go to main activity
             String email = firebaseUser.getEmail();
             String displayName = firebaseUser.getDisplayName();
-            Log.i("User info", "Email: " + email + "\n" +
-                    "Display Name: " + displayName);
 
             builder.setEmail(email);
             builder.setUsername(displayName);
             user = builder.build();
-            Log.i("Builder info:", "Email: " + user.getEmail() + "\n" +
+            Log.i("User info:", "Email: " + user.getEmail() + "\n" +
                     "Username: " + user.getUsername());
         /*}
         else {
