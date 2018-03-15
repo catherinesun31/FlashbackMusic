@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.v7.widget.AppCompatButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -240,20 +241,24 @@ public class TrackListController extends Fragment {
     /**
      * Specialised button that has a particular colour and listener for this layout.
      */
-    private class TrackButton extends android.support.v7.widget.AppCompatButton implements View.OnClickListener{
+    private class TrackButton extends AppCompatButton implements View.OnClickListener{
 
-        private int defaultColour;
         private int highlightColour;
-
+        private ColorDrawable startButtonColour;
+        private int defaultColour;
         public TrackButton(int highlightColour){
 
             super(context);
-            ColorDrawable buttonColor = (ColorDrawable) this.getBackground();
-            this.defaultColour = buttonColor.getColor();
+            super.setText("Button");
+            this.setBackgroundColor(Color.RED);
+            this.startButtonColour = (ColorDrawable) this.getBackground();
+            defaultColour = startButtonColour.getColor();
+        //defaultColour = this.getColor();
+        //buttonColor.setColor(defaultColour);
+
             this.highlightColour = highlightColour;
 
         }
-
 
         public void onClick(View v) {
 
@@ -273,4 +278,5 @@ public class TrackListController extends Fragment {
             }
         }
     }
+
 }
