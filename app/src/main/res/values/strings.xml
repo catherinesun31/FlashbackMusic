@@ -16,7 +16,7 @@
     <string name="title_activity_get_location">Map</string>
 
     <string name="sign_in_request">Welcome to Flashback Music. Please sign in
-        to your Google account, or continue as an anonymous user.</string>
+        to your Google account.</string>
     <string name="email_address">Email:</string>
     <string name="password">Password:</string>
     <string name="anonymous">Continue as Anonymous</string>

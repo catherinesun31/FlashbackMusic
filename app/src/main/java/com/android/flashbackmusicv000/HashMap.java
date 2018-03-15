@@ -16,11 +16,13 @@ public class HashMap {
     private DatabaseReference ref;
     private static final String TAG = "HASH ERROR";
     private static final String ANON = "anonymous_users";
+    private boolean checked;
 
-    HashMap() {
+    HashMap(int ID) {
         //Check that the hash map has not already been instantiated on Firebase
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         ref = database.getReference(ANON);
+        checked = false;
         getInstance(new FirebaseCallback() {
             @Override
             public void onCallback(String username, String value) {
@@ -28,6 +30,7 @@ public class HashMap {
                 pair.add(0, username);
                 pair.add(1, value);
                 list.add(pair);
+                checked = true;
             }
         });
         //ref.child("Anonymous").setValue(true);
@@ -46,6 +49,10 @@ public class HashMap {
             }
             update();
         }*/
+    }
+
+    public boolean isChecked() {
+        return checked;
     }
 
     public ArrayList<ArrayList<String>> getList() {
