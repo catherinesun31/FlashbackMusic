@@ -160,10 +160,12 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
                 if ((keyevent.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
                     String getUrl = url.getText().toString();
+                    /*
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference dataRef = database.getReference();
                     dataRef.child("URLDownload").setValue(getUrl);
-                    addStorage();
+                    */
+                    addStorage(getUrl);
                     return true;
                 }
                 return false;
@@ -454,18 +456,20 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
     /* addStorage gets our Download url and stores it into the Firebase
      */
-    public void addStorage(){
+    public void addStorage(String url){
+        /*
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference dataRef = database.getReference();
         dataRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 url = dataSnapshot.getValue().toString();
+                */
                 String downloadRoute = Environment.getExternalStorageDirectory().toString();
                 Uri music_uri = Uri.parse(url);
                 DownloadData(music_uri);
             }
-
+/*
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
 
@@ -479,7 +483,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             public void onCancelled(DatabaseError databaseError) {}
         });
 
-    }
+    }*/
 
     private boolean DownloadStatus(Cursor cursor, long DownloadId){
 
@@ -601,12 +605,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
         //Set local destination for downloaded file to path in application's external files directory
         // This puts it into storage/emulated/0/Download
-<<<<<<< HEAD
+
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS , "Download.mp3");
-=======
-        request.setDestinationInExternalPublicDir(Environment.getExternalStoragePublicDirectory
-                (Environment.DIRECTORY_DOWNLOADS).toString() , "Download.mp3");
->>>>>>> a497175688958e02c49e3e7508c933cba9991ddf
+
         //Enqueue download and save into referenceId
 
         downloadReference = downloadManager.enqueue(request);
