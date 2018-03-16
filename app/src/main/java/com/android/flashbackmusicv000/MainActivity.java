@@ -154,11 +154,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         ms = new MusicStorage();
         neutral = ms.createStorage(MainActivity.this, f,d,n,favorites, disliked, neutral);
 
+        // EditText for download link user provides
         final EditText url = (EditText) findViewById(R.id.urlinput);
         url.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View view, int keyCode, KeyEvent keyevent) {
-
+                //Check when user hits <enter>
                 if ((keyevent.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    //get the link user provides
                     String getUrl = url.getText().toString();
                     /*
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
