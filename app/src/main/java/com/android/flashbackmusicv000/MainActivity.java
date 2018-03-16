@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     protected String mAreaOutput;
     protected String mCityOutput;
     protected String mStateOutput;
-    private MusicStorage ms;
+    public MusicStorage ms;
     DownloadManager downloadManager;
 
     FirebaseDatabase database;

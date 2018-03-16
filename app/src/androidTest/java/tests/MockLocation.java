@@ -1,4 +1,4 @@
-package com.android.flashbackmusicv000;
+package tests;
 
 import android.content.Context;
 import android.location.Location;

@@ -1,22 +1,24 @@
-package com.android.flashbackmusicv000;
+package tests;
 
-import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Bundle;
 import android.support.test.rule.ActivityTestRule;
 import android.util.Log;
+
+
+import com.android.flashbackmusicv000.MainActivity;
 
 import org.junit.*;
 
 
-import static android.content.Context.LOCATION_SERVICE;
 import static junit.framework.Assert.assertEquals;
+
+//@RunWith(AndroidJUnit4.class)
 
 /**
  * Created by Chelsea on 3/14/18.
  *
- * Utilizes MockLocation to test current location works correctly.
+ * TESTS MainActivity.getLocation()
+ * Utilizes tests.MockLocation to test current location works correctly.
  */
 
 public class LocationServiceTest {
@@ -25,9 +27,11 @@ public class LocationServiceTest {
     @Rule
     public ActivityTestRule<MainActivity> mA = new ActivityTestRule<MainActivity>(MainActivity.class);
 
-    @Before
+   @Before
     public void setup(){
-      //  mock = new MockLocation(LocationManager.NETWORK_PROVIDER, mA.getActivity());
+        MainActivity mainActivity = mA.getActivity();
+        //set to mockLocation somehow?
+       mock = new MockLocation(LocationManager.NETWORK_PROVIDER, mA.getActivity());
 
     }
 
@@ -36,10 +40,10 @@ public class LocationServiceTest {
     public void testUserLocationBlacks(){
 
         //Mock location is Black's beach.
-      //  mock.pushLocation(32.887261, -117.252967);
+        mock.pushLocation(32.887261, -117.252967);
         //set location in main activity
-       // Log.d("testUserLocation", mA.getActivity().getLocation());
-       // assertEquals(mA.getActivity().getLocation(), "");
+        Log.d("testUserLocation", mA.getActivity().getLocation());
+       assertEquals(mA.getActivity().getLocation(), "");
 
 
     }
