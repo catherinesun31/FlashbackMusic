@@ -456,7 +456,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
     }
 
-    /* addStorage gets our Download url and stores it into the Firebase
+    /* addStorage downloads an mp3 file from a given url
      */
     public void addStorage(String url){
         /*
@@ -467,7 +467,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 url = dataSnapshot.getValue().toString();
                 */
+                //gets the path to phone's Downloads folder
                 String downloadRoute = Environment.getExternalStorageDirectory().toString();
+                //change url from string to Uri
                 Uri music_uri = Uri.parse(url);
                 DownloadData(music_uri);
             }
@@ -488,98 +490,100 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     }*/
 
     private boolean DownloadStatus(Cursor cursor, long DownloadId){
+        if(cursor!=null && cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)>0 && cursor.getColumnIndex(DownloadManager.COLUMN_REASON) > 0) {
 
-        //column for download  status
-        int columnIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS);
-        int status = cursor.getInt(columnIndex);
-        //column for reason code if the download failed or paused
-        int columnReason = cursor.getColumnIndex(DownloadManager.COLUMN_REASON);
-        int reason = cursor.getInt(columnReason);
-        //get the download filename
-        int filenameIndex = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME);
-        String filename = cursor.getString(filenameIndex);
 
-        String statusText = "";
-        String reasonText = "";
+            //column for download  status
+            int columnIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS);
+            int status = cursor.getInt(columnIndex);
+            //column for reason code if the download failed or paused
+            int columnReason = cursor.getColumnIndex(DownloadManager.COLUMN_REASON);
+            int reason = cursor.getInt(columnReason);
+            //get the download filename
+            int filenameIndex = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME);
+            String filename = cursor.getString(filenameIndex);
 
-        switch(status){
-            case DownloadManager.STATUS_FAILED:
-                statusText = "STATUS_FAILED";
-                switch(reason){
-                    case DownloadManager.ERROR_CANNOT_RESUME:
-                        reasonText = "ERROR_CANNOT_RESUME";
-                        break;
-                    case DownloadManager.ERROR_DEVICE_NOT_FOUND:
-                        reasonText = "ERROR_DEVICE_NOT_FOUND";
-                        break;
-                    case DownloadManager.ERROR_FILE_ALREADY_EXISTS:
-                        reasonText = "ERROR_FILE_ALREADY_EXISTS";
-                        break;
-                    case DownloadManager.ERROR_FILE_ERROR:
-                        reasonText = "ERROR_FILE_ERROR";
-                        break;
-                    case DownloadManager.ERROR_HTTP_DATA_ERROR:
-                        reasonText = "ERROR_HTTP_DATA_ERROR";
-                        break;
-                    case DownloadManager.ERROR_INSUFFICIENT_SPACE:
-                        reasonText = "ERROR_INSUFFICIENT_SPACE";
-                        break;
-                    case DownloadManager.ERROR_TOO_MANY_REDIRECTS:
-                        reasonText = "ERROR_TOO_MANY_REDIRECTS";
-                        break;
-                    case DownloadManager.ERROR_UNHANDLED_HTTP_CODE:
-                        reasonText = "ERROR_UNHANDLED_HTTP_CODE";
-                        break;
-                    case DownloadManager.ERROR_UNKNOWN:
-                        reasonText = "ERROR_UNKNOWN";
-                        break;
-                }
-                break;
-            case DownloadManager.STATUS_PAUSED:
-                statusText = "STATUS_PAUSED";
-                switch(reason){
-                    case DownloadManager.PAUSED_QUEUED_FOR_WIFI:
-                        reasonText = "PAUSED_QUEUED_FOR_WIFI";
-                        break;
-                    case DownloadManager.PAUSED_UNKNOWN:
-                        reasonText = "PAUSED_UNKNOWN";
-                        break;
-                    case DownloadManager.PAUSED_WAITING_FOR_NETWORK:
-                        reasonText = "PAUSED_WAITING_FOR_NETWORK";
-                        break;
-                    case DownloadManager.PAUSED_WAITING_TO_RETRY:
-                        reasonText = "PAUSED_WAITING_TO_RETRY";
-                        break;
-                }
-                break;
-            case DownloadManager.STATUS_PENDING:
-                statusText = "STATUS_PENDING";
-                break;
-            case DownloadManager.STATUS_RUNNING:
-                statusText = "STATUS_RUNNING";
-                break;
-            case DownloadManager.STATUS_SUCCESSFUL:
-                statusText = "STATUS_SUCCESSFUL";
-                reasonText = "Filename:\n" + filename;
-                break;
+            String statusText = "";
+            String reasonText = "";
+
+            switch (status) {
+                case DownloadManager.STATUS_FAILED:
+                    statusText = "STATUS_FAILED";
+                    switch (reason) {
+                        case DownloadManager.ERROR_CANNOT_RESUME:
+                            reasonText = "ERROR_CANNOT_RESUME";
+                            break;
+                        case DownloadManager.ERROR_DEVICE_NOT_FOUND:
+                            reasonText = "ERROR_DEVICE_NOT_FOUND";
+                            break;
+                        case DownloadManager.ERROR_FILE_ALREADY_EXISTS:
+                            reasonText = "ERROR_FILE_ALREADY_EXISTS";
+                            break;
+                        case DownloadManager.ERROR_FILE_ERROR:
+                            reasonText = "ERROR_FILE_ERROR";
+                            break;
+                        case DownloadManager.ERROR_HTTP_DATA_ERROR:
+                            reasonText = "ERROR_HTTP_DATA_ERROR";
+                            break;
+                        case DownloadManager.ERROR_INSUFFICIENT_SPACE:
+                            reasonText = "ERROR_INSUFFICIENT_SPACE";
+                            break;
+                        case DownloadManager.ERROR_TOO_MANY_REDIRECTS:
+                            reasonText = "ERROR_TOO_MANY_REDIRECTS";
+                            break;
+                        case DownloadManager.ERROR_UNHANDLED_HTTP_CODE:
+                            reasonText = "ERROR_UNHANDLED_HTTP_CODE";
+                            break;
+                        case DownloadManager.ERROR_UNKNOWN:
+                            reasonText = "ERROR_UNKNOWN";
+                            break;
+                    }
+                    break;
+                case DownloadManager.STATUS_PAUSED:
+                    statusText = "STATUS_PAUSED";
+                    switch (reason) {
+                        case DownloadManager.PAUSED_QUEUED_FOR_WIFI:
+                            reasonText = "PAUSED_QUEUED_FOR_WIFI";
+                            break;
+                        case DownloadManager.PAUSED_UNKNOWN:
+                            reasonText = "PAUSED_UNKNOWN";
+                            break;
+                        case DownloadManager.PAUSED_WAITING_FOR_NETWORK:
+                            reasonText = "PAUSED_WAITING_FOR_NETWORK";
+                            break;
+                        case DownloadManager.PAUSED_WAITING_TO_RETRY:
+                            reasonText = "PAUSED_WAITING_TO_RETRY";
+                            break;
+                    }
+                    break;
+                case DownloadManager.STATUS_PENDING:
+                    statusText = "STATUS_PENDING";
+                    break;
+                case DownloadManager.STATUS_RUNNING:
+                    statusText = "STATUS_RUNNING";
+                    break;
+                case DownloadManager.STATUS_SUCCESSFUL:
+                    statusText = "STATUS_SUCCESSFUL";
+                    reasonText = "Filename:\n" + filename;
+                    break;
+            }
+
+            if (statusText == "STATUS_SUCCESSFUL") {
+                return true;
+            } else {
+
+                // Make a delay of 3 seconds so that next toast (Music Status) will not merge with this one.
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                    }
+                }, 3000);
+
+                return false;
+            }
         }
-
-        if(statusText == "STATUS_SUCCESSFUL") {
-            return true;
-        }
-        else {
-
-            // Make a delay of 3 seconds so that next toast (Music Status) will not merge with this one.
-            final Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                }
-            }, 3000);
-
-            return false;
-        }
-
+        return false;
     }
 
     /* DownloadData downloads the desired mp3 from the given url. Does checks on whether it has
