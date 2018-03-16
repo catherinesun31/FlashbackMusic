@@ -186,9 +186,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                 if (isChecked) {
                     LinkedList<Song> songs = new LinkedList<Song>();
                     songs.addAll(ms.getAlbumStorage().allSongs.getSongs());
-                    FlashBackMode fbm = new FlashBackMode(songs);
+                    VibeMode vm = new VibeMode(songs);
                     ArrayList<Song> newSongs = new ArrayList<Song>();
-                    //newSongs.addAll(fbm.createQueue());
+                    //newSongs.addAll(vm.createQueue());
                     editor.putBoolean("flashback", true);
                     editor.commit();
                     launchNowPlaying(ms.getAlbumStorage().allSongs.getSongs());
@@ -196,6 +196,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                 else{
                     editor.putBoolean("flashback", false);
                     editor.commit();
+                    //TODO put something here to stop playing the song
                 }
             }
         });

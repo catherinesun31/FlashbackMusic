@@ -1,79 +1,73 @@
 package com.android.flashbackmusicv000;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-/**
- * Created by cailintreseder on 2/18/18.
- */
-
-public class FlashBackMode {
-    LinkedList<Song> flashQueue;
+public class VibeMode {
+    LinkedList<Song> vibeQueue;
     LinkedList<Song> unsorted;
 
-    public FlashBackMode(LinkedList<Song> songList) {
+    public VibeMode(LinkedList<Song> songList) {
         unsorted = songList;
-        flashQueue = new LinkedList<Song>();
+        vibeQueue = new LinkedList<Song>();
         //createQueue();
     }
     public void turnFlashBackModeOn() {
 
     }
     public LinkedList<Song> createQueue() {
-        flashQueue.add(unsorted.get(0));
+        vibeQueue.add(unsorted.get(0));
         for (int i = 1; i < unsorted.size(); ++i) {
-            for (int j = 0; j < flashQueue.size(); ++j) {
-                Song compare = flashQueue.get(j);
+            for (int j = 0; j < vibeQueue.size(); ++j) {
+                Song compare = vibeQueue.get(j);
                 Song current = unsorted.get(i);
                 int compareTotal = getScore(compare);
                 int currentTotal = getScore(current);
                 if (compareTotal == currentTotal) {
                     if (compare.isFavorite() && !current.isFavorite()) {
-                        flashQueue.add(j+1, current);
+                        vibeQueue.add(j+1, current);
                     }
                     else if (!compare.isFavorite() && current.isFavorite()) {
-                        flashQueue.add(j, current);
+                        vibeQueue.add(j, current);
                     }
                     else if (compare.isFavorite() && current.isFavorite()) {
                         if (compare.getFullDate().after(current.getFullDate())) {
-                            flashQueue.add(j+1, current);
+                            vibeQueue.add(j+1, current);
                         }
                         else {
-                            flashQueue.add(j, current);
+                            vibeQueue.add(j, current);
                         }
                     }
                     else {
                         if (compare.getFullDate().after(current.getFullDate())) {
-                            flashQueue.add(j+1, current);
+                            vibeQueue.add(j+1, current);
                         }
                         else {
-                            flashQueue.add(j, current);
+                            vibeQueue.add(j, current);
                         }
                     }
                 }
                 else {
                     if (compareTotal > currentTotal) {
-                        flashQueue.add(j+1, current);
+                        vibeQueue.add(j+1, current);
                     }
                     else {
-                        flashQueue.add(j, current);
+                        vibeQueue.add(j, current);
                     }
                 }
             }
         }
         //Make sure that no song that wasn't played at a previous time/day/place, or is disliked,
         //will be played in flashback mode
-        for (Song song: flashQueue) {
-            if (getScore(song) == 0) flashQueue.remove(song);
-            if (song.isDislike()) flashQueue.remove(song);
+        for (Song song: vibeQueue) {
+            if (getScore(song) == 0) vibeQueue.remove(song);
+            if (song.isDislike()) vibeQueue.remove(song);
         }
-        return flashQueue;
+        return vibeQueue;
     }
 
     public int getScore(Song song) {

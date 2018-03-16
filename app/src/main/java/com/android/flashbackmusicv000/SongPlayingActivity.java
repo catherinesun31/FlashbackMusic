@@ -161,7 +161,7 @@ public class SongPlayingActivity extends AppCompatActivity implements
             nextPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mediaPlayer) {
-                    System.out.println("Supposed to change song info");
+                    Log.d("INFO", "Supposed to change song info");
                     //getLocation(savedInstanceState);
                     song1.setTime(getTime());
                     song1.setDate(getDate());

@@ -93,7 +93,7 @@ public class SignInActivity extends AppCompatActivity {
             try {
                 //Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-
+                Log.i(TAG, "Google sign in successful");
                 //authenticating with firebase
                 firebaseAuthWithGoogle(account);
             } catch (ApiException e) {

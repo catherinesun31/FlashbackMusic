@@ -1,8 +1,10 @@
 package com.android.flashbackmusicv000;
 
+import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -29,11 +31,15 @@ public class Song implements Parcelable{
     private Date date;
     private boolean favorite = false;
     private boolean dislike = false;
+    private int score;
+    private ArrayList<Location> locations;
 
     // Song Constructor for raw files
     public Song (String name, int songId) {
         title = name;
         this.songId = songId;
+        this.score = 0;
+        locations = new ArrayList<>();
     }
 
     // Song Constructor for url links
@@ -41,6 +47,8 @@ public class Song implements Parcelable{
         title = name;
         this.fileLocation = fileLocation;
         this.songId = 0;
+        this.score = 0;
+        locations = new ArrayList<>();
     }
 
     // Setters for Song
@@ -60,6 +68,10 @@ public class Song implements Parcelable{
         else {
             lastTimeOfDay = "Night";
         }
+    }
+
+    public void addLocationPlayed(Location location) {
+        locations.add(location);
     }
 
     public void setFullDate(Date date) { this.date = date; }
@@ -115,6 +127,22 @@ public class Song implements Parcelable{
     public boolean isDislike() { return dislike; }
 
     public Date getFullDate() { return date; }
+
+    public int score() { return score; }
+
+    public boolean wasPlayedNearby(Location location) {
+        for (Location l: locations) {
+            float[] results = new float[1];
+            Location.distanceBetween(location.getLatitude(), location.getLongitude(),
+                    l.getLatitude(), l.getLongitude(),results);
+            float distance = results[0];
+            boolean isClose = distance < 1000;
+            if (isClose) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     // Parcel uses this
     @Override
