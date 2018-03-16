@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     protected String mAreaOutput;
     protected String mCityOutput;
     protected String mStateOutput;
-    private MusicStorage ms;
+    public MusicStorage ms;
     DownloadManager downloadManager;
 
     FirebaseDatabase database;
@@ -420,7 +420,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         startService(intent);
     }
 
-    private String getLocation() {
+    public String getLocation() {
         Log.i("In: ", "SongPlayingActivity.getLocation");
 
         String address = "";
