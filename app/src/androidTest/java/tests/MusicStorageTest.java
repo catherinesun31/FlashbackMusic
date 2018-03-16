@@ -2,6 +2,7 @@ package tests;
 import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
+import android.util.Log;
 
 import com.android.flashbackmusicv000.AlbumStorage;
 import com.android.flashbackmusicv000.MainActivity;
@@ -11,6 +12,10 @@ import org.junit.*;
 
 /**
  * Created by Chelsea on 3/15/18.
+ *
+ * Class tests MusicStorage, AlbumStorage and SongStorage classes,
+ *  Album and Song classes,
+ * as well as part of onCreate() in MainActivity implicitly.
  */
 
 public class MusicStorageTest {
@@ -19,18 +24,9 @@ public class MusicStorageTest {
     @Rule
     ActivityTestRule<MainActivity> ma = new ActivityTestRule<MainActivity>(MainActivity.class);
 
-    /*@Override
-    protected Intent getActivityIntent() {
-        InstrumentationRegistry.getTargetContext();
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.putExtra();
-        return intent;
-    }
-*/
     /*
     Test that music storage correctly populated the arrays in MainActivity onCreate method
 
-    Also implicitly tests that songStorage and albumStorage were correctly initialized.
      */
 
     @Before
@@ -44,8 +40,17 @@ public class MusicStorageTest {
         SongStorage ss = currentActivity.ms.getSongStorage();
         AlbumStorage as = currentActivity.ms.getAlbumStorage();
 
+        //iterate through ss and as, log the values of the song and albums in the lists
+        //Testing was correctly populated and that the song and album classes were correctly populated
 
+        for(int i = 0; i < ss.songsList.size(); i++){
+            Log.d("Songtitle: ", ss.songsList.get(i).getTitle());
+            Log.d("Song full date", ss.songsList.get(i).getFullDate().toString());
+        }
 
+        for(int i = 0; i< as.getAlbums().size(); i++){
+            Log.d("Album name", as.getAlbums().get(i).getName());
+
+        }
     }
-
 }
