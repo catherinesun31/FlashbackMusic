@@ -7,9 +7,12 @@ import java.util.LinkedList;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class VibeMode {
+public class VibeMode implements UserObserver {
     LinkedList<Song> vibeQueue;
     LinkedList<Song> unsorted;
+    private SongSubject locationSubject;
+    private SongSubject timeSubject;
+    private SongSubject daySubject;
 
     public VibeMode(LinkedList<Song> songList) {
         unsorted = songList;
@@ -68,6 +71,10 @@ public class VibeMode {
             if (song.isDislike()) vibeQueue.remove(song);
         }
         return vibeQueue;
+    }
+
+    public void update() {
+
     }
 
     public int getScore(Song song) {
