@@ -10,7 +10,6 @@ import java.util.Set;
  */
 
 public class SongStorage {
-
     public ArrayList<Song> songsList;
 
 
@@ -18,22 +17,18 @@ public class SongStorage {
         if(songsList == null){
             songsList = new ArrayList<Song>();
         }
-
     }
 
     /*
      * Add a song to our song list
      */
-    public void initializeSongs(Song currentSong, Set<String> favorites, Set<String> disliked,
+    public void initializeSong(Song currentSong, Set<String> favorites, Set<String> disliked,
                                 Set<String> neutral){
-
 
             setSongFavDisNeut(currentSong, favorites, disliked, neutral);
 
             //ADD TO SONGS LIST
             songsList.add(currentSong);
-
-
     }
 
     /*
@@ -56,7 +51,6 @@ public class SongStorage {
                     Log.d("Added a favorite", "Added a favorite");
                     flag = true;
                 }
-
             }
         }
         if (disliked != null) {
@@ -67,7 +61,7 @@ public class SongStorage {
                     //this.disliked[dislikedNow] = currentSong.getTitle();
                     // ++dislikedNow;
                     Log.d("Added a disliked", "Added a disliked");
-
+                    flag = true;
                 }
 
             }
@@ -84,4 +78,5 @@ public class SongStorage {
             }
         }
     }
+
 }
