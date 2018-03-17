@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Set;
 
-public class SongListActivity extends AppCompatActivity{
+public class SongListActivity extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer;
     private boolean isFlashBackOn;
@@ -71,36 +71,37 @@ public class SongListActivity extends AppCompatActivity{
         }
 
 
-            currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
+        currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
 
-            Set<String> fave = currentSongState.getStringSet("favorites", null);
-            Set<String> dis = currentSongState.getStringSet("disliked", null);
-            Set<String> neut = currentSongState.getStringSet("neutral", null);
-            isFlashBackOn = currentSongState.getBoolean("flashback", false);
+        Set<String> fave = currentSongState.getStringSet("favorites", null);
+        Set<String> dis = currentSongState.getStringSet("disliked", null);
+        Set<String> neut = currentSongState.getStringSet("neutral", null);
+        isFlashBackOn = currentSongState.getBoolean("flashback", false);
 
-            favorites = new ArraySet<String>();
-            disliked = new ArraySet<String>();
-            neutral = new ArraySet<String>();
+        favorites = new ArraySet<String>();
+        disliked = new ArraySet<String>();
+        neutral = new ArraySet<String>();
 
-            favorites.addAll(fave);
-            neutral.addAll(neut);
-            disliked.addAll(dis);
+        favorites.addAll(fave);
+        neutral.addAll(neut);
+        disliked.addAll(dis);
 
-            setWidgets();
 
-            songs = new ArrayList<String>();
-            if (favorites != null) {
-                songs.addAll(favorites);
-            }
-            if (disliked != null) {
-                songs.addAll(disliked);
+        setWidgets();
 
-            }
-            if (neutral != null) {
-                songs.addAll(neutral);
-            }
-            //do this to show songs in alphabetical order
-            Collections.sort(songs);
+        songs = new ArrayList<String>();
+        if (favorites != null) {
+            songs.addAll(favorites);
+        }
+        if (disliked != null) {
+            songs.addAll(disliked);
+
+        }
+        if (neutral != null) {
+            songs.addAll(neutral);
+        }
+        //do this to show songs in alphabetical order
+        Collections.sort(songs);
 
         final SharedPreferences.Editor editor = currentSongState.edit();
         Switch flashback = (Switch) findViewById(R.id.flashSwitch);
@@ -122,7 +123,12 @@ public class SongListActivity extends AppCompatActivity{
             }
         });
 
-            ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
+
+
+
+
+
+        ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
 
             final float scale = this.getResources().getDisplayMetrics().density;
             int songId = songs.get(0).hashCode();
@@ -131,18 +137,19 @@ public class SongListActivity extends AppCompatActivity{
             int buttonId = songId + 1;
 
             //counter loop creates a new button. Attaches a 'new song' to the click listener.
-        String path = Environment.getExternalStorageDirectory().toString() + "/storage/emulated/0/Download";
+        String path = Environment.getExternalStorageDirectory().toString() + "/storage/emulated/0/Download/";
         Log.d("Files", "Path: " + Environment.getExternalStorageDirectory().toString() + "/storage/emulated/0/Download");
         File directory = new File(path);
         File[] files = directory.listFiles();
         if (files != null) {
             for (int i = 0; i < files.length; i++) {
+                System.out.println("POR QUEEEEEEEEEEEEEEEEEEE");
                 //downloadManager.addCompletedDownload(file.getName(), file.getName(), true, "application/mp3", file.getAbsolutePath(),file.length(),true)
                 String fileName = files[i].getName();
-                path += "/" + fileName;
                 System.out.println(path);
                 fileName = fileName.replace(".mp3", "");
-                Song song = new Song(fileName, path);
+                Song song = new Song(fileName, path + fileName);
+                System.out.println(actualSongs.size() + " " + songs.size());
                 actualSongs.add(song);
                 songs.add(song.getTitle());
             }
@@ -150,6 +157,7 @@ public class SongListActivity extends AppCompatActivity{
         else{
             System.err.println("Access denied");
         }
+        System.out.println(actualSongs.size() + " " + songs.size());
 
             for (index = 0; index < actualSongs.size(); index++) {
                 final String fileName = actualSongs.get(index).getTitle();
@@ -158,7 +166,7 @@ public class SongListActivity extends AppCompatActivity{
                 android.support.constraint.ConstraintLayout.LayoutParams params = new
                         android.support.constraint.ConstraintLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT, pixels);
-                button.setId(songs.get(index).hashCode());
+                button.setId(actualSongs.get(index).getTitle().hashCode());
                 button.setText(fileName);
                 button.setBackgroundColor(Color.rgb(230, 230, 230));
                 button.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
@@ -337,6 +345,28 @@ public class SongListActivity extends AppCompatActivity{
         switchy = (Switch) findViewById(R.id.flashSwitch);
         isFlashBackOn = currentSongState.getBoolean("flashback",false);
         switchy.setChecked(isFlashBackOn);
+        switchy.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+
+                if(isChecked) {
+
+                    //run event;
+                    isFlashBackOn = true;
+
+                    Toast.makeText(getApplicationContext(), "Vibe mode is on", Toast.LENGTH_SHORT).show();
+
+                } else {
+
+
+                    //close event
+                    isFlashBackOn = false;
+
+                    Toast.makeText(getApplicationContext(), "Vibe mode is off", Toast.LENGTH_SHORT).show();
+                    //
+                }
+            }
+        });
     }
 
 }

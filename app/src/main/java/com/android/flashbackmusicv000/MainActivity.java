@@ -11,11 +11,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.location.Location;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -29,6 +30,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -39,11 +41,11 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -60,23 +62,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     int favoritesNow;
     int dislikedNow;
     int neutralNow;
-    public static MediaPlayer mediaPlayer;
     private boolean isFlashBackOn;
     private Switch flashSwitch;
     String url;
 
     public static SharedPreferences flashBackState;
-
-
-    ArrayList<Song> songs1;
-
-    //private Album allSongs;
-
     Context mContext;
-    private Switch switchy;
-
 //albums need to be passed...
-
+    private Switch switchy;
 
     private FusedLocationProviderClient mFusedLocationClient;
     private Location locationManager;
@@ -94,8 +87,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     protected String mAreaOutput;
     protected String mCityOutput;
     protected String mStateOutput;
-    private MusicStorage ms;
-    DownloadManager downloadManager;
+    public MusicStorage ms;
+    public DownloadManager downloadManager;
+
 
     FirebaseDatabase database;
     DatabaseReference dataRef;
@@ -137,14 +131,12 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         Switch flashback = (Switch) findViewById(R.id.flashSwitch);
         flashback.setChecked(isFlashBackOn);
 
-
-
         favorites = new ArraySet<String>();
         neutral = new ArraySet<String>();
         disliked = new ArraySet<String>();
 
-        currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
-        isFlashBackOn = currentSongState.getBoolean("flashback", false);
+        //currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
+        //isFlashBackOn = currentSongState.getBoolean("flashback", false);
         setWidgets();
 
         Song[] songs = {};
@@ -164,17 +156,19 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
         ms = new MusicStorage();
         neutral = ms.createStorage(MainActivity.this, f,d,n,favorites, disliked, neutral);
-
+        //addStorage();
+        // EditText for download link user provides
         final EditText url = (EditText) findViewById(R.id.urlinput);
         url.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View view, int keyCode, KeyEvent keyevent) {
-
+                //Check when user hits <enter>
                 if ((keyevent.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    //get the link user provides
                     String getUrl = url.getText().toString();
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference dataRef = database.getReference();
-                    dataRef.child("URLDownload").setValue(getUrl);
                     addStorage();
+                    dataRef.child("URLDownload").setValue(getUrl);
                     return true;
                 }
                 return false;
@@ -213,7 +207,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         songsList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(ms.getAlbumStorage().allSongs == null){
+                    System.out.println("HELLO");
+                }
                 launchSongs(ms.getAlbumStorage().allSongs);
+
             }
         });
 
@@ -226,9 +224,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         });
 
         //close event
-        //isFlashBackOn = false;
-        //Toast.makeText(getApplicationContext(), "vibe mode is off", Toast.LENGTH_SHORT).show();
-        //
+        isFlashBackOn = false;
+
+        Toast.makeText(getApplicationContext(), "Vibe mode is off", Toast.LENGTH_SHORT).show();
+
 
         /*
          * I'm thinking that here, we should make a list of all of the Song objects from songs that
@@ -250,6 +249,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         if (ActivityCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.i("In: ", "MainActivity.onStart, permission is not granted");
             ActivityCompat.requestPermissions(this,
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     100);
@@ -316,6 +316,92 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         }
     }
 
+
+
+
+/*
+            // Janice add in: wanted to pass in the file location as Song variable
+            int songId = this.getResources().getIdentifier(fields[i].getName(), "raw", this.getPackageName());
+
+            String title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+            String artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+            String albumName = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
+            String duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+
+            long mil = Long.parseLong(duration);
+            int seconds = (int)Math.ceil((mil / 1000) % 60);
+            int minutes = (int)Math.ceil((mil / (1000*60)) % 60);
+            duration = minutes + ":" + seconds;
+
+            Log.d("Information: ", "Title: " + title + "\n" + "Artist: " + artist + "\n" +
+            "com.android.flashbackmusicv000.Album: " + albumName + "\n" +
+            "Duration: " + duration);
+
+            Song currentSong = new Song(title, songId);
+
+           /* The following conditional statements add to the ArrayLists of strings.
+            * will instead add the strings to the songs... and pass them as albums.
+            */
+
+            /* boolean flag = false;
+            if (favorites != null) {
+                if (!favorites.isEmpty()) {
+                    if (favorites.contains(title) && !flag) {
+                        currentSong.favorite();
+                        //adding to the string arrayList.
+                        this.favorites.add(currentSong.getTitle());
+                        //this.favorites[favoritesNow] = currentSong.getTitle();
+                        ++favoritesNow;
+                        flag = true;
+                    }
+
+                }
+            }
+            if (disliked != null) {
+                if (!disliked.isEmpty()) {
+                    if (disliked.contains(title) && !flag) {
+                        currentSong.dislike();
+                        this.disliked.add(currentSong.getTitle());
+                        //this.disliked[dislikedNow] = currentSong.getTitle();
+                        ++dislikedNow;
+                    }
+
+                }
+            }
+            if (neutral != null) {
+                if (!neutral.isEmpty()) {
+                    if (neutral.contains(title) && !flag) {
+                        currentSong.neutral();
+                        this.neutral.add(currentSong.getTitle());
+                        //this.neutral[neutralNow] = currentSong.getTitle();
+                        ++neutralNow;
+                    }
+                }
+            }
+            //if the album does not exist within the set of albums, add a new album to it with the
+            //set of songs. else simply add to a currently existing album.
+
+            if(!checkAlbum(albumName)){
+
+                albums.add(new Album(albumName, currentSong));
+
+            }
+            else {
+                Album albumToAddSong = retrieveAlbum(albumName);
+                albumToAddSong.addSong(new Song(title, songId));
+            }
+            if(i == 0) {
+                this.allSongs = new Album("All Songs From Main Activity",currentSong);
+            }
+            else {
+                this.allSongs.addSong(currentSong);
+            }
+            songs[i] = currentSong;
+        }
+
+        return songs;
+    }
+*/
     /*
      * launchSongs:
      * @params: none
@@ -324,14 +410,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
      * and songs are put inside.
      * This starts the SongsListActivity, and migrates to the list of all of the current songs
      */
-    // JANICE EDIT 02/13: PASSING IN THE ARRAY OF SONGS SO WE CAN PASS THROUGH TO SONGSLIST AND SONGSPLAYING
-
     public void launchSongs(Album allSongs) {
 
         //strings to be sent in an activity towards the SongListActivity
 
         Intent toSongListIntent = new Intent(this, SongListActivity.class);
-
 
         //All songs.....
         toSongListIntent.putExtra("songs",allSongs);
@@ -347,7 +430,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
 
     /*
-     * launchAlbums:
+     * launchAlbums: launches the AlbumsListActivity with all of the albums we have
+     * @params: albums - the list of albums the user currently has
+     * @return: void
      */
     public void launchAlbums(ArrayList<Album> albums) {
         Intent albumsIntent  = new Intent(this, AlbumQueue.class);
@@ -358,7 +443,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         startActivity(albumsIntent);
     }
 
-
+    /* @param: list of songs to check for vibe mode
+     *
+     * launchNowPlaying launches the SongPlayingActivity using our vibe mode settings
+     */
     public void launchNowPlaying(ArrayList<Song> songs) {
         Intent intent = new Intent(this, SongPlayingActivity.class);
 
@@ -426,7 +514,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         startService(intent);
     }
 
-    private String getLocation() {
+    public String getLocation() {
         Log.i("In: ", "SongPlayingActivity.getLocation");
 
         String address = "";
@@ -462,33 +550,172 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
     }
 
+    /* addStorage downloads an mp3 file from a given url
+     */
     public void addStorage(){
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference dataRef = database.getReference();
-        dataRef.addChildEventListener(new ChildEventListener() {
+        System.out.println("Add that storage");
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference dataRef = database.getReference("URLDownload");
+        dataRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 url = dataSnapshot.getValue().toString();
+                System.err.println("INSIDE HERE");
+                //gets the path to phone's Downloads folder
                 String downloadRoute = Environment.getExternalStorageDirectory().toString();
+                //change url from string to Uri
                 Uri music_uri = Uri.parse(url);
                 DownloadData(music_uri);
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+            /*@Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                System.err.println("INSIDE HERE");
+                //gets the path to phone's Downloads folder
+                String downloadRoute = Environment.getExternalStorageDirectory().toString();
+                //change url from string to Uri
+                Uri music_uri = Uri.parse(url);
+                DownloadData(music_uri);
+            }
 
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) { }
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                url = dataSnapshot.getValue().toString();
+                System.err.println("INSIDE HERE2");
+                //gets the path to phone's Downloads folder
+                String downloadRoute = Environment.getExternalStorageDirectory().toString();
+                //change url from string to Uri
+                Uri music_uri = Uri.parse(url);
+                DownloadData(music_uri);
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {}
+            public void onCancelled(DatabaseError databaseError) {}*/
         });
 
     }
-    private long DownloadData (Uri uri) {
+
+    private boolean DownloadStatus(Cursor cursor, DownloadManager dm) {
+        DownloadManager.Query query = null;
+        Cursor c = null;
+        query = new DownloadManager.Query();
+        String statusText = "";
+
+        if (query != null) {
+            query.setFilterByStatus(DownloadManager.STATUS_FAILED | DownloadManager.STATUS_PAUSED | DownloadManager.STATUS_SUCCESSFUL |
+                    DownloadManager.STATUS_RUNNING | DownloadManager.STATUS_PENDING);
+        } else {
+            return false;
+        }
+        c = dm.query(query);
+        if (c.moveToFirst()) {
+            int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
+            switch (status) {
+                case DownloadManager.STATUS_PAUSED:
+                    statusText = "STATUS_PAUSED";
+                    break;
+                case DownloadManager.STATUS_PENDING:
+                    statusText = "STATUS_PENDING";
+                    break;
+                case DownloadManager.STATUS_RUNNING:
+                    statusText = "STATUS_RUNNING";
+                    break;
+                case DownloadManager.STATUS_SUCCESSFUL:
+                    statusText = "STATUS_SUCCESSFUL";
+                    break;
+                case DownloadManager.STATUS_FAILED:
+                    statusText = "STATUS_FAILED";
+                    break;
+            }
+        }
+        /*if (cursor != null && cursor.getColumnIndex(dm.COLUMN_STATUS) > 0 && cursor.getColumnIndex(dm.COLUMN_REASON) > 0) {
+
+
+            //column for download  status
+            int columnIndex = cursor.getColumnIndex(dm.COLUMN_STATUS);
+            if (cursor.getInt(columnIndex) > 0) {
+                int status = cursor.getInt(columnIndex);
+                //column for reason code if the download failed or paused
+                int columnReason = cursor.getColumnIndex(dm.COLUMN_REASON);
+                int reason = cursor.getInt(columnReason);
+                //get the download filename
+                int filenameIndex = cursor.getColumnIndex(dm.COLUMN_LOCAL_FILENAME);
+                //String status1 = dm.COLUMN_STATUS;
+                //int status =
+                String filename = cursor.getString(filenameIndex);
+
+                String statusText = "";
+                String reasonText = "";
+
+                switch (status) {
+                    case DownloadManager.STATUS_FAILED:
+                        statusText = "STATUS_FAILED";
+                        break;
+                    case DownloadManager.STATUS_PAUSED:
+                        statusText = "STATUS_PAUSED";
+                        break;
+                    case DownloadManager.STATUS_PENDING:
+                        statusText = "STATUS_PENDING";
+                        break;
+                    case DownloadManager.STATUS_RUNNING:
+                        statusText = "STATUS_RUNNING";
+                        break;
+                    case DownloadManager.STATUS_SUCCESSFUL:
+                        statusText = "STATUS_SUCCESSFUL";
+                        break;
+                }
+
+                if (statusText == "STATUS_SUCCESSFUL") {
+                    return true;
+                } else {
+
+                    // Make a delay of 3 seconds so that next toast (Music Status) will not merge with this one.
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                        }
+                    }, 3000);
+
+                    return false;
+                }
+            }
+        }*/
+        if (statusText == "STATUS_SUCCESSFUL") {
+            return true;
+        }
+
+        // Make a delay of 3 seconds so that next toast (Music Status) will not merge with this one.
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+            }
+        }, 3000);
+
+        return false;
+    }
+
+    /* DownloadData downloads the desired mp3 from the given url. Does checks on whether it has
+     * completely downloaded
+     *
+     * DEPENDS ON EMULATOR for the request.setDestinationInExternalPublicDir(Environ,getExternal...
+     *      for Nexus 4, just replace the whole first parameter with Environment.DIRECTORY_DOWNLOADS
+     *
+     * @param uri - the url for the mp3 we want
+     */
+    public long DownloadData (Uri uri) {
 
         long downloadReference;
 
@@ -503,18 +730,37 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         //Setting description of request
         request.setDescription("Downloading Song from URL");
 
-        //Set the local destination for the downloaded file to a path within the application's external files directory
-        // This puts it into Android/data/com.android.flashbackmusicv000/files/Download
-        //request.setDestinationInExternalFilesDir(MainActivity.this, "/storage/emulated/0/Download", "Song.mp3");
-
+        //Set local destination for downloaded file to path in application's external files directory
         // This puts it into storage/emulated/0/Download
+
+        //request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS , "Download.mp3");
         request.setDestinationInExternalPublicDir(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() , "Download.mp3");
         //Enqueue download and save into referenceId
-
+        System.out.println("HMMMMMMMMMMMMMMMMMMMMMMMMMM");
         downloadReference = downloadManager.enqueue(request);
+
+        // Calling our Download Status
+        DownloadManager.Query MusicDownloadQuery = new DownloadManager.Query();
+        //set the query filter to our previously Enqueued download
+        MusicDownloadQuery.setFilterById(downloadReference);
+
+        //Query the download manager about downloads that have been requested.
+        Cursor cursor = downloadManager.query(MusicDownloadQuery);
+        boolean status = DownloadStatus(cursor, downloadManager);
+
+        while(!status){
+            if(cursor.moveToFirst()) {
+                status = DownloadStatus(cursor, downloadManager);
+            }
+        }
+        if(status){
+            ms.addNewDownload(this, Environment.getExternalStorageDirectory().toString() +
+                    "/storage/emulated/0/Download/Download.mp3", favorites, disliked, neutral);
+        }
 
         return downloadReference;
     }
+
     private void setWidgets() {
         switchy = (Switch) findViewById(R.id.flashSwitch);
         isFlashBackOn = currentSongState.getBoolean("flashback", false);
