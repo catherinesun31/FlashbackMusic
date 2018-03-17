@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -77,6 +78,11 @@ public class SignInActivity extends AppCompatActivity {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if (account != null) {
             Log.i("LOGIN", account.getDisplayName() + " is already logged in");
+            SharedPreferences prefs = getSharedPreferences("Username", MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString("User", account.getDisplayName());
+            editor.putString("Email", account.getEmail());
+            editor.apply();
             launchActivity();
         }
     }
@@ -166,6 +172,12 @@ public class SignInActivity extends AppCompatActivity {
             user = builder.build();
             Log.i("User info:", "Email: " + user.getEmail() + "\n" +
                     "Username: " + user.getUsername());
+            //Add the username to shared preferences to access from other methods
+        SharedPreferences prefs = getSharedPreferences("Username", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("User", user.getUsername());
+        editor.putString("Email", user.getEmail());
+        editor.commit();
         /*}
         else {
             //Create a unique ID for the current anonymous user

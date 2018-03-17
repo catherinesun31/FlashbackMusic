@@ -31,15 +31,23 @@ public class Song implements Parcelable{
     private Date date;
     private boolean favorite = false;
     private boolean dislike = false;
-    private int score;
-    private ArrayList<Location> locations;
+
+    private String[] days;
+    private Location[] locations;
+    private int numDays;
+    private int numLocations;
+    private String user;
+
+    private final int MAX = 50;
 
     // Song Constructor for raw files
     public Song (String name, int songId) {
         title = name;
         this.songId = songId;
-        this.score = 0;
-        locations = new ArrayList<>();
+        days = new String[MAX];
+        locations = new Location[MAX];
+        numDays = 0;
+        numLocations = 0;
     }
 
     // Song Constructor for url links
@@ -47,8 +55,10 @@ public class Song implements Parcelable{
         title = name;
         this.fileLocation = fileLocation;
         this.songId = 0;
-        this.score = 0;
-        locations = new ArrayList<>();
+        days = new String[MAX];
+        locations = new Location[MAX];
+        numDays = 0;
+        numLocations = 0;
     }
 
     // Setters for Song
@@ -56,22 +66,27 @@ public class Song implements Parcelable{
         lastLocation = newLocation;
     }
 
-    public void setTime(String newTime) {
-        lastTime = newTime;
-        String hour = newTime.substring(0, 2);
-        if (Integer.parseInt(hour) >= 5 && Integer.parseInt(hour) < 11) {
-            lastTimeOfDay = "Morning";
-        }
-        else if (Integer.parseInt(hour) >= 11 && Integer.parseInt(hour) < 17) {
-            lastTimeOfDay = "Afternoon";
-        }
-        else {
-            lastTimeOfDay = "Night";
-        }
+    public void setUser(String user) {
+        this.user = user;
     }
 
     public void addLocationPlayed(Location location) {
-        locations.add(location);
+        locations[numLocations] = location;
+        numLocations++;
+    }
+
+    public void addDayPlayed(String day) {
+        boolean flag = false;
+        for (int i = 0; i < 7; ++i) {
+            if (days[i].equals(day)) {
+                flag = true;
+                break;
+            }
+        }
+        if (!flag) {
+            days[numDays] = day;
+            numDays++;
+        }
     }
 
     public void setFullDate(Date date) { this.date = date; }
@@ -82,18 +97,11 @@ public class Song implements Parcelable{
 
     public void setDay(String newDay) { lastDay = newDay; }
 
-    public void dislike() {
-        dislike = true;
-    }
+    public void dislike() { favorite = false; dislike = true; }
 
-    public void favorite() {
-        favorite = true;
-    }
+    public void favorite() { favorite = true; dislike = false; }
 
-    public void neutral() {
-        favorite = false;
-        dislike = false;
-    }
+    public void neutral() { favorite = false; dislike = false; }
 
     // Getters for Song
     public int getSongId() {return songId;}
@@ -128,22 +136,6 @@ public class Song implements Parcelable{
 
     public Date getFullDate() { return date; }
 
-    public int score() { return score; }
-
-    public boolean wasPlayedNearby(Location location) {
-        for (Location l: locations) {
-            float[] results = new float[1];
-            Location.distanceBetween(location.getLatitude(), location.getLongitude(),
-                    l.getLatitude(), l.getLongitude(),results);
-            float distance = results[0];
-            boolean isClose = distance < 1000;
-            if (isClose) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     // Parcel uses this
     @Override
     public int describeContents() {
@@ -162,6 +154,10 @@ public class Song implements Parcelable{
         out.writeString(lastDate);
         out.writeByte((byte) (favorite ? 1 : 0));
         out.writeByte((byte) (dislike ? 1 : 0));
+
+        out.writeString(user);
+        out.writeArray(locations);
+        out.writeArray(days);
     }
 
     // this is used to regenerate your object. All Parcelables must have a CREATOR that implements these two methods
@@ -186,6 +182,10 @@ public class Song implements Parcelable{
         lastDate = in.readString();
         favorite = in.readByte() != 0;
         dislike = in.readByte() != 0;
+
+        user = in.readString();
+        //locations = (Location[])in.readArray(this.getClass().getClassLoader());
+        //days = (String[])in.readArray(this.getClass().getClassLoader());
     }
 
     public boolean Undo() {

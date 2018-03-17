@@ -23,6 +23,7 @@ public class HashMap {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         ref = database.getReference(ANON);
         checked = false;
+        /*
         getInstance(new FirebaseCallback() {
             @Override
             public void onCallback(String username, String value) {
@@ -32,7 +33,7 @@ public class HashMap {
                 list.add(pair);
                 checked = true;
             }
-        });
+        });*/
         //ref.child("Anonymous").setValue(true);
 
         //If it has not, create a new hash map
@@ -121,7 +122,7 @@ public class HashMap {
                     ArrayList<String> pair = new ArrayList<>(2);
                     pair.add(0, username);
                     pair.add(1, val);
-                    cb.onCallback(username, val);
+                    //cb.onCallback(username, val);
                     dataList.add(pair);
                 }
                 else {

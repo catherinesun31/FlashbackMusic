@@ -30,14 +30,19 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
+import java.util.HashMap;
 
 public class SongPlayingActivity extends AppCompatActivity implements
         OnMapReadyCallback {
@@ -62,7 +67,7 @@ public class SongPlayingActivity extends AppCompatActivity implements
 
     private int songIndex = 0;
     private SharedPreferences currentSongState;
-
+    private String username;
 
     protected String mAddressOutput;
     protected String mAreaOutput;
@@ -82,6 +87,7 @@ public class SongPlayingActivity extends AppCompatActivity implements
         isFlashBackOn = currentSongState.getBoolean("flashback", false);
         Intent i = getIntent();
         setWidgets();
+        getCurrentUser();
 
         songList = i.getParcelableArrayListExtra("name_of_extra");
         final Song song = songList.get(songIndex);
@@ -105,8 +111,8 @@ public class SongPlayingActivity extends AppCompatActivity implements
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     //LinkedList<Song> songs = new LinkedList<Song>();
-                    //songs.addAll(ms.getAlbumStorage().allSongs.getSongs());
-                    //FlashBackMode fbm = new FlashBackMode(songs);
+                    //songs.addAll(songList);
+                    VibeMode fbm = new VibeMode();
                     //ArrayList<Song> newSongs = new ArrayList<Song>();
                     //newSongs.addAll(fbm.createQueue());
                     editor.putBoolean("flashback", true);
@@ -142,6 +148,34 @@ public class SongPlayingActivity extends AppCompatActivity implements
         }
 
         MediaPlayer tempPlayer = mediaPlayer;
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                //Get all song information and push to Firebase
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference reference = database.getReference();
+                reference.child("Working?").setValue("Apparently yes");
+                reference.keepSynced(true);
+                HashMap<String, Object> locationUpdates = new HashMap<>();
+
+                String latLong = locationManager.getLatitude() + "," + locationManager.getLongitude();
+                locationUpdates.put(latLong + "/song", song.getTitle());
+                locationUpdates.put(latLong + "/user", username);
+                locationUpdates.put(latLong + "/time", song.getLastTimeOfDay());
+                locationUpdates.put(latLong + "/day", song.getLastDay());
+                reference.child("Locations").updateChildren(locationUpdates);
+
+                song.addDayPlayed(getDay());
+                song.setDate(getDate());
+                song.setDay(getDay());
+                song.setUser(username);
+                song.setFullDate(getFullDate());
+                song.addLocationPlayed(locationManager);
+
+                mLocationCallback = new LocationCallback();
+                song.setLocation(getLocation());
+            }
+        });
         //getLocation(savedInstanceState);
 
         for(++songIndex ; songIndex < songList.size(); songIndex++){
@@ -163,7 +197,7 @@ public class SongPlayingActivity extends AppCompatActivity implements
                 public void onCompletion(MediaPlayer mediaPlayer) {
                     Log.d("INFO", "Supposed to change song info");
                     //getLocation(savedInstanceState);
-                    song1.setTime(getTime());
+                    //song1.setTime(getTime());
                     song1.setDate(getDate());
                     song1.setDay(getDay());
 
@@ -191,9 +225,22 @@ public class SongPlayingActivity extends AppCompatActivity implements
                             if (song1.isFavorite()) {
                                 song1.dislike();
                                 //skip the song here
+
                             }
                         }
                     });
+
+                    //Get all song information and push to Firebase
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference reference = database.getReference("Locations");
+                    HashMap<String, Object> locationUpdates = new HashMap<>();
+
+                    String latLong = locationManager.getLatitude() + ", " + locationManager.getLongitude();
+                    locationUpdates.put(latLong + "/song", song1.getTitle());
+                    locationUpdates.put(latLong + "/user", username);
+                    locationUpdates.put(latLong + "/time", song1.getLastTimeOfDay());
+                    locationUpdates.put(latLong + "/day", song1.getLastDay());
+                    reference.updateChildren(locationUpdates);
                 }
 
             });
@@ -204,11 +251,12 @@ public class SongPlayingActivity extends AppCompatActivity implements
 
         //getLocation(savedInstanceState);
 
+        /* Removed to ensure only changed when song ends
         song.setTime(getTime());
         song.setDate(getDate());
         song.setDay(getDay());
         song.setFullDate(getFullDate());
-
+        */
         mLocationCallback = new LocationCallback();
         song.setLocation(getLocation());
 
@@ -228,6 +276,22 @@ public class SongPlayingActivity extends AppCompatActivity implements
             statusButton.setText("✓");
         }
 
+        Button skipButton = findViewById(R.id.skip);
+        skipButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (songList.size() == 1) {
+                    mediaPlayer.stop();
+                    launchMain();
+                }
+                else {
+                    ++songIndex;
+                    //skip the song or whatever
+                    //mediaPlayer.setNextMediaPlayer();
+                }
+            }
+        });
+
         statusButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -235,14 +299,36 @@ public class SongPlayingActivity extends AppCompatActivity implements
                         song.favorite();
                         statusButton.setText("✓");
                     }
-                    if (song.isFavorite()) {
+                    else if (song.isFavorite()) {
                         song.dislike();
                         //skip the song here
+                        if (songList.size() == 1) {
+                            mediaPlayer.stop();
+                            launchMain();
+                        }
+                        else {
+                            ++songIndex;
+                            //skip the song or whatever
+                            //mediaPlayer.setNextMediaPlayer();
+                        }
                     }
                 }
         });
         mResultReceiver = new AddressResultReceiver(new Handler());
-        songLocation.setText(mAddressOutput);
+        //songLocation.setText(mAddressOutput);
+    }
+
+    private void launchMain() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    private void getCurrentUser() {
+        SharedPreferences prefs = getSharedPreferences("Username", MODE_PRIVATE);
+        username = prefs.getString("User", null);
+        if (username == null) {
+            username = "User";
+        }
     }
 
     @Override
@@ -279,25 +365,13 @@ public class SongPlayingActivity extends AppCompatActivity implements
         super.onSaveInstanceState(outState);
     }
 
-    private void changeMap(Location location) {
-        Log.i("In: ", "SongPlayingActivity.changeMap");
-
-        Log.d("MAP LOCATION", "Reaching map" + mMap);
-
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-
-    }
-
     private Date getFullDate() {
         Calendar calendar = Calendar.getInstance();
         Date currentTime = calendar.getTime();
         return currentTime;
     }
 
-    //TODO (if enough time): change this to a Time class, so that it's SRP (but also who cares)
+    //TODO (if enough time): change this to a Time class, so that it's SRP
     private String getTime() {
         Calendar calendar = Calendar.getInstance();
         Date currentTime = calendar.getTime();
@@ -323,7 +397,7 @@ public class SongPlayingActivity extends AppCompatActivity implements
         return dateFormat.format(currentTime);
     }
 
-    //TODO (if enough time): change this to a Location class, so that it's SRP (but also who cares)
+    //TODO (if enough time): change this to a Location class, so that it's SRP
     private String getLocation() {
         Log.i("In: ", "SongPlayingActivity.getLocation");
 
@@ -351,41 +425,10 @@ public class SongPlayingActivity extends AppCompatActivity implements
                                     + "Latitude: " + locationManager.getLatitude());
 
                             //Get the location as an address
-
-                            //Log.d("Address: ", mAddressOutput);
-                        }
-                    }
-                });
-
-        mFusedLocationClient.getLastLocation().addOnSuccessListener(
-                this, new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        //logic to handle location
-                        if (location != null) {
-                            locationManager = location;
-
-                            Log.d("Current Location", "Longitude: " + locationManager.getLongitude() + "\n"
-                                    + "Latitude: " + locationManager.getLatitude());
-
-                            //Get the location as an address
                             startIntentService(locationManager);
                         }
                     }
                 });
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            mFusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    //logic to handle location
-                    if (location != null) {
-                        locationManager = location;
-                        Log.d("Current Location", "Longitude: " + locationManager.getLongitude() + "\n"
-                                + "Latitude: " + locationManager.getLatitude());
-                    }
-                }
-            });
-        }
         return address;
     }
 
