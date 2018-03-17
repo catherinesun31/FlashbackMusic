@@ -1,5 +1,7 @@
 package com.android.flashbackmusicv000;
 
+import android.location.Location;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -7,10 +9,10 @@ import java.util.LinkedList;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class VibeMode implements UserObserver {
+public class VibeMode implements LocationObserver {
     LinkedList<Song> vibeQueue;
     LinkedList<Song> unsorted;
-    private SongSubject locationSubject;
+    private LocationSubject locationSubject;
     private SongSubject timeSubject;
     private SongSubject daySubject;
 
@@ -73,7 +75,7 @@ public class VibeMode implements UserObserver {
         return vibeQueue;
     }
 
-    public void update() {
+    public void updateLocation(Location location) {
 
     }
 
