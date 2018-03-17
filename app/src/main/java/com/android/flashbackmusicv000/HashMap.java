@@ -59,7 +59,6 @@ public class HashMap {
         return list;
     }
 
-    //TODO: Test Hash functionality
     public String hash(int userVal) {
         int val = userVal%list.size();
         //hash to that index, if it has not already been used
