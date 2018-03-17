@@ -1,6 +1,7 @@
 package com.android.flashbackmusicv000;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.util.ArraySet;
@@ -8,6 +9,9 @@ import android.util.Log;
 
 import java.lang.reflect.Field;
 import java.util.Set;
+
+import static android.content.Context.MODE_PRIVATE;
+
 
 
 /**
@@ -68,9 +72,9 @@ public class MusicStorage {
 
                 Song currentSong = new Song(title, songId);
 
-                ss.initializeSongs(currentSong, favorites, disliked, neutral);
+                ss.initializeSong(currentSong, favorites, disliked, neutral);
 
-                as.initalizeAlbum(currentSong, albumName, i);
+                as.initializeAlbum(currentSong, albumName);
 
             }
 
@@ -115,12 +119,15 @@ public class MusicStorage {
                 "com.android.flashbackmusicv000.Album: " + albumName + "\n" +
                 "Duration: " + duration);
 
-        //SharedPreferences currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
-        //final SharedPreferences.Editor editor = currentSongState.edit();
+        // Get shared preferences to add song to the string list of neutrals
+        SharedPreferences currentSongState = a.getSharedPreferences("songs", MODE_PRIVATE);
+        final SharedPreferences.Editor editor = currentSongState.edit();
 
         Song currentSong = new Song(title, path);
         neutral.add(title);
-        ss.initializeSongs(currentSong, favorites, disliked, neutral);
+        ss.initializeSong(currentSong, favorites, disliked, neutral);
+        as.initializeAlbum(currentSong, albumName);
+        editor.putStringSet("neutral", neutral);
     }
 
 }

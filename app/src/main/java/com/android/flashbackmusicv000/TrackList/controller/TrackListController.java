@@ -148,8 +148,8 @@ public class TrackListController extends Fragment {
     }
 
     private void setTrackButtons(){
-
-        //trackButtons = new ArrayList<Button>();
+        //store to hide.
+        trackButtons = new ArrayList<Button>();
         Iterator trackIterator = songList.iterator();
         constraintLayout = (ConstraintLayout) view.findViewById(R.id.constraintLayout);
 
@@ -165,8 +165,8 @@ public class TrackListController extends Fragment {
             currentButton.setText(""+currentSong);
             currentButton.setOnClickListener(currentButton);
 
-            //
-            //trackButtons.add(button);
+            // for hiding and reshowing....
+            trackButtons.add(currentButton);
             //assuming it is top down
             constraintLayout.addView(currentButton);
 
@@ -186,9 +186,113 @@ public class TrackListController extends Fragment {
         Globals.currentContext = context;
         switchy = (Switch) view.findViewById(R.id.flashSwitch);
         switchy.setChecked(Globals.isOn);
-        switchy.setOnCheckedChangeListener(new Globals.SwitchListener());
+       // maybe something a little different here switchy.setOnCheckedChangeListener(new Globals.SwitchListener());
+        switchy.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+
+
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+
+                if(isChecked){
+
+
+                    Toast.makeText(context, "vibe mode is on", Toast.LENGTH_SHORT).show();
+                    Globals.isOn = true;
+
+                    //hide all the buttons inside the view.
+                    hideButtons();
+
+
+                } else {
+
+                    Toast.makeText(context, "vibe mode is off", Toast.LENGTH_SHORT).show();
+                    Globals.isOn = false;
+
+                    //display buttons again....
+                    showButtons();
+
+                }
+
+
+            }
+        });
 
     }
+
+    private void hideButtons(){
+
+        ViewGroup topView = (ViewGroup) view.findViewById(R.id.constraintLayout);
+
+        ViewGroup constraintView = (ViewGroup) view.findViewById(R.id.constraintLayout);
+
+        //loop to change button setting.
+        for(int i=0; i < topView.getChildCount(); i++) {
+            View childView = topView.getChildAt(i);
+            /*
+            View childView = parentView.getChildAt(i);
+            int resID = childView.getId();
+            */
+
+            if(childView instanceof Button) {
+
+                childView.setVisibility(View.INVISIBLE);
+
+            }
+            // if it is a button hide.
+            //int resID = childView.getId();
+        }
+
+        for(int i=0; i < constraintView.getChildCount(); i++) {
+            View childView = constraintView.getChildAt(i);
+
+            if(childView instanceof Button) {
+
+                childView.setVisibility(View.INVISIBLE);
+
+            }
+            // if it is a button hide.
+            //int resID = childView.getId();
+        }
+
+    }
+
+    private void showButtons(){
+
+        ViewGroup topView = (ViewGroup) view.findViewById(R.id.constraintLayout);
+
+        ViewGroup constraintView = (ViewGroup) view.findViewById(R.id.constraintLayout);
+
+        //loop to change button setting.
+        for(int i=0; i < topView.getChildCount(); i++) {
+            View childView = topView.getChildAt(i);
+            /*
+            View childView = parentView.getChildAt(i);
+            int resID = childView.getId();
+            */
+
+            if(childView instanceof Button) {
+
+                childView.setVisibility(View.VISIBLE);
+
+            }
+            // if it is a button hide.
+            //int resID = childView.getId();
+        }
+
+        for(int i=0; i < constraintView.getChildCount(); i++) {
+            View childView = constraintView.getChildAt(i);
+
+            if(childView instanceof Button) {
+
+                childView.setVisibility(View.VISIBLE);
+
+            }
+            // if it is a button hide.
+            //int resID = childView.getId();
+        }
+
+    }
+
 
     private void setListeners(){
 
@@ -246,6 +350,7 @@ public class TrackListController extends Fragment {
         private int highlightColour;
         private ColorDrawable startButtonColour;
         private int defaultColour;
+
         public TrackButton(int highlightColour){
 
             super(context);
@@ -259,6 +364,11 @@ public class TrackListController extends Fragment {
             this.highlightColour = highlightColour;
 
         }
+
+        //Needs to be currently playing, not click function.....
+        //Update comes from track function.
+        // if this track, matches currently playing, then highlight this.
+
 
         public void onClick(View v) {
 

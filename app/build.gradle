@@ -66,4 +66,10 @@ repositories {
 }
 
 apply plugin: 'com.google.gms.google-services'
-//apply plugin: 'com.google.android.gms:play-services:11.8.0'
+
+android {
+    defaultConfig {
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+}
+

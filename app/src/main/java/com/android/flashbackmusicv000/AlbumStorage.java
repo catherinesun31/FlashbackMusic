@@ -18,7 +18,7 @@ public class AlbumStorage {
         }
     }
 
-    public void initalizeAlbum( Song currentSong, String albumName, int i){
+    public void initializeAlbum( Song currentSong, String albumName){
 
         if(!checkAlbum(albumName)){
 
@@ -30,7 +30,7 @@ public class AlbumStorage {
             // changed below from creating new song
             albumToAddSong.addSong(currentSong);
         }
-        if(i == 0) {
+        if(this.allSongs == null) {
             this.allSongs = new Album("All Songs From Main Activity",currentSong);
         }
         else {

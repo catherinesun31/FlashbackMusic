@@ -70,18 +70,11 @@ public class Song implements Parcelable{
 
     public void setDay(String newDay) { lastDay = newDay; }
 
-    public void dislike() {
-        dislike = true;
-    }
+    public void dislike() { favorite = false; dislike = true; }
 
-    public void favorite() {
-        favorite = true;
-    }
+    public void favorite() { favorite = true; dislike = false; }
 
-    public void neutral() {
-        favorite = false;
-        dislike = false;
-    }
+    public void neutral() { favorite = false; dislike = false; }
 
     // Getters for Song
     public int getSongId() {return songId;}
