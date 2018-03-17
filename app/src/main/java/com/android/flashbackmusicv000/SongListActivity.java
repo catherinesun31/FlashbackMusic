@@ -115,8 +115,14 @@ public class SongListActivity extends AppCompatActivity {
         int textSize = (int) (10 * scale + 0.5f);
         int buttonId = songId + 1;
 
+
+            //counter loop creates a new button. Attaches a 'new song' to the click listener.
+        //String path = Environment.getExternalStorageDirectory().toString() + "/storage/emulated/0/Download/";
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
+/*
         //counter loop creates a new button. Attaches a 'new song' to the click listener.
         String path = Environment.getExternalStorageDirectory().toString() + "/storage/emulated/0/Download/";
+*/
         Log.d("Files", "Path: " + Environment.getExternalStorageDirectory().toString() + "/storage/emulated/0/Download");
         File directory = new File(path);
         File[] files = directory.listFiles();
