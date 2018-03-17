@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference dataRef = database.getReference();
                     dataRef.child("URLDownload").setValue(getUrl);
-                    //addStorage();
+                    addStorage();
                     return true;
                 }
                 return false;
@@ -462,7 +462,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         dataRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                String url = dataSnapshot.getValue().toString();
+                url = dataSnapshot.getValue().toString();
                 System.err.println("INSIDE HERE");
                 //gets the path to phone's Downloads folder
                 String downloadRoute = Environment.getExternalStorageDirectory().toString();
