@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+//apply plugin: 'com.google.android.gms:play-services:11.8.0'
 
 android {
     compileSdkVersion 26
@@ -23,6 +24,10 @@ android {
 
 
 dependencies {
+
+    //implementation 'com.google.android.gms:play-services:11.8.0'
+
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
@@ -37,12 +42,32 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     compile "com.google.android.gms:play-services-location:11.8.0"
     compile 'com.google.android.gms:play-services-auth:11.8.0'
-    compile 'com.google.apis:google-api-services-people:v1-rev243-1.23.0'
-    compile 'com.google.android.gms:play-services-plus:11.8.0'
-}
+    compile 'com.google.android.gms:play-services:11.8.0'
+
 repositories {
     mavenCentral()
 }
 
 
+    //Added by James Rich for JUnit instrumental testing.
+    //Had to install the android support repository
+    androidTestCompile 'com.android.support:support-annotations:24.0.0'
+    androidTestCompile 'com.android.support.test:runner:0.5'
+    androidTestCompile 'com.android.support.test:rules:0.5'
+    // Optional -- Hamcrest library
+    androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
+    // Optional -- UI testing with Espresso
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
+    // Optional -- UI testing with UI Automator
+    androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
+    //End for instrumental testing.
+
+    compile 'com.google.android.gms:play-services-ads:11.8.0'
+}
+
 apply plugin: 'com.google.gms.google-services'
+android {
+    defaultConfig {
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+}
