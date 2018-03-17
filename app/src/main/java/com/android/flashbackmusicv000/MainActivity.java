@@ -46,9 +46,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 
 public class MainActivity extends AppCompatActivity implements LocationListener, OnMapReadyCallback {
@@ -472,8 +478,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                 //gets the path to phone's Downloads folder
                 String downloadRoute = Environment.getExternalStorageDirectory().toString();
                 //change url from string to Uri
+                String subUrl = url.substring(0, url.length()-5);
+                boolean isZip = false;
+                if (subUrl.charAt(subUrl.length()-1) == 'p') {
+                    isZip = true;
+                }
                 Uri music_uri = Uri.parse(url);
-                DownloadData(music_uri);
+                DownloadData(music_uri, isZip);
             }
 
             @Override
@@ -623,7 +634,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
      *
      * @param uri - the url for the mp3 we want
      */
-    private long DownloadData (Uri uri) {
+    private long DownloadData (Uri uri, boolean isZip) {
 
         long downloadReference;
 
@@ -631,43 +642,90 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
         // Create request for android download manager
         DownloadManager.Request request = new DownloadManager.Request(uri);
+        if (isZip == false) {
+            //Setting title of request
+            request.setTitle("Downloading Song");
 
-        //Setting title of request
-        request.setTitle("Downloading Song");
+            //Setting description of request
+            request.setDescription("Downloading Song from URL");
 
-        //Setting description of request
-        request.setDescription("Downloading Song from URL");
+            //Set local destination for downloaded file to path in application's external files directory
+            // This puts it into storage/emulated/0/Download
 
-        //Set local destination for downloaded file to path in application's external files directory
-        // This puts it into storage/emulated/0/Download
+            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "Download.mp3");
+            //request.setDestinationInExternalPublicDir(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() , "Download.mp3");
+            //Enqueue download and save into referenceId
+            System.out.println("HMMMMMMMMMMMMMMMMMMMMMMMMMM");
+            downloadReference = downloadManager.enqueue(request);
 
-        //request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS , "Download.mp3");
-        request.setDestinationInExternalPublicDir(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() , "Download.mp3");
-        //Enqueue download and save into referenceId
-        System.out.println("HMMMMMMMMMMMMMMMMMMMMMMMMMM");
-        downloadReference = downloadManager.enqueue(request);
+            // Calling our Download Status
+            DownloadManager.Query MusicDownloadQuery = new DownloadManager.Query();
+            //set the query filter to our previously Enqueued download
+            MusicDownloadQuery.setFilterById(downloadReference);
 
-        // Calling our Download Status
-        DownloadManager.Query MusicDownloadQuery = new DownloadManager.Query();
-        //set the query filter to our previously Enqueued download
-        MusicDownloadQuery.setFilterById(downloadReference);
+            //Query the download manager about downloads that have been requested.
+            Cursor cursor = downloadManager.query(MusicDownloadQuery);
+            boolean status = DownloadStatus(cursor, downloadManager);
 
-        //Query the download manager about downloads that have been requested.
-        Cursor cursor = downloadManager.query(MusicDownloadQuery);
-        boolean status = DownloadStatus(cursor, downloadManager);
-
-        while(!status){
-            if(cursor.moveToFirst()) {
-                status = DownloadStatus(cursor, downloadManager);
+            while (!status) {
+                if (cursor.moveToFirst()) {
+                    status = DownloadStatus(cursor, downloadManager);
+                }
             }
-        }
-        if(status){
-            ms.addNewDownload(this, Environment.getExternalStorageDirectory().toString() +
-                    "/storage/emulated/0/Download/Download.mp3", favorites, disliked, neutral);
-        }
+            if (status) {
+                ms.addNewDownload(this, Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() +
+                        "/storage/emulated/0/Download/Download.mp3", favorites, disliked, neutral);
 
-        return downloadReference;
+               /* ms.addNewDownload(this, Environment.getExternalStorageDirectory().toString() +
+                        "/storage/emulated/0/Download/Download.mp3", favorites, disliked, neutral);*/
+            }
+
+            return downloadReference;
+        }
+        else {
+            //Setting title of request
+            request.setTitle("Downloading Zip");
+
+            //Setting description of request
+            request.setDescription("Downloading Zip from URL");
+
+            //Set local destination for downloaded file to path in application's external files directory
+            // This puts it into storage/emulated/0/Download
+
+            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "Download.zip");
+            //request.setDestinationInExternalPublicDir(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() , "Download.mp3");
+            //Enqueue download and save into referenceId
+            System.out.println("ZIPPPPPPPPPP");
+            downloadReference = downloadManager.enqueue(request);
+
+            // Calling our Download Status
+            DownloadManager.Query MusicDownloadQuery = new DownloadManager.Query();
+            //set the query filter to our previously Enqueued download
+            MusicDownloadQuery.setFilterById(downloadReference);
+
+            //Query the download manager about downloads that have been requested.
+            Cursor cursor = downloadManager.query(MusicDownloadQuery);
+            boolean status = DownloadStatus(cursor, downloadManager);
+
+            while (!status) {
+                if (cursor.moveToFirst()) {
+                    status = DownloadStatus(cursor, downloadManager);
+                }
+            }
+            if (status) {
+                ms.unpackZip("/storage/emulated/0/Download/", "Download.zip",favorites, disliked, neutral, this);
+            }
+            /*
+
+            if (status) {
+                ms.addNewDownload(this, Environment.getExternalStorageDirectory().toString() +
+                        "/storage/emulated/0/Download/Download.zip", favorites, disliked, neutral);
+            }*/
+
+            return downloadReference;
+        }
     }
+
 
     private void setWidgets() {
         switchy = (Switch) findViewById(R.id.flashSwitch);

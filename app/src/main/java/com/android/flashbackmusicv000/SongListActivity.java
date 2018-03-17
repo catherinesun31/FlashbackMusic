@@ -130,7 +130,8 @@ public class SongListActivity extends AppCompatActivity{
             int buttonId = songId + 1;
 
             //counter loop creates a new button. Attaches a 'new song' to the click listener.
-        String path = Environment.getExternalStorageDirectory().toString() + "/storage/emulated/0/Download/";
+        //String path = Environment.getExternalStorageDirectory().toString() + "/storage/emulated/0/Download/";
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
         Log.d("Files", "Path: " + Environment.getExternalStorageDirectory().toString() + "/storage/emulated/0/Download");
         File directory = new File(path);
         File[] files = directory.listFiles();
