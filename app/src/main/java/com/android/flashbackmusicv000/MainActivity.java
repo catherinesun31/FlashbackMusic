@@ -56,7 +56,6 @@ import java.util.Set;
 public class MainActivity extends AppCompatActivity implements LocationListener, OnMapReadyCallback {
 
     SharedPreferences currentSongState;
-    //SharedPreferences widgetState;
     Set<String> favorites;
     Set<String> disliked;
     Set<String> neutral;
@@ -64,18 +63,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     int dislikedNow;
     int neutralNow;
     private boolean isFlashBackOn;
-    private Switch flashSwitch;
     String url;
 
-    public static SharedPreferences flashBackState;
     Context mContext;
-//albums need to be passed...
     private Switch switchy;
 
     private FusedLocationProviderClient mFusedLocationClient;
     private Location locationManager;
     LocationRequest mLocationRequest;
-    Location mCurrentLocation;
     private LocationCallback mLocationCallback;
     private boolean mRequestingLocationUpdates;
     final String REQUESTING_LOCATION_UPDATES_KEY = "Requesting Location Updates";
@@ -90,10 +85,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     protected String mStateOutput;
     public MusicStorage ms;
     public DownloadManager downloadManager;
-
-
-    FirebaseDatabase database;
-    DatabaseReference dataRef;
 
     /**
      * onCreate Method represents the beginning state of the main activity whenever it is started.
@@ -319,91 +310,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     }
 
 
-
-
-/*
-            // Janice add in: wanted to pass in the file location as Song variable
-            int songId = this.getResources().getIdentifier(fields[i].getName(), "raw", this.getPackageName());
-
-            String title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
-            String artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
-            String albumName = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
-            String duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-
-            long mil = Long.parseLong(duration);
-            int seconds = (int)Math.ceil((mil / 1000) % 60);
-            int minutes = (int)Math.ceil((mil / (1000*60)) % 60);
-            duration = minutes + ":" + seconds;
-
-            Log.d("Information: ", "Title: " + title + "\n" + "Artist: " + artist + "\n" +
-            "com.android.flashbackmusicv000.Album: " + albumName + "\n" +
-            "Duration: " + duration);
-
-            Song currentSong = new Song(title, songId);
-
-           /* The following conditional statements add to the ArrayLists of strings.
-            * will instead add the strings to the songs... and pass them as albums.
-            */
-
-            /* boolean flag = false;
-            if (favorites != null) {
-                if (!favorites.isEmpty()) {
-                    if (favorites.contains(title) && !flag) {
-                        currentSong.favorite();
-                        //adding to the string arrayList.
-                        this.favorites.add(currentSong.getTitle());
-                        //this.favorites[favoritesNow] = currentSong.getTitle();
-                        ++favoritesNow;
-                        flag = true;
-                    }
-
-                }
-            }
-            if (disliked != null) {
-                if (!disliked.isEmpty()) {
-                    if (disliked.contains(title) && !flag) {
-                        currentSong.dislike();
-                        this.disliked.add(currentSong.getTitle());
-                        //this.disliked[dislikedNow] = currentSong.getTitle();
-                        ++dislikedNow;
-                    }
-
-                }
-            }
-            if (neutral != null) {
-                if (!neutral.isEmpty()) {
-                    if (neutral.contains(title) && !flag) {
-                        currentSong.neutral();
-                        this.neutral.add(currentSong.getTitle());
-                        //this.neutral[neutralNow] = currentSong.getTitle();
-                        ++neutralNow;
-                    }
-                }
-            }
-            //if the album does not exist within the set of albums, add a new album to it with the
-            //set of songs. else simply add to a currently existing album.
-
-            if(!checkAlbum(albumName)){
-
-                albums.add(new Album(albumName, currentSong));
-
-            }
-            else {
-                Album albumToAddSong = retrieveAlbum(albumName);
-                albumToAddSong.addSong(new Song(title, songId));
-            }
-            if(i == 0) {
-                this.allSongs = new Album("All Songs From Main Activity",currentSong);
-            }
-            else {
-                this.allSongs.addSong(currentSong);
-            }
-            songs[i] = currentSong;
-        }
-
-        return songs;
-    }
-*/
     /*
      * launchSongs:
      * @params: none
@@ -571,39 +477,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-            /*@Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                System.err.println("INSIDE HERE");
-                //gets the path to phone's Downloads folder
-                String downloadRoute = Environment.getExternalStorageDirectory().toString();
-                //change url from string to Uri
-                Uri music_uri = Uri.parse(url);
-                DownloadData(music_uri);
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                url = dataSnapshot.getValue().toString();
-                System.err.println("INSIDE HERE2");
-                //gets the path to phone's Downloads folder
-                String downloadRoute = Environment.getExternalStorageDirectory().toString();
-                //change url from string to Uri
-                Uri music_uri = Uri.parse(url);
-                DownloadData(music_uri);
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {}*/
+            public void onCancelled(DatabaseError databaseError) {}
         });
 
     }
