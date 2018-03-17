@@ -1,6 +1,7 @@
 package com.android.flashbackmusicv000;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -21,8 +22,15 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.UUID;
 
 public class SignInActivity extends AppCompatActivity {
     private static final String TAG = "GoogleActivity";
@@ -52,23 +60,12 @@ public class SignInActivity extends AppCompatActivity {
         googleSignInClient = GoogleSignIn.getClient(this, gso);
         mAuth = FirebaseAuth.getInstance();
 
-        mAuth.signOut();
-        googleSignInClient.signOut();
-
         com.google.android.gms.common.SignInButton signInButton =
                 findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                signIn(false);
-            }
-        });
-
-        Button anonymousUser = findViewById(R.id.anonymous_user);
-        anonymousUser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                signIn(true);
+                signIn();
             }
         });
     }
@@ -76,12 +73,12 @@ public class SignInActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in or anonymous, and go to Main Activity
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null) {
-            Log.d("LOGIN", "User is already logged in");
+        // Check if user is signed in, and go to Main Activity
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if (account != null) {
+            Log.i("LOGIN", account.getDisplayName() + " is already logged in");
+            launchActivity();
         }
-        updateUI(currentUser);
     }
 
     @Override
@@ -100,14 +97,13 @@ public class SignInActivity extends AppCompatActivity {
                 //authenticating with firebase
                 firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
-                Log.e(TAG, "Google sign in failed", e);
-                updateUI(null);
+                Log.e(TAG, "Google sign in failed");
             }
         }
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
+        Log.i(TAG, "firebaseAuthWithGoogle:" + acct.getId());
 
         //getting the auth credential
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
@@ -118,15 +114,16 @@ public class SignInActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Log.d(TAG, "signInWithCredential:success");
+                            Log.i(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
 
                             if (user != null) {
-                                createUser(user);
+                                User us = createUser(user);
+                                Log.i("User", "Username: " + us.getUsername() + "\n" +
+                                        "Email: " + us.getEmail());
+                                Toast.makeText(SignInActivity.this, user.getDisplayName() + " Signed In", Toast.LENGTH_SHORT).show();
+                                launchActivity();
                             }
-                            updateUI(user);
-
-                            Toast.makeText(SignInActivity.this, "User Signed In", Toast.LENGTH_SHORT).show();
                         }
                         else {
                             // If sign in fails, display a message to the user.
@@ -138,79 +135,59 @@ public class SignInActivity extends AppCompatActivity {
                                 googleSignInClient.signOut();
                             }
                             catch (Exception e) {
-                                Log.e("Error", "Authentication error", e);
+                                Log.e("Error", "Authentication/Sign in error");
                             }
-                            updateUI(null);
-
                         }
                     }
                 });
 
     }
 
-    public void signIn(boolean anon) {
-        if (anon) {
-            mAuth.signInAnonymously()
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                // Sign in success, update UI with the signed-in user's information
-                                Log.d(TAG, "signInAnonymously:success");
-                                FirebaseUser user = mAuth.getCurrentUser();
-                                createUser(user);
-                                updateUI(user);
-                            }
-                            else {
-                                // If sign in fails, display a message to the user.
-                                Log.w(TAG, "signInAnonymously:failure", task.getException());
-                                Toast.makeText(SignInActivity.this, "Authentication failed.",
-                                        Toast.LENGTH_SHORT).show();
-                                try {
-                                    mAuth.signOut();
-                                }
-                                catch (Exception e) {
-                                    Log.e("Error", "Anonymous user error", e);
-                                }
-                            }
-                        }
-                    });
-        }
-        else {
-            Log.d("GOOGLE SIGN IN", "Signed in with Google");
-
-            Intent signInIntent = googleSignInClient.getSignInIntent();
-            startActivityForResult(signInIntent, RC_SIGN_IN);
-        }
+    private void launchActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
-    private void updateUI(FirebaseUser user) {
-        if (user != null) {
-            //Check that the current user's information has been added to the
-            //database already
-
-            //Go to main activity
-        }
-        else {
-            //Create an anonymous user to use as a proxy
-        }
+    public void signIn() {
+        Intent signInIntent = googleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-    private void createUser(FirebaseUser user) {
-        if (user != null) {
+    private User createUser(FirebaseUser firebaseUser) {
+        IUserBuilder builder = new UserBuilder();
+        User user;
+        //if (firebaseUser != null) {
             //Builder class to create a user with their information and go to main activity
-            String email = user.getEmail();
-            String displayName = user.getDisplayName();
-            Log.i("User info", "Email: " + email + "\n" +
-                    "Display Name: " + displayName);
-            IUserBuilder builder = new UserBuilder();
+            String email = firebaseUser.getEmail();
+            String displayName = firebaseUser.getDisplayName();
+
             builder.setEmail(email);
             builder.setUsername(displayName);
-            User user1 = builder.build();
-
-        }
+            user = builder.build();
+            Log.i("User info:", "Email: " + user.getEmail() + "\n" +
+                    "Username: " + user.getUsername());
+        /*}
         else {
+            //Create a unique ID for the current anonymous user
+            int ID = UUID.randomUUID().hashCode();
+
+            //ensure the id is nonnegative
+            if (ID < 0) ID = ID * (-1);
+            //saveToSharedPref(ID);
             //Builder class to create user with anonymous information
-        }
+            builder.setID(ID);
+            user = builder.build();
+            Log.i("User info", "Username: " + user.getUsername());
+        }*/
+        return user;
     }
+
+    /*
+    private void saveToSharedPref(int ID) {
+        SharedPreferences preferences = getSharedPreferences("IDS", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("anonymous_id", ID);
+        editor.apply();
+    }
+    */
 }

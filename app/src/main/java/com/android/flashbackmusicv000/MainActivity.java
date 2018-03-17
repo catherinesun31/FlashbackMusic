@@ -11,12 +11,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.location.Location;
-import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -47,7 +47,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Set;
@@ -63,21 +62,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     int favoritesNow;
     int dislikedNow;
     int neutralNow;
-    public static MediaPlayer mediaPlayer;
     private boolean isFlashBackOn;
     private Switch flashSwitch;
     String url;
 
     public static SharedPreferences flashBackState;
-
-
-    ArrayList<Song> songs1;
-
-    //private Album allSongs;
-
     Context mContext;
-
 //albums need to be passed...
+    private Switch switchy;
 
     private FusedLocationProviderClient mFusedLocationClient;
     private Location locationManager;
@@ -138,13 +130,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         Switch flashback = (Switch) findViewById(R.id.flashSwitch);
         flashback.setChecked(isFlashBackOn);
 
-
-
         favorites = new ArraySet<String>();
         neutral = new ArraySet<String>();
         disliked = new ArraySet<String>();
 
-
+        //currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
+        //isFlashBackOn = currentSongState.getBoolean("flashback", false);
+        setWidgets();
 
         Song[] songs = {};
 
@@ -164,16 +156,20 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         ms = new MusicStorage();
         neutral = ms.createStorage(MainActivity.this, f,d,n,favorites, disliked, neutral);
 
+        // EditText for download link user provides
         final EditText url = (EditText) findViewById(R.id.urlinput);
         url.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View view, int keyCode, KeyEvent keyevent) {
-
+                //Check when user hits <enter>
                 if ((keyevent.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    //get the link user provides
                     String getUrl = url.getText().toString();
+                    /*
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference dataRef = database.getReference();
                     dataRef.child("URLDownload").setValue(getUrl);
-                    addStorage();
+                    */
+                    addStorage(getUrl);
                     return true;
                 }
                 return false;
@@ -245,6 +241,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     protected void onStart() {
         Log.i("In: ", "MainActivity.onStart");
         super.onStart();
+        setWidgets();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         if (ActivityCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -409,14 +406,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
      * and songs are put inside.
      * This starts the SongsListActivity, and migrates to the list of all of the current songs
      */
-    // JANICE EDIT 02/13: PASSING IN THE ARRAY OF SONGS SO WE CAN PASS THROUGH TO SONGSLIST AND SONGSPLAYING
-
     public void launchSongs(Album allSongs) {
 
         //strings to be sent in an activity towards the SongListActivity
 
         Intent toSongListIntent = new Intent(this, SongListActivity.class);
-
 
         //All songs.....
         toSongListIntent.putExtra("songs",allSongs);
@@ -432,7 +426,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
 
     /*
-     * launchAlbums:
+     * launchAlbums: launches the AlbumsListActivity with all of the albums we have
+     * @params: albums - the list of albums the user currently has
+     * @return: void
      */
     public void launchAlbums(ArrayList<Album> albums) {
         Intent albumsIntent  = new Intent(this, AlbumQueue.class);
@@ -443,7 +439,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         startActivity(albumsIntent);
     }
 
-
+    /* @param: list of songs to check for vibe mode
+     *
+     * launchNowPlaying launches the SongPlayingActivity using our vibe mode settings
+     */
     public void launchNowPlaying(ArrayList<Song> songs) {
         Intent intent = new Intent(this, SongPlayingActivity.class);
 
@@ -547,18 +546,24 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
     }
 
-    public void addStorage(){
+    /* addStorage downloads an mp3 file from a given url
+     */
+    public void addStorage(String url){
+        /*
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference dataRef = database.getReference();
+        final DatabaseReference dataRef = database.getReference();
         dataRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 url = dataSnapshot.getValue().toString();
+                */
+                //gets the path to phone's Downloads folder
                 String downloadRoute = Environment.getExternalStorageDirectory().toString();
+                //change url from string to Uri
                 Uri music_uri = Uri.parse(url);
                 DownloadData(music_uri);
             }
-
+/*
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
 
@@ -572,7 +577,113 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             public void onCancelled(DatabaseError databaseError) {}
         });
 
+    }*/
+
+    private boolean DownloadStatus(Cursor cursor, long DownloadId){
+        if(cursor!=null && cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)>0 && cursor.getColumnIndex(DownloadManager.COLUMN_REASON) > 0) {
+
+
+            //column for download  status
+            int columnIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS);
+            int status = cursor.getInt(columnIndex);
+            //column for reason code if the download failed or paused
+            int columnReason = cursor.getColumnIndex(DownloadManager.COLUMN_REASON);
+            int reason = cursor.getInt(columnReason);
+            //get the download filename
+            int filenameIndex = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME);
+            String filename = cursor.getString(filenameIndex);
+
+            String statusText = "";
+            String reasonText = "";
+
+            switch (status) {
+                case DownloadManager.STATUS_FAILED:
+                    statusText = "STATUS_FAILED";
+                    switch (reason) {
+                        case DownloadManager.ERROR_CANNOT_RESUME:
+                            reasonText = "ERROR_CANNOT_RESUME";
+                            break;
+                        case DownloadManager.ERROR_DEVICE_NOT_FOUND:
+                            reasonText = "ERROR_DEVICE_NOT_FOUND";
+                            break;
+                        case DownloadManager.ERROR_FILE_ALREADY_EXISTS:
+                            reasonText = "ERROR_FILE_ALREADY_EXISTS";
+                            break;
+                        case DownloadManager.ERROR_FILE_ERROR:
+                            reasonText = "ERROR_FILE_ERROR";
+                            break;
+                        case DownloadManager.ERROR_HTTP_DATA_ERROR:
+                            reasonText = "ERROR_HTTP_DATA_ERROR";
+                            break;
+                        case DownloadManager.ERROR_INSUFFICIENT_SPACE:
+                            reasonText = "ERROR_INSUFFICIENT_SPACE";
+                            break;
+                        case DownloadManager.ERROR_TOO_MANY_REDIRECTS:
+                            reasonText = "ERROR_TOO_MANY_REDIRECTS";
+                            break;
+                        case DownloadManager.ERROR_UNHANDLED_HTTP_CODE:
+                            reasonText = "ERROR_UNHANDLED_HTTP_CODE";
+                            break;
+                        case DownloadManager.ERROR_UNKNOWN:
+                            reasonText = "ERROR_UNKNOWN";
+                            break;
+                    }
+                    break;
+                case DownloadManager.STATUS_PAUSED:
+                    statusText = "STATUS_PAUSED";
+                    switch (reason) {
+                        case DownloadManager.PAUSED_QUEUED_FOR_WIFI:
+                            reasonText = "PAUSED_QUEUED_FOR_WIFI";
+                            break;
+                        case DownloadManager.PAUSED_UNKNOWN:
+                            reasonText = "PAUSED_UNKNOWN";
+                            break;
+                        case DownloadManager.PAUSED_WAITING_FOR_NETWORK:
+                            reasonText = "PAUSED_WAITING_FOR_NETWORK";
+                            break;
+                        case DownloadManager.PAUSED_WAITING_TO_RETRY:
+                            reasonText = "PAUSED_WAITING_TO_RETRY";
+                            break;
+                    }
+                    break;
+                case DownloadManager.STATUS_PENDING:
+                    statusText = "STATUS_PENDING";
+                    break;
+                case DownloadManager.STATUS_RUNNING:
+                    statusText = "STATUS_RUNNING";
+                    break;
+                case DownloadManager.STATUS_SUCCESSFUL:
+                    statusText = "STATUS_SUCCESSFUL";
+                    reasonText = "Filename:\n" + filename;
+                    break;
+            }
+
+            if (statusText == "STATUS_SUCCESSFUL") {
+                return true;
+            } else {
+
+                // Make a delay of 3 seconds so that next toast (Music Status) will not merge with this one.
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                    }
+                }, 3000);
+
+                return false;
+            }
+        }
+        return false;
     }
+
+    /* DownloadData downloads the desired mp3 from the given url. Does checks on whether it has
+     * completely downloaded
+     *
+     * DEPENDS ON EMULATOR for the request.setDestinationInExternalPublicDir(Environ,getExternal...
+     *      for Nexus 4, just replace the whole first parameter with Environment.DIRECTORY_DOWNLOADS
+     *
+     * @param uri - the url for the mp3 we want
+     */
     private long DownloadData (Uri uri) {
 
         long downloadReference;
@@ -588,12 +699,39 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         //Setting description of request
         request.setDescription("Downloading Song from URL");
 
-        //Set the local destination for the downloaded file to a path within the application's external files directory
-        request.setDestinationInExternalFilesDir(MainActivity.this, Environment.DIRECTORY_DOWNLOADS, "Download.mp3");
+        //Set local destination for downloaded file to path in application's external files directory
+        // This puts it into storage/emulated/0/Download
+
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS , "Download.mp3");
+
         //Enqueue download and save into referenceId
+
         downloadReference = downloadManager.enqueue(request);
 
+        // Calling our Download Status
+        DownloadManager.Query MusicDownloadQuery = new DownloadManager.Query();
+        //set the query filter to our previously Enqueued download
+        MusicDownloadQuery.setFilterById(downloadReference);
+
+        //Query the download manager about downloads that have been requested.
+        Cursor cursor = downloadManager.query(MusicDownloadQuery);
+        boolean status = DownloadStatus(cursor, downloadReference);
+
+        while(!status){
+            status = DownloadStatus(cursor, downloadReference);
+        }
+        if(status){
+            ms.addNewDownload(this, Environment.getExternalStorageDirectory().toString() +
+                    "/storage/emulated/0/Download/Download.mp3", favorites, disliked, neutral);
+        }
+
         return downloadReference;
+    }
+
+    private void setWidgets() {
+        switchy = (Switch) findViewById(R.id.flashSwitch);
+        isFlashBackOn = currentSongState.getBoolean("flashback", false);
+        switchy.setChecked(isFlashBackOn);
     }
 }
 

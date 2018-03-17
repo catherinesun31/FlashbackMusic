@@ -11,6 +11,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Menu;
@@ -39,6 +40,7 @@ public class AlbumQueue extends AppCompatActivity {
     private Switch switchy;
 
     private ArrayList<Album> albums;
+    SharedPreferences currentSongState;
 
     /* onCreate makes all the buttons for each album in our raw files
      */
@@ -52,6 +54,27 @@ public class AlbumQueue extends AppCompatActivity {
         // set intent items
         setSentItems();
 
+        currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
+        isFlashBackOn = currentSongState.getBoolean("flashback", false);
+        final SharedPreferences.Editor editor = currentSongState.edit();
+        Switch flashback = (Switch) findViewById(R.id.flashSwitch);
+        flashback.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    //LinkedList<Song> songs = new LinkedList<Song>();
+                    //songs.addAll(ms.getAlbumStorage().allSongs.getSongs());
+                    //FlashBackMode fbm = new FlashBackMode(songs);
+                    //ArrayList<Song> newSongs = new ArrayList<Song>();
+                    //newSongs.addAll(fbm.createQueue());
+                    editor.putBoolean("flashback", true);
+                    editor.commit();
+                }
+                else{
+                    editor.putBoolean("flashback", false);
+                    editor.commit();
+                }
+            }
+        });
 
         // may need to consider an instance where the number of albums are unknown.
 
@@ -62,7 +85,7 @@ public class AlbumQueue extends AppCompatActivity {
         Button album5 = (Button) findViewById(R.id.album5);
 
         //get songs to load... and
-        Switch flashback = (Switch) findViewById(R.id.flashSwitch);
+        //Switch flashback = (Switch) findViewById(R.id.flashSwitch);
         flashback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -176,12 +199,9 @@ public class AlbumQueue extends AppCompatActivity {
 
     }
     private void setSwitch(){
-
-        mainIntent = getIntent();
         switchy = (Switch) findViewById(R.id.flashSwitch);
-
+        isFlashBackOn = currentSongState.getBoolean("flashback",false);
         switchy.setChecked(isFlashBackOn);
-
         switchy.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
