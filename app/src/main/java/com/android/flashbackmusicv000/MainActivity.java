@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference dataRef = database.getReference();
                     dataRef.child("URLDownload").setValue(getUrl);
-                    //addStorage();
+                    addStorage();
                     return true;
                 }
                 return false;
@@ -203,7 +203,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         songsList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(ms.getAlbumStorage().allSongs == null){
+                    System.out.println("HELLO");
+                }
                 launchSongs(ms.getAlbumStorage().allSongs);
+
             }
         });
 
@@ -462,7 +466,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         dataRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                String url = dataSnapshot.getValue().toString();
+                url = dataSnapshot.getValue().toString();
                 System.err.println("INSIDE HERE");
                 //gets the path to phone's Downloads folder
                 String downloadRoute = Environment.getExternalStorageDirectory().toString();
@@ -473,7 +477,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                String url = dataSnapshot.getValue().toString();
+                url = dataSnapshot.getValue().toString();
                 //gets the path to phone's Downloads folder
                 String downloadRoute = Environment.getExternalStorageDirectory().toString();
                 //change url from string to Uri
@@ -620,7 +624,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS , "Download.mp3");
 
         //Enqueue download and save into referenceId
-
+        System.out.println("HMMMMMMMMMMMMMMMMMMMMMMMMMM");
         downloadReference = downloadManager.enqueue(request);
 
         // Calling our Download Status
