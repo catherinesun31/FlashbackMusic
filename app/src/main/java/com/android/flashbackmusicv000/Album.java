@@ -14,7 +14,7 @@ import java.util.NoSuchElementException;
  * It is iterable so it can hold an array of songs.
  */
 
-public class Album implements /*Iterable<T>8*/ Parcelable {
+public class Album implements Parcelable {
     ArrayList<Song> songs;  // this contains the actual elements of the album
 
     String name;
