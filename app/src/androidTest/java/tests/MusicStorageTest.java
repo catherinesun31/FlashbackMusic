@@ -44,8 +44,8 @@ public class MusicStorageTest {
         //Testing was correctly populated and that the song and album classes were correctly populated
 
         for(int i = 0; i < 10; i++){
-            Log.d("Songtitle: ", ss.songsList.get(i).getTitle());
-            Log.d("Song full date", ss.songsList.get(i).getFullDate().toString());
+           Log.d("Songtitle: ", ss.songsList.get(i).getTitle());
+           Log.d("Song full date", ss.songsList.get(i).getFullDate().toString());
         }
 
         for(int i = 0; i< 10; i++){
