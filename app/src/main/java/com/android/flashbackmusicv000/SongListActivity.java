@@ -23,7 +23,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
-import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -131,18 +130,19 @@ public class SongListActivity extends AppCompatActivity{
             int buttonId = songId + 1;
 
             //counter loop creates a new button. Attaches a 'new song' to the click listener.
-        String path = Environment.getExternalStorageDirectory().toString() + "/storage/emulated/0/Download";
+        String path = Environment.getExternalStorageDirectory().toString() + "/storage/emulated/0/Download/";
         Log.d("Files", "Path: " + Environment.getExternalStorageDirectory().toString() + "/storage/emulated/0/Download");
         File directory = new File(path);
         File[] files = directory.listFiles();
         if (files != null) {
             for (int i = 0; i < files.length; i++) {
+                System.out.println("POR QUEEEEEEEEEEEEEEEEEEE");
                 //downloadManager.addCompletedDownload(file.getName(), file.getName(), true, "application/mp3", file.getAbsolutePath(),file.length(),true)
                 String fileName = files[i].getName();
-                path += "/" + fileName;
                 System.out.println(path);
                 fileName = fileName.replace(".mp3", "");
-                Song song = new Song(fileName, path);
+                Song song = new Song(fileName, path + fileName);
+                System.out.println(actualSongs.size() + " " + songs.size());
                 actualSongs.add(song);
                 songs.add(song.getTitle());
             }
@@ -150,6 +150,7 @@ public class SongListActivity extends AppCompatActivity{
         else{
             System.err.println("Access denied");
         }
+        System.out.println(actualSongs.size() + " " + songs.size());
 
             for (index = 0; index < actualSongs.size(); index++) {
                 final String fileName = actualSongs.get(index).getTitle();
@@ -158,7 +159,7 @@ public class SongListActivity extends AppCompatActivity{
                 android.support.constraint.ConstraintLayout.LayoutParams params = new
                         android.support.constraint.ConstraintLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT, pixels);
-                button.setId(songs.get(index).hashCode());
+                button.setId(actualSongs.get(index).getTitle().hashCode());
                 button.setText(fileName);
                 button.setBackgroundColor(Color.rgb(230, 230, 230));
                 button.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
