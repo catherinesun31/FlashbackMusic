@@ -75,8 +75,8 @@ public class SignInActivity extends AppCompatActivity {
         super.onStart();
         // Check if user is signed in, and go to Main Activity
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        if (account != null) {
-            Log.i("LOGIN", account.getDisplayName() + " is already logged in");
+        if (account == null) {
+           // Log.i("LOGIN", account.getDisplayName() + " is already logged in");
             launchActivity();
         }
     }
