@@ -173,8 +173,10 @@ public class MusicStorage {
                 {
                     fout.write(buffer, 0, count);
                 }
+                System.err.println(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() +
+                        "/"+filename);
                 addNewDownload(a, Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() +
-                        "/storage/emulated/0/Download/Download.zip", favorites, disliked, neutral);
+                        "/"+filename, favorites, disliked, neutral);
                 fout.close();
                 zis.closeEntry();
             }
