@@ -123,7 +123,7 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
         currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
         isFlashBackOn = currentSongState.getBoolean("flashback", false);
         Intent i = getIntent();
-        setWidgets();
+
 
 
         //song being passed a parcelable, through the intent... but no parcelable was sent...???
@@ -489,7 +489,6 @@ public class SongPlayingActivity extends AppCompatActivity implements OnMapReady
             System.out.println(e.toString());
         }
     }
-
     /*
      * Loads a downloaded song onto the mediaPlayer and starts playing
      */
