@@ -38,9 +38,18 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+import android.widget.CompoundButton;
+import android.widget.Switch;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.content.ServiceConnection;
+import android.content.Context;
+import android.content.ComponentName;
+import android.os.IBinder;
 
-public class SongPlayingActivity extends AppCompatActivity implements
-        OnMapReadyCallback {
+public class SongPlayingActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+
     private ArrayList<Song> songList;
     Context mContext;
 
@@ -59,15 +68,47 @@ public class SongPlayingActivity extends AppCompatActivity implements
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private AddressResultReceiver mResultReceiver;
-
+    private boolean mIsBound = false;
+    private MusicBackgroundService mServ;
+    private Intent toMusicServiceIntent;
     private int songIndex = 0;
     private SharedPreferences currentSongState;
-
 
     protected String mAddressOutput;
     protected String mAreaOutput;
     protected String mCityOutput;
     protected String mStateOutput;
+
+
+
+
+    //Karla add in
+    private ServiceConnection SCon = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            //mServ = ((MusicBackgroundService.ServiceBinder)iBinder).getService();
+            //MusicService.ServiceBinder binder = (MusicService.ServiceBinder) service;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            mServ = null;
+        }
+    };
+    void doBindService(){
+        bindService(new Intent(this, MusicBackgroundService.class), SCon, Context.BIND_AUTO_CREATE);
+        mIsBound = true;
+    }
+    void doUnbindService(){
+        if (mIsBound) {
+
+            unbindService(SCon);
+            mIsBound = false;
+        }
+    }
+    //end Karla add in
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +116,7 @@ public class SongPlayingActivity extends AppCompatActivity implements
         Log.i("In: ", "SongPlayingActivity.onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_song_playing);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -82,6 +124,9 @@ public class SongPlayingActivity extends AppCompatActivity implements
         isFlashBackOn = currentSongState.getBoolean("flashback", false);
         Intent i = getIntent();
 
+
+
+        //song being passed a parcelable, through the intent... but no parcelable was sent...???
 
         songList = i.getParcelableArrayListExtra("name_of_extra");
         final Song song = songList.get(songIndex);
@@ -130,6 +175,9 @@ public class SongPlayingActivity extends AppCompatActivity implements
         TextView songTitle = (TextView) findViewById(R.id.songtitle);
         songTitle.setText(song.getTitle());
 
+        final int nameInt = song.getSongId();
+
+        mediaPlayer = MediaPlayer.create(this, songList.get(songIndex).getSongId());
         if( songList.get(songIndex).getSongId() > 0)
             mediaPlayer = MediaPlayer.create(this, songList.get(songIndex).getSongId());
         else {
@@ -200,6 +248,7 @@ public class SongPlayingActivity extends AppCompatActivity implements
             tempPlayer.setNextMediaPlayer(nextPlayer);
             tempPlayer = nextPlayer;
         }
+
         mediaPlayer.start();
 
         //getLocation(savedInstanceState);
@@ -244,6 +293,18 @@ public class SongPlayingActivity extends AppCompatActivity implements
         mResultReceiver = new AddressResultReceiver(new Handler());
         songLocation.setText(mAddressOutput);
     }
+
+
+
+    private void sendIntentToMusicService(){
+
+        Intent toMusicService = new Intent(this,MusicBackgroundService.class);
+        intent.putExtra("message", "toMusicService");
+        startService(intent);
+
+    }
+
+
 
     @Override
     protected void onStop() {
@@ -441,6 +502,30 @@ public class SongPlayingActivity extends AppCompatActivity implements
         switchy = (Switch) findViewById(R.id.flashSwitch);
         isFlashBackOn = currentSongState.getBoolean("flashback", false);
         switchy.setChecked(isFlashBackOn);
+
+        /*
+        switchy.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+
+                if(isChecked) {
+                    //run event;
+                    isFlashBackOn = true;
+                    Toast.makeText(getApplicationContext(), "Vibe mode is on", Toast.LENGTH_SHORT).show();
+
+
+
+                } else {
+
+
+                    //close event
+                    isFlashBackOn = false;
+                    Toast.makeText(getApplicationContext(), "Vibe mode is off", Toast.LENGTH_SHORT).show();
+
+                    //
+                }
+            }
+        });*/
     }
 
     /*

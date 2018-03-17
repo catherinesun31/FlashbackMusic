@@ -23,13 +23,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Set;
 
-public class SongListActivity extends AppCompatActivity{
+public class SongListActivity extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer;
     private boolean isFlashBackOn;
@@ -92,7 +93,6 @@ public class SongListActivity extends AppCompatActivity{
         }
         if (disliked != null) {
             songs.addAll(disliked);
-
         }
         if (neutral != null) {
             songs.addAll(neutral);
@@ -177,7 +177,6 @@ public class SongListActivity extends AppCompatActivity{
                 @Override
                 public void onClick(View view) {
                     if (!disliked.contains(fileName)) {
-                        //launchActivity(newSong);
                         if (!isFromAlbum) {
                             songsToPlay = new ArrayList<Song>();
                             songsToPlay.add(actualSongs.get(songIndex));
@@ -331,6 +330,28 @@ public class SongListActivity extends AppCompatActivity{
         switchy = (Switch) findViewById(R.id.flashSwitch);
         isFlashBackOn = currentSongState.getBoolean("flashback",false);
         switchy.setChecked(isFlashBackOn);
+        switchy.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+
+                if(isChecked) {
+
+                    //run event;
+                    isFlashBackOn = true;
+
+                    Toast.makeText(getApplicationContext(), "Vibe mode is on", Toast.LENGTH_SHORT).show();
+
+                } else {
+
+
+                    //close event
+                    isFlashBackOn = false;
+
+                    Toast.makeText(getApplicationContext(), "Vibe mode is off", Toast.LENGTH_SHORT).show();
+                    //
+                }
+            }
+        });
     }
 
 }
