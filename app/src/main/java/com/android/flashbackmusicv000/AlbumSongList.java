@@ -389,6 +389,30 @@ public class AlbumSongList extends AppCompatActivity {
         isFlashBackOn = currentSongState.getBoolean("flashback", false);
         switchy.setChecked(isFlashBackOn);
 
+        switchy.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+
+                if(isChecked) {
+
+                    //run event;
+                    isFlashBackOn = true;
+
+                    Toast.makeText(getApplicationContext(), "Vibe mode is on", Toast.LENGTH_SHORT).show();
+
+
+                } else {
+
+
+                    //close event
+                    isFlashBackOn = false;
+
+                    Toast.makeText(getApplicationContext(), "Vibe mode is off", Toast.LENGTH_SHORT).show();
+
+                    //
+                }
+            }
+        });
     }
 }
 
