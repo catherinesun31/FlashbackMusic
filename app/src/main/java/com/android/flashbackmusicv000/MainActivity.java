@@ -30,6 +30,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
     public static SharedPreferences flashBackState;
     Context mContext;
+//albums need to be passed...
     private Switch switchy;
 
     private FusedLocationProviderClient mFusedLocationClient;
@@ -221,9 +223,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         });
 
         //close event
-        //isFlashBackOn = false;
-        //Toast.makeText(getApplicationContext(), "vibe mode is off", Toast.LENGTH_SHORT).show();
-        //
+        isFlashBackOn = false;
+
+        Toast.makeText(getApplicationContext(), "Vibe mode is off", Toast.LENGTH_SHORT).show();
+
 
         /*
          * I'm thinking that here, we should make a list of all of the Song objects from songs that
@@ -245,6 +248,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         if (ActivityCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.i("In: ", "MainActivity.onStart, permission is not granted");
             ActivityCompat.requestPermissions(this,
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     100);
@@ -311,6 +315,92 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         }
     }
 
+
+
+
+/*
+            // Janice add in: wanted to pass in the file location as Song variable
+            int songId = this.getResources().getIdentifier(fields[i].getName(), "raw", this.getPackageName());
+
+            String title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+            String artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+            String albumName = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
+            String duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+
+            long mil = Long.parseLong(duration);
+            int seconds = (int)Math.ceil((mil / 1000) % 60);
+            int minutes = (int)Math.ceil((mil / (1000*60)) % 60);
+            duration = minutes + ":" + seconds;
+
+            Log.d("Information: ", "Title: " + title + "\n" + "Artist: " + artist + "\n" +
+            "com.android.flashbackmusicv000.Album: " + albumName + "\n" +
+            "Duration: " + duration);
+
+            Song currentSong = new Song(title, songId);
+
+           /* The following conditional statements add to the ArrayLists of strings.
+            * will instead add the strings to the songs... and pass them as albums.
+            */
+
+            /* boolean flag = false;
+            if (favorites != null) {
+                if (!favorites.isEmpty()) {
+                    if (favorites.contains(title) && !flag) {
+                        currentSong.favorite();
+                        //adding to the string arrayList.
+                        this.favorites.add(currentSong.getTitle());
+                        //this.favorites[favoritesNow] = currentSong.getTitle();
+                        ++favoritesNow;
+                        flag = true;
+                    }
+
+                }
+            }
+            if (disliked != null) {
+                if (!disliked.isEmpty()) {
+                    if (disliked.contains(title) && !flag) {
+                        currentSong.dislike();
+                        this.disliked.add(currentSong.getTitle());
+                        //this.disliked[dislikedNow] = currentSong.getTitle();
+                        ++dislikedNow;
+                    }
+
+                }
+            }
+            if (neutral != null) {
+                if (!neutral.isEmpty()) {
+                    if (neutral.contains(title) && !flag) {
+                        currentSong.neutral();
+                        this.neutral.add(currentSong.getTitle());
+                        //this.neutral[neutralNow] = currentSong.getTitle();
+                        ++neutralNow;
+                    }
+                }
+            }
+            //if the album does not exist within the set of albums, add a new album to it with the
+            //set of songs. else simply add to a currently existing album.
+
+            if(!checkAlbum(albumName)){
+
+                albums.add(new Album(albumName, currentSong));
+
+            }
+            else {
+                Album albumToAddSong = retrieveAlbum(albumName);
+                albumToAddSong.addSong(new Song(title, songId));
+            }
+            if(i == 0) {
+                this.allSongs = new Album("All Songs From Main Activity",currentSong);
+            }
+            else {
+                this.allSongs.addSong(currentSong);
+            }
+            songs[i] = currentSong;
+        }
+
+        return songs;
+    }
+*/
     /*
      * launchSongs:
      * @params: none

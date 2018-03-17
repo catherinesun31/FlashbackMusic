@@ -23,13 +23,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Set;
 
-public class SongListActivity extends AppCompatActivity{
+public class SongListActivity extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer;
     private boolean isFlashBackOn;
@@ -70,36 +71,37 @@ public class SongListActivity extends AppCompatActivity{
         }
 
 
-            currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
+        currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
 
-            Set<String> fave = currentSongState.getStringSet("favorites", null);
-            Set<String> dis = currentSongState.getStringSet("disliked", null);
-            Set<String> neut = currentSongState.getStringSet("neutral", null);
-            isFlashBackOn = currentSongState.getBoolean("flashback", false);
+        Set<String> fave = currentSongState.getStringSet("favorites", null);
+        Set<String> dis = currentSongState.getStringSet("disliked", null);
+        Set<String> neut = currentSongState.getStringSet("neutral", null);
+        isFlashBackOn = currentSongState.getBoolean("flashback", false);
 
-            favorites = new ArraySet<String>();
-            disliked = new ArraySet<String>();
-            neutral = new ArraySet<String>();
+        favorites = new ArraySet<String>();
+        disliked = new ArraySet<String>();
+        neutral = new ArraySet<String>();
 
-            favorites.addAll(fave);
-            neutral.addAll(neut);
-            disliked.addAll(dis);
+        favorites.addAll(fave);
+        neutral.addAll(neut);
+        disliked.addAll(dis);
 
-            setWidgets();
 
-            songs = new ArrayList<String>();
-            if (favorites != null) {
-                songs.addAll(favorites);
-            }
-            if (disliked != null) {
-                songs.addAll(disliked);
+        setWidgets();
 
-            }
-            if (neutral != null) {
-                songs.addAll(neutral);
-            }
-            //do this to show songs in alphabetical order
-            Collections.sort(songs);
+        songs = new ArrayList<String>();
+        if (favorites != null) {
+            songs.addAll(favorites);
+        }
+        if (disliked != null) {
+            songs.addAll(disliked);
+
+        }
+        if (neutral != null) {
+            songs.addAll(neutral);
+        }
+        //do this to show songs in alphabetical order
+        Collections.sort(songs);
 
         final SharedPreferences.Editor editor = currentSongState.edit();
         Switch flashback = (Switch) findViewById(R.id.flashSwitch);
@@ -121,7 +123,12 @@ public class SongListActivity extends AppCompatActivity{
             }
         });
 
-            ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
+
+
+
+
+
+        ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
 
             final float scale = this.getResources().getDisplayMetrics().density;
             int songId = songs.get(0).hashCode();
@@ -338,6 +345,28 @@ public class SongListActivity extends AppCompatActivity{
         switchy = (Switch) findViewById(R.id.flashSwitch);
         isFlashBackOn = currentSongState.getBoolean("flashback",false);
         switchy.setChecked(isFlashBackOn);
+        switchy.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+
+                if(isChecked) {
+
+                    //run event;
+                    isFlashBackOn = true;
+
+                    Toast.makeText(getApplicationContext(), "Vibe mode is on", Toast.LENGTH_SHORT).show();
+
+                } else {
+
+
+                    //close event
+                    isFlashBackOn = false;
+
+                    Toast.makeText(getApplicationContext(), "Vibe mode is off", Toast.LENGTH_SHORT).show();
+                    //
+                }
+            }
+        });
     }
 
 }

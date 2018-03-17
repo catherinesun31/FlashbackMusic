@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "653538051030-ftht3htdvrrmon9pbmit22dlapnibrk2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.android.flashbackmusicv000",
+            "certificate_hash": "b1876d7895d18358c2d089a27f3b13dcc60990c6"
+          }
+        },
+        {
+          "client_id": "653538051030-fejkva8no46s47l8dt6vasl95abitlbf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.android.flashbackmusicv000",
+            "certificate_hash": "d4841cf623c32e5b7bfce7c4a8e5a1c8609f4294"
+          }
+        },
+        {
           "client_id": "653538051030-dmcq60cf40fcaevkdg7o790bv89nrd8d.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

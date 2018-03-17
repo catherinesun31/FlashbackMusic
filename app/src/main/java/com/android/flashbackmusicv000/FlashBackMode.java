@@ -1,5 +1,7 @@
 package com.android.flashbackmusicv000;
 
+import java.util.ArrayList;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -14,18 +16,19 @@ import java.util.TimeZone;
  */
 
 public class FlashBackMode {
+
+
+
     LinkedList<Song> flashQueue;
     LinkedList<Song> unsorted;
 
     public FlashBackMode(LinkedList<Song> songList) {
         unsorted = songList;
         flashQueue = new LinkedList<Song>();
-        //createQueue();
-    }
-    public void turnFlashBackModeOn() {
 
     }
     public LinkedList<Song> createQueue() {
+
         flashQueue.add(unsorted.get(0));
         for (int i = 1; i < unsorted.size(); ++i) {
             for (int j = 0; j < flashQueue.size(); ++j) {
