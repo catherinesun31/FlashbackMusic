@@ -463,7 +463,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     public void addStorage(){
         System.out.println("Add that storage");
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference dataRef = database.getReference("URLDownload");
+        final DatabaseReference dataRef = database.getReference();
         dataRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
