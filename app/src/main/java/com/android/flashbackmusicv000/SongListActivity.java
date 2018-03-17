@@ -1,11 +1,9 @@
 package com.android.flashbackmusicv000;
 
 import android.annotation.SuppressLint;
-import android.app.DownloadManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.constraint.ConstraintLayout;
@@ -32,12 +30,9 @@ import java.util.Set;
 
 public class SongListActivity extends AppCompatActivity {
 
-    private MediaPlayer mediaPlayer;
     private boolean isFlashBackOn;
     private boolean isFromAlbum = false;
     public int index;
-    DownloadManager downloadManager;
-
     SharedPreferences currentSongState;
     public ArraySet<String> favorites;
     public ArraySet<String> disliked;
@@ -47,8 +42,6 @@ public class SongListActivity extends AppCompatActivity {
     ArrayList<Song> songsToPlay = new ArrayList<Song>();    // Janice add in
     private Switch switchy;
     private Intent in;
-
-    // com.android.flashbackmusicv000.Song Instances
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,11 +98,6 @@ public class SongListActivity extends AppCompatActivity {
         flashback.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    //LinkedList<Song> songs = new LinkedList<Song>();
-                    //songs.addAll(ms.getAlbumStorage().allSongs.getSongs());
-                    //FlashBackMode fbm = new FlashBackMode(songs);
-                    //ArrayList<Song> newSongs = new ArrayList<Song>();
-                    //newSongs.addAll(fbm.createQueue());
                     editor.putBoolean("flashback", true);
                     editor.commit();
                 } else {
@@ -132,17 +120,7 @@ public class SongListActivity extends AppCompatActivity {
         Log.d("Files", "Path: " + Environment.getExternalStorageDirectory().toString() + "/storage/emulated/0/Download");
         File directory = new File(path);
         File[] files = directory.listFiles();
-        /*if (files != null) {
-            for (int i = 0; i < files.length; i++) {
-                //Song song = new Song(fileName, path + fileName);
-                // System.out.println(actualSongs.size() + " " + songs.size());
-                //actualSongs.add(song);
-                //songs.add(song.getTitle());
-            }
-        }
-        else{
-            System.err.println("Access denied");
-        }*/
+
         System.out.println(actualSongs.size() + " " + songs.size());
 
         for (index = 0; index < actualSongs.size(); index++) {
@@ -165,7 +143,6 @@ public class SongListActivity extends AppCompatActivity {
             final Song newSong = actualSongs.get(index);
 
             System.out.println("Looped..." + index);
-            // Janice: Checking whether to play whole album or just the single song
             if (isFromAlbum) {
                 songsToPlay = actualSongs;
                 System.out.println("It is from the album");
@@ -297,7 +274,6 @@ public class SongListActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SongPlayingActivity.class);
 
         intent.putExtra("name_of_extra", songList);
-        //intent.putExtra("name_of_extra", song);
         intent.putExtra("isOn", isFlashBackOn);
         startActivity(intent);
     }
