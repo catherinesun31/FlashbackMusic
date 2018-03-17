@@ -24,10 +24,12 @@ public class VibeMode {
     ArrayList<Song> unsorted;
     DatabaseReference ref;
     ArrayList<HashMap<String, Object>> songs = new ArrayList<>();
+    Location currentLocation;
 
 
-    public VibeMode() {
+    public VibeMode(Location location) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
+        currentLocation = location;
         ref = database.getReference("Locations");
         unsorted = new ArrayList<Song>();
         getInstance(new FirebaseCallback() {
@@ -61,7 +63,7 @@ public class VibeMode {
                     for (DataSnapshot child: dataSnapshot.getChildren()) {
                         hashMap.put(child.getKey(), child.getValue());
                     }
-                    hashMap.put(location, loc);
+                    hashMap.put("Location", loc);
 
                     /*ArrayList<ArrayList<String>> dataList = new ArrayList<>();
                     String username = (String)dataSnapshot.getKey();
@@ -102,8 +104,19 @@ public class VibeMode {
     }
 
 
-    public ArrayList<Song> createQueue() {
-        vibeQueue.add(unsorted.get(0));
+    public void createQueue() {
+        int total = 0;
+        for (HashMap<String, Object> hm: songs) {
+            Location location = (Location)hm.get("Location");
+            float[] result = new float[1];
+            Location.distanceBetween(location.getLatitude(), location.getLongitude(),
+                    currentLocation.getLatitude(), currentLocation.getLongitude(),result);
+            boolean isClose = result[0] < 1000;
+            if (isClose) {
+                total++;
+            }
+        }
+        /*vibeQueue.add(unsorted.get(0));
         for (int i = 1; i < unsorted.size(); ++i) {
             for (int j = 0; j < vibeQueue.size(); ++j) {
                 Song compare = vibeQueue.get(j);
@@ -150,7 +163,7 @@ public class VibeMode {
             if (getScore(song) == 0) vibeQueue.remove(song);
             if (song.isDislike()) vibeQueue.remove(song);
         }
-        return vibeQueue;
+        return vibeQueue;*/
     }
 
     public void updateLocation(Location location) {

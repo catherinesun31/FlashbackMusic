@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                 if (isChecked) {
                     LinkedList<Song> songs = new LinkedList<Song>();
                     songs.addAll(ms.getAlbumStorage().allSongs.getSongs());
-                    VibeMode vm = new VibeMode();
+                    VibeMode vm = new VibeMode(locationManager);
                     ArrayList<Song> newSongs = new ArrayList<Song>();
                     //newSongs.addAll(vm.createQueue());
                     editor.putBoolean("flashback", true);

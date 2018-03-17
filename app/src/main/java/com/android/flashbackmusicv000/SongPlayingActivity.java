@@ -112,7 +112,7 @@ public class SongPlayingActivity extends AppCompatActivity implements
                 if (isChecked) {
                     //LinkedList<Song> songs = new LinkedList<Song>();
                     //songs.addAll(songList);
-                    VibeMode fbm = new VibeMode();
+                    VibeMode fbm = new VibeMode(locationManager);
                     //ArrayList<Song> newSongs = new ArrayList<Song>();
                     //newSongs.addAll(fbm.createQueue());
                     editor.putBoolean("flashback", true);
@@ -154,7 +154,7 @@ public class SongPlayingActivity extends AppCompatActivity implements
                 //Get all song information and push to Firebase
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference reference = database.getReference();
-                reference.child("Working?").setValue("Apparently yes");
+                //reference.child("Working?").setValue("Apparently yes");
                 reference.keepSynced(true);
                 HashMap<String, Object> locationUpdates = new HashMap<>();
 
@@ -423,6 +423,10 @@ public class SongPlayingActivity extends AppCompatActivity implements
 
                             Log.d("Current Location", "Longitude: " + locationManager.getLongitude() + "\n"
                                     + "Latitude: " + locationManager.getLatitude());
+                            SharedPreferences prefs = getSharedPreferences("Location", MODE_PRIVATE);
+                            SharedPreferences.Editor edit = prefs.edit();
+                            edit.putString("current location", location.getLatitude() + "," +
+                            location.getLongitude());
 
                             //Get the location as an address
                             startIntentService(locationManager);
