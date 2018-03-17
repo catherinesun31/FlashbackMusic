@@ -53,7 +53,6 @@ import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements LocationListener, OnMapReadyCallback {
 
-    //currentSOngState
     SharedPreferences currentSongState;
     //SharedPreferences widgetState;
     Set<String> favorites;
@@ -462,6 +461,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     /* addStorage downloads an mp3 file from a given url
      */
     public void addStorage(){
+        System.out.println("Add that storage");
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference dataRef = database.getReference("URLDownload");
         dataRef.addChildEventListener(new ChildEventListener() {
