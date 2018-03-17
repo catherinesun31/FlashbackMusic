@@ -1,7 +1,7 @@
 package com.android.flashbackmusicv000.TrackList.controller;
 
 //The View is a fragment
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;

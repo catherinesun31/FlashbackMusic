@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -24,6 +26,9 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
+import android.support.v4.app.Fragment;
+
+import com.android.flashbackmusicv000.TrackList.controller.TrackListController;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -56,8 +61,15 @@ public class SongListActivity extends AppCompatActivity{
         setContentView(R.layout.activity_song_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        //sorting out the fragment to put it inside the activity file.
+        /*
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-
+        TrackListController fragment = new TrackListController();
+        fragmentTransaction.add(R.id.contentFragment, fragment);
+        fragmentTransaction.commit();
+        */
         //
         in = getIntent();
         Album albumSelected = null;
