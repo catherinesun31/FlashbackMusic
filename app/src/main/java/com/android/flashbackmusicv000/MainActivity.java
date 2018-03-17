@@ -87,7 +87,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     protected String mCityOutput;
     protected String mStateOutput;
     public MusicStorage ms;
-    DownloadManager downloadManager;
+    public DownloadManager downloadManager;
+
 
     FirebaseDatabase database;
     DatabaseReference dataRef;
@@ -574,7 +575,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
      *
      * @param uri - the url for the mp3 we want
      */
-    private long DownloadData (Uri uri) {
+    public long DownloadData (Uri uri) {
 
         long downloadReference;
 

@@ -43,12 +43,12 @@ public class MusicStorageTest {
         //iterate through ss and as, log the values of the song and albums in the lists
         //Testing was correctly populated and that the song and album classes were correctly populated
 
-        for(int i = 0; i < ss.songsList.size(); i++){
-            Log.d("Songtitle: ", ss.songsList.get(i).getTitle());
-            Log.d("Song full date", ss.songsList.get(i).getFullDate().toString());
+        for(int i = 0; i < 10; i++){
+           Log.d("Songtitle: ", ss.songsList.get(i).getTitle());
+           Log.d("Song full date", ss.songsList.get(i).getFullDate().toString());
         }
 
-        for(int i = 0; i< as.getAlbums().size(); i++){
+        for(int i = 0; i< 10; i++){
             Log.d("Album name", as.getAlbums().get(i).getName());
 
         }
