@@ -53,6 +53,7 @@ import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements LocationListener, OnMapReadyCallback {
 
+    //currentSOngState
     SharedPreferences currentSongState;
     //SharedPreferences widgetState;
     Set<String> favorites;

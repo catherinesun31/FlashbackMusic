@@ -1,20 +1,48 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    
+
     repositories {
+
+        /**
+         * Addition of maven 'seems' to fix many of the import problems within the friend's list.
+         * However, even with this fixed, not all emulators support the files. If the Gradle build can
+         * sync and does not complain about the files, then changing the emulator to one that supports
+         * Google play services should allow the program to run. Accept a gradle build of upto 15 minutes.
+         */
+        maven {
+            url "https://maven.google.com" // Google's Maven repository
+        }
+
         google()
         jcenter()
     }
     dependencies {
+
         classpath 'com.android.tools.build:gradle:3.0.1'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
         classpath 'com.google.gms:google-services:3.1.0'
+
         classpath 'com.google.android.gms:play-services-plus:11.8.0'
+        //compile 'com.google.android.gms:play-services:11.8.0'
+
     }
 }
+
+//apply plugin: 'com.google.gms.google-services'
+//apply plugin: 'com.google.android.gms:play-services:11.8.0'
+
+/**
+ * Also added for instrumental JUnit testing.
+
+
+android {
+    defaultConfig {
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+}*/
 
 allprojects {
     repositories {

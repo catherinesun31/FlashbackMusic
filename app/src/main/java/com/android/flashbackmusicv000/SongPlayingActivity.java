@@ -81,7 +81,7 @@ public class SongPlayingActivity extends AppCompatActivity implements
         currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
         isFlashBackOn = currentSongState.getBoolean("flashback", false);
         Intent i = getIntent();
-        setWidgets();
+
 
         songList = i.getParcelableArrayListExtra("name_of_extra");
         final Song song = songList.get(songIndex);
@@ -428,7 +428,6 @@ public class SongPlayingActivity extends AppCompatActivity implements
             System.out.println(e.toString());
         }
     }
-
     /*
      * Loads a downloaded song onto the mediaPlayer and starts playing
      */
