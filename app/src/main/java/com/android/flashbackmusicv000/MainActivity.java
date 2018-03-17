@@ -126,11 +126,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         neutral = new ArraySet<String>();
         disliked = new ArraySet<String>();
 
-        //currentSongState = getSharedPreferences("songs", MODE_PRIVATE);
-        //isFlashBackOn = currentSongState.getBoolean("flashback", false);
         setWidgets();
-
-        Song[] songs = {};
 
         boolean f = false;
         if (fave != null) {
@@ -147,7 +143,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
         ms = new MusicStorage();
         neutral = ms.createStorage(MainActivity.this, f,d,n,favorites, disliked, neutral);
-        //addStorage();
         // EditText for download link user provides
         final EditText url = (EditText) findViewById(R.id.urlinput);
         url.setOnKeyListener(new View.OnKeyListener() {
@@ -173,7 +168,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                     songs.addAll(ms.getAlbumStorage().allSongs.getSongs());
                     FlashBackMode fbm = new FlashBackMode(songs);
                     ArrayList<Song> newSongs = new ArrayList<Song>();
-                    //newSongs.addAll(fbm.createQueue());
                     editor.putBoolean("flashback", true);
                     editor.commit();
                     launchNowPlaying(ms.getAlbumStorage().allSongs.getSongs());
@@ -228,7 +222,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
          */
 
         //Create the IntentService to automatically update the user's location every minute or so
-        //mResultReceiver = new SongPlayingActivity.AddressResultReceiver(new Handler());
         mLocationCallback = new LocationCallback();
         mContext = this;
     }
