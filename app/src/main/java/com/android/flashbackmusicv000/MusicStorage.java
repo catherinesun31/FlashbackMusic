@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
+import android.os.Environment;
 import android.util.ArraySet;
 import android.util.Log;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.util.Set;
 
@@ -78,6 +80,44 @@ public class MusicStorage {
 
             }
 
+            String path = Environment.getExternalStorageDirectory().toString() + "/storage/emulated/0/Download/";
+            File directory = new File(path);
+            File[] files = directory.listFiles();
+            if (files != null) {
+                for (int i = 0; i < files.length; i++) {
+                    String fileName = files[i].getName();
+
+                    mmr.setDataSource(path + fileName);
+                    fileName = fileName.replace(".mp3", "");
+
+                    String title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+                    String artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+                    String albumName = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
+                    String duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+
+                    long mil = Long.parseLong(duration);
+                    int seconds = (int) Math.ceil((mil / 1000) % 60);
+                    int minutes = (int) Math.ceil((mil / (1000 * 60)) % 60);
+                    duration = minutes + ":" + seconds;
+
+                    Log.d("Information: ", "Title: " + title + "\n" +
+                            "Artist: " + artist + "\n" +
+                            "com.android.flashbackmusicv000.Album: " + albumName + "\n" +
+                            "Duration: " + duration);
+
+
+                    Song currentSong = new Song(title, path + fileName);
+
+                    ss.initializeSong(currentSong, favorites, disliked, neutral);
+
+                    as.initializeAlbum(currentSong, albumName);
+                    System.out.println("SIZE OF SONGLIST" + ss.songsList.size());
+                }
+            } else {
+                System.err.println("Access denied");
+            }
+
+
             if ((!f && !d && !n) || (favorites.size() + neutral.size() + disliked.size() == 0)) {
                 neutral = new ArraySet<>();
                 Log.d("Is it empty", "It is empty");
@@ -128,6 +168,17 @@ public class MusicStorage {
         ss.initializeSong(currentSong, favorites, disliked, neutral);
         as.initializeAlbum(currentSong, albumName);
         editor.putStringSet("neutral", neutral);
+
+        for (int i = 0; i < ss.songsList.size(); ++i) {
+            Log.d("Running songsList", "Running for loop " + i);
+
+            neutral.add(ss.songsList.get(i).getTitle());
+            if (i == 0) {
+                as.allSongs = new Album("All Songs From Main Activity", ss.songsList.get(i));
+            } else {
+                as.allSongs.addSong(ss.songsList.get(i));
+            }
+        }
     }
 
 }
