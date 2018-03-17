@@ -19,6 +19,9 @@ public class AlbumStorage {
     }
 
     public void initializeAlbum( Song currentSong, String albumName){
+        if(albumName == null){
+            albumName = "Unknown";
+        }
 
         if(!checkAlbum(albumName)){
 
@@ -35,6 +38,7 @@ public class AlbumStorage {
         }
         else {
             this.allSongs.addSong(currentSong);
+            System.out.println("Added an album");
         }
 
     }

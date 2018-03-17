@@ -1,11 +1,9 @@
 package com.android.flashbackmusicv000;
 
 import android.annotation.SuppressLint;
-import android.app.DownloadManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.constraint.ConstraintLayout;
@@ -32,12 +30,9 @@ import java.util.Set;
 
 public class SongListActivity extends AppCompatActivity {
 
-    private MediaPlayer mediaPlayer;
     private boolean isFlashBackOn;
     private boolean isFromAlbum = false;
     public int index;
-    DownloadManager downloadManager;
-
     SharedPreferences currentSongState;
     public ArraySet<String> favorites;
     public ArraySet<String> disliked;
@@ -47,8 +42,6 @@ public class SongListActivity extends AppCompatActivity {
     ArrayList<Song> songsToPlay = new ArrayList<Song>();    // Janice add in
     private Switch switchy;
     private Intent in;
-
-    // com.android.flashbackmusicv000.Song Instances
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +58,7 @@ public class SongListActivity extends AppCompatActivity {
             isFromAlbum = in.getExtras().getBoolean("albumOrigin");
             albumSelected = in.getExtras().getParcelable("songs");
             actualSongs = albumSelected.getSongs();
-        }
-        else {
+        } else {
             isFromAlbum = false;
         }
 
@@ -86,7 +78,6 @@ public class SongListActivity extends AppCompatActivity {
         neutral.addAll(neut);
         disliked.addAll(dis);
 
-
         setWidgets();
 
         songs = new ArrayList<String>();
@@ -95,7 +86,6 @@ public class SongListActivity extends AppCompatActivity {
         }
         if (disliked != null) {
             songs.addAll(disliked);
-
         }
         if (neutral != null) {
             songs.addAll(neutral);
@@ -108,158 +98,130 @@ public class SongListActivity extends AppCompatActivity {
         flashback.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    //LinkedList<Song> songs = new LinkedList<Song>();
-                    //songs.addAll(ms.getAlbumStorage().allSongs.getSongs());
-                    //FlashBackMode fbm = new FlashBackMode(songs);
-                    //ArrayList<Song> newSongs = new ArrayList<Song>();
-                    //newSongs.addAll(fbm.createQueue());
                     editor.putBoolean("flashback", true);
                     editor.commit();
-                }
-                else{
+                } else {
                     editor.putBoolean("flashback", false);
                     editor.commit();
                 }
             }
         });
 
-
-
-
-
-
         ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
 
-            final float scale = this.getResources().getDisplayMetrics().density;
-            int songId = songs.get(0).hashCode();
-            int pixels = (int) (50 * scale + 0.5f);
-            int textSize = (int) (10 * scale + 0.5f);
-            int buttonId = songId + 1;
+        final float scale = this.getResources().getDisplayMetrics().density;
+        int songId = songs.get(0).hashCode();
+        int pixels = (int) (50 * scale + 0.5f);
+        int textSize = (int) (10 * scale + 0.5f);
+        int buttonId = songId + 1;
 
-            //counter loop creates a new button. Attaches a 'new song' to the click listener.
+        //counter loop creates a new button. Attaches a 'new song' to the click listener.
         String path = Environment.getExternalStorageDirectory().toString() + "/storage/emulated/0/Download/";
         Log.d("Files", "Path: " + Environment.getExternalStorageDirectory().toString() + "/storage/emulated/0/Download");
         File directory = new File(path);
         File[] files = directory.listFiles();
-        if (files != null) {
-            for (int i = 0; i < files.length; i++) {
-                System.out.println("POR QUEEEEEEEEEEEEEEEEEEE");
-                //downloadManager.addCompletedDownload(file.getName(), file.getName(), true, "application/mp3", file.getAbsolutePath(),file.length(),true)
-                String fileName = files[i].getName();
-                System.out.println(path);
-                fileName = fileName.replace(".mp3", "");
-                Song song = new Song(fileName, path + fileName);
-                System.out.println(actualSongs.size() + " " + songs.size());
-                actualSongs.add(song);
-                songs.add(song.getTitle());
-            }
-        }
-        else{
-            System.err.println("Access denied");
-        }
+
         System.out.println(actualSongs.size() + " " + songs.size());
 
-            for (index = 0; index < actualSongs.size(); index++) {
-                final String fileName = actualSongs.get(index).getTitle();
+        for (index = 0; index < actualSongs.size(); index++) {
+            final String fileName = actualSongs.get(index).getTitle();
 
-                Button button = new Button(this);
-                android.support.constraint.ConstraintLayout.LayoutParams params = new
-                        android.support.constraint.ConstraintLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT, pixels);
-                button.setId(actualSongs.get(index).getTitle().hashCode());
-                button.setText(fileName);
-                button.setBackgroundColor(Color.rgb(230, 230, 230));
-                button.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
-                button.setTextColor(Color.rgb(89, 89, 89));
-                button.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
-                button.setSingleLine(true);
-                button.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-                button.setMarqueeRepeatLimit(1000);
+            Button button = new Button(this);
+            android.support.constraint.ConstraintLayout.LayoutParams params = new
+                    android.support.constraint.ConstraintLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, pixels);
+            button.setId(actualSongs.get(index).getTitle().hashCode());
+            button.setText(fileName);
+            button.setBackgroundColor(Color.rgb(230, 230, 230));
+            button.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
+            button.setTextColor(Color.rgb(89, 89, 89));
+            button.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
+            button.setSingleLine(true);
+            button.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            button.setMarqueeRepeatLimit(1000);
 
-                final Song newSong = actualSongs.get(index);
+            final Song newSong = actualSongs.get(index);
 
-                System.out.println("Looped...");
-                // Janice: Checking whether to play whole album or just the single song
-                if (isFromAlbum) {
-                    songsToPlay = actualSongs;
-                    System.out.println("It is from the album");
-                }
-
-                final int songIndex = index;
-
-                button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (!disliked.contains(fileName)) {
-                            //launchActivity(newSong);
-                            if (!isFromAlbum) {
-                                songsToPlay = new ArrayList<Song>();
-                                songsToPlay.add(actualSongs.get(songIndex));
-                                System.out.println("HELLO? " + actualSongs.get(songIndex).getFileLocation());
-                            }
-                            launchActivity(songsToPlay);
-                        }
-                    }
-                });
-
-                constraintLayout.addView(button, params);
-
-                final Button add = new Button(this);
-                android.support.constraint.ConstraintLayout.LayoutParams smallParams = new
-                        android.support.constraint.ConstraintLayout.LayoutParams(
-                        pixels, pixels);
-                add.setId((int) button.getId() + 1);
-
-                if (neutral.contains(fileName)) add.setText("+");
-                else if (disliked.contains(fileName)) add.setText("x");
-                else add.setText("✓");
-
-                add.setBackgroundColor(Color.rgb(230, 230, 230));
-                add.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
-                constraintLayout.addView(add, smallParams);
-
-                add.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        buttonChange(add, newSong);
-                    }
-                });
-
-                ConstraintSet constraintSet = new ConstraintSet();
-                constraintSet.clone(constraintLayout);
-                constraintSet.connect(
-                        button.getId(), ConstraintSet.LEFT,
-                        ConstraintSet.PARENT_ID, ConstraintSet.LEFT, 0);
-                constraintSet.connect(
-                        add.getId(), ConstraintSet.RIGHT,
-                        ConstraintSet.PARENT_ID, ConstraintSet.RIGHT, 0);
-                constraintSet.connect(
-                        button.getId(), ConstraintSet.END,
-                        add.getId(), ConstraintSet.START, pixels);
-
-
-                if (index == 0) {
-                    constraintSet.connect(
-                            button.getId(), ConstraintSet.TOP,
-                            ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
-                    constraintSet.connect(
-                            add.getId(), ConstraintSet.TOP,
-                            ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
-                } else {
-                    constraintSet.connect(
-                            button.getId(), ConstraintSet.TOP,
-                            songId, ConstraintSet.BOTTOM, 0);
-                    constraintSet.connect(
-                            add.getId(), ConstraintSet.TOP,
-                            buttonId, ConstraintSet.BOTTOM, 0);
-                }
-                constraintSet.constrainDefaultHeight(button.getId(), pixels);
-                constraintSet.constrainDefaultHeight(add.getId(), pixels);
-                constraintSet.applyTo(constraintLayout);
-
-                songId = button.getId();
-                buttonId = songId + 1;
+            System.out.println("Looped..." + index);
+            if (isFromAlbum) {
+                songsToPlay = actualSongs;
+                System.out.println("It is from the album");
             }
+
+            final int songIndex = index;
+
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (!disliked.contains(fileName)) {
+                        if (!isFromAlbum) {
+                            songsToPlay = new ArrayList<Song>();
+                            songsToPlay.add(actualSongs.get(songIndex));
+                            System.out.println("HELLO? " + actualSongs.get(songIndex).getFileLocation());
+                        }
+                        launchActivity(songsToPlay);
+                    }
+                }
+            });
+
+            constraintLayout.addView(button, params);
+
+            final Button add = new Button(this);
+            android.support.constraint.ConstraintLayout.LayoutParams smallParams = new
+                    android.support.constraint.ConstraintLayout.LayoutParams(
+                    pixels, pixels);
+            add.setId((int) button.getId() + 1);
+
+            if (neutral.contains(fileName)) add.setText("+");
+            else if (disliked.contains(fileName)) add.setText("x");
+            else add.setText("✓");
+
+            add.setBackgroundColor(Color.rgb(230, 230, 230));
+            add.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
+            constraintLayout.addView(add, smallParams);
+
+            add.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    buttonChange(add, newSong);
+                }
+            });
+
+            ConstraintSet constraintSet = new ConstraintSet();
+            constraintSet.clone(constraintLayout);
+            constraintSet.connect(
+                    button.getId(), ConstraintSet.LEFT,
+                    ConstraintSet.PARENT_ID, ConstraintSet.LEFT, 0);
+            constraintSet.connect(
+                    add.getId(), ConstraintSet.RIGHT,
+                    ConstraintSet.PARENT_ID, ConstraintSet.RIGHT, 0);
+            constraintSet.connect(
+                    button.getId(), ConstraintSet.END,
+                    add.getId(), ConstraintSet.START, pixels);
+
+
+            if (index == 0) {
+                constraintSet.connect(
+                        button.getId(), ConstraintSet.TOP,
+                        ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
+                constraintSet.connect(
+                        add.getId(), ConstraintSet.TOP,
+                        ConstraintSet.PARENT_ID, ConstraintSet.TOP, 0);
+            } else {
+                constraintSet.connect(
+                        button.getId(), ConstraintSet.TOP,
+                        songId, ConstraintSet.BOTTOM, 0);
+                constraintSet.connect(
+                        add.getId(), ConstraintSet.TOP,
+                        buttonId, ConstraintSet.BOTTOM, 0);
+            }
+            constraintSet.constrainDefaultHeight(button.getId(), pixels);
+            constraintSet.constrainDefaultHeight(add.getId(), pixels);
+            constraintSet.applyTo(constraintLayout);
+
+            songId = button.getId();
+            buttonId = songId + 1;
+        }
     }
 
     public boolean contains(String[] songs, String string) {
@@ -312,7 +274,6 @@ public class SongListActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SongPlayingActivity.class);
 
         intent.putExtra("name_of_extra", songList);
-        //intent.putExtra("name_of_extra", song);
         intent.putExtra("isOn", isFlashBackOn);
         startActivity(intent);
     }
