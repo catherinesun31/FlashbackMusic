@@ -162,12 +162,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                 if ((keyevent.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
                     //get the link user provides
                     String getUrl = url.getText().toString();
-                    /*
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference dataRef = database.getReference();
                     dataRef.child("URLDownload").setValue(getUrl);
-                    */
-                    addStorage(getUrl);
+                    //addStorage();
                     return true;
                 }
                 return false;
@@ -458,27 +456,34 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
     /* addStorage downloads an mp3 file from a given url
      */
-    public void addStorage(String url){
-        /*
+    public void addStorage(){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference dataRef = database.getReference();
+        final DatabaseReference dataRef = database.getReference("URLDownload");
         dataRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                url = dataSnapshot.getValue().toString();
-                */
+                String url = dataSnapshot.getValue().toString();
+                System.err.println("INSIDE HERE");
                 //gets the path to phone's Downloads folder
                 String downloadRoute = Environment.getExternalStorageDirectory().toString();
                 //change url from string to Uri
                 Uri music_uri = Uri.parse(url);
                 DownloadData(music_uri);
             }
-/*
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
 
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) { }
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                String url = dataSnapshot.getValue().toString();
+                //gets the path to phone's Downloads folder
+                String downloadRoute = Environment.getExternalStorageDirectory().toString();
+                //change url from string to Uri
+                Uri music_uri = Uri.parse(url);
+                DownloadData(music_uri);
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
@@ -487,7 +492,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             public void onCancelled(DatabaseError databaseError) {}
         });
 
-    }*/
+    }
 
     private boolean DownloadStatus(Cursor cursor, long DownloadId){
         if(cursor!=null && cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)>0 && cursor.getColumnIndex(DownloadManager.COLUMN_REASON) > 0) {
