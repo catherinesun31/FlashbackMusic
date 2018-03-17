@@ -515,7 +515,39 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     }
 
     private boolean DownloadStatus(Cursor cursor, DownloadManager dm) {
-        if (cursor != null && cursor.getColumnIndex(dm.COLUMN_STATUS) > 0 && cursor.getColumnIndex(dm.COLUMN_REASON) > 0) {
+        DownloadManager.Query query = null;
+        Cursor c = null;
+        query = new DownloadManager.Query();
+        String statusText = "";
+
+        if (query != null) {
+            query.setFilterByStatus(DownloadManager.STATUS_FAILED | DownloadManager.STATUS_PAUSED | DownloadManager.STATUS_SUCCESSFUL |
+                    DownloadManager.STATUS_RUNNING | DownloadManager.STATUS_PENDING);
+        } else {
+            return false;
+        }
+        c = dm.query(query);
+        if (c.moveToFirst()) {
+            int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
+            switch (status) {
+                case DownloadManager.STATUS_PAUSED:
+                    statusText = "STATUS_PAUSED";
+                    break;
+                case DownloadManager.STATUS_PENDING:
+                    statusText = "STATUS_PENDING";
+                    break;
+                case DownloadManager.STATUS_RUNNING:
+                    statusText = "STATUS_RUNNING";
+                    break;
+                case DownloadManager.STATUS_SUCCESSFUL:
+                    statusText = "STATUS_SUCCESSFUL";
+                    break;
+                case DownloadManager.STATUS_FAILED:
+                    statusText = "STATUS_FAILED";
+                    break;
+            }
+        }
+        /*if (cursor != null && cursor.getColumnIndex(dm.COLUMN_STATUS) > 0 && cursor.getColumnIndex(dm.COLUMN_REASON) > 0) {
 
 
             //column for download  status
@@ -567,7 +599,19 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                     return false;
                 }
             }
+        }*/
+        if (statusText == "STATUS_SUCCESSFUL") {
+            return true;
         }
+
+        // Make a delay of 3 seconds so that next toast (Music Status) will not merge with this one.
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+            }
+        }, 3000);
+
         return false;
     }
 
